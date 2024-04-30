@@ -1,0 +1,10 @@
+{
+	"project_name": "Enter the name of project (without spaces)",
+	"project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}",
+	"project_description": "ATTENTION: It is necessary to fill the description of the microservice {{ cookiecutter.project_name }}",
+	"project_release": "1.0.0",
+	"app_developer": "fistName.lastName",
+	"app_lang_version": "3.10",
+	"use_postgresql": "n",
+    "use_alembic": "n"
+}
