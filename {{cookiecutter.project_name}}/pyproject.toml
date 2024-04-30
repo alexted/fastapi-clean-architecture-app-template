@@ -1,0 +1,93 @@
+[tool.poetry]
+name = "{{ cookiecutter.project_name }}"
+version = "{{ cookiecutter.project_release }}"
+description = "{{ cookiecutter.project_description }}"
+authors = ["{{ cookiecutter.app_developer }}"]
+
+[tool.poetry.dependencies]
+python = "^{{ cookiecutter.app_lang_version }}"
+fastapi = "*"
+orjson = "*"
+uvicorn = "*"
+gunicorn = "*"
+{% if cookiecutter.use_postgresql|lower == 'y' -%}
+asyncpg = "*"
+SQLAlchemy = {version = "*", extras = ["asyncio"]}
+{% endif -%}
+{% if cookiecutter.use_alembic|lower == 'y' -%}
+alembic = "*"
+{% endif -%}
+python-json-logger = "*"
+sentry-sdk = { version = "*", extras = ["fastapi"] }
+prometheus-fastapi-instrumentator = "*"
+markdown2 = "*"
+inflection = "*"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "*"
+python-dotenv = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-xdist = "*"
+pytest-env = "*"
+pytest-cov = "*"
+httpx = "*"
+mypy = "*"
+flake8 = "*"
+flake8-broken-line = "*"
+flake8-builtins = "*"
+flake8-commas = "*"
+flake8-comprehensions = "*"
+flake8-mutable = "*"
+flake8-print = "*"
+flake8-cognitive-complexity = "*"
+flake8-functions = "*"
+flake8-quotes = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.flake8]
+ignore = ["D203"]
+exclude = [".git", "__pycache__", "tests", "migrations", "venv"]
+max-line-length = 120
+max-function-length = 80
+max-complexity = 10
+inline-quotes = "\""
+max-cognitive-complexity = 10
+
+[tool.pytest.ini_options]
+minversion = "7.1"
+asyncio_mode = "auto"
+testpaths = "tests"
+env = [
+    "ENVIRONMENT = TEST",
+    #"POSTGRES_DSN = postgresql+asyncpg://test_user:@localhost:5432/tsq",
+]
+
+[tool.coverage.run]
+source = ["core"]
+omit = ["tests/*"]
+data_file = "tests/coverage/.coverage"
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+omit = ["tests/*"]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+    "def logger",
+    "def build_spec.*:",
+    "except ConnectionRefusedError",
+]
