@@ -2,7 +2,7 @@ import typing as t
 
 from pydantic import BaseModel, NoneStr
 
-from {{ cookiecutter.project_slug }}.api.serializers.items import ItemResponse
+from src.api.serializers.items import ItemResponse
 
 
 class CreateItemDTO(BaseModel):

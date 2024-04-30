@@ -6,11 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
-from {{ cookiecutter.project_slug }}.data.postgres.engine import db_session
-from {{ cookiecutter.project_slug }}.data.postgres.models import Item
-from {{ cookiecutter.project_slug }}.data.postgres.repository.item_dto import ItemDTO
-from {{ cookiecutter.project_slug }}.data.postgres.repository.item_dto import ItemFilters
-from {{ cookiecutter.project_slug }}.data.postgres.repository.base_repo import AbstractRepository
+from src.data.postgres.engine import db_session
+from src.data.postgres.models import Item
+from src.data.postgres.repository.item_dto import ItemDTO
+from src.data.postgres.repository.item_dto import ItemFilters
+from src.data.postgres.repository.base_repo import AbstractRepository
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,8 @@
-version: '3'
-
 services:
   {{ cookiecutter.project_name }}:
     build: 
       context: .
+    restart: unless-stopped
     volumes:
       - '.:/usr/src/app'
     ports:
@@ -14,13 +13,12 @@ services:
 {% if cookiecutter.use_postgresql|lower == 'y' -%}
   postgres:
     image: postgres:alpine
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: zasxcdfv
+      POSTGRES_PASSWORD: password
       POSTGRES_USER: {{ cookiecutter.project_slug }}
     volumes:
       - postgresql_data:/var/lib/postgresql/data
-      - ./scripts/sql:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
 {%- endif %}

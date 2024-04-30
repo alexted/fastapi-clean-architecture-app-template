@@ -2,9 +2,9 @@ import pytest
 from alembic.command import downgrade, upgrade
 from alembic.config import Config as AlembicConfig
 
-from {{ cookiecutter.project_slug }}.app.web import create_app
-from {{ cookiecutter.project_slug }}.data.postgres.engine import session_scope
-from {{ cookiecutter.project_slug }}.data.postgres.models import Base, Item
+from src.app.web import create_app
+from src.data.postgres.engine import session_scope
+from src.data.postgres.models import Base, Item
 from tests.moks_data import items
 
 

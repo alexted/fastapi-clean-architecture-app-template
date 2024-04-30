@@ -6,8 +6,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from {{ cookiecutter.project_slug }}.data.postgres import models
-from {{ cookiecutter.project_slug }}.app.config import config as app_config
+from src.data.postgres import models
+from src.app.config import config as app_config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

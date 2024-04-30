@@ -2,7 +2,8 @@ import os
 from enum import Enum
 from pathlib import Path
 
-from pydantic import BaseSettings, HttpUrl, PostgresDsn
+from pydantic_settings import BaseSettings
+from pydantic import HttpUrl, PostgresDsn
 
 CONFIG_FILE = Path('.env').as_posix() if Path('.env').exists() else None
 

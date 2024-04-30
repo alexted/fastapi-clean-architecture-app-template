@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
-from {{ cookiecutter.project_slug }}.api.serializers.items import ItemRequest, ItemResponse
-from {{ cookiecutter.project_slug }}.use_cases.items.create_item import get_create_item_use_case, CreateUser
-from {{ cookiecutter.project_slug }}.use_cases.items.get_item import GetUserRequest, get_get_item_use_case, GetUser
+from src.api.serializers.items import ItemRequest, ItemResponse
+from src.use_cases.items.create_item import get_create_item_use_case, CreateUser
+from src.use_cases.items.get_item import GetUserRequest, get_get_item_use_case, GetUser
 
 routes = APIRouter(tags=['users'])
 

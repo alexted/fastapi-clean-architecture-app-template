@@ -1,7 +1,7 @@
-from {{ cookiecutter.project_slug }}.api.serializers.items import ItemRequest, ItemResponse
-from {{ cookiecutter.project_slug }}.data.postgres.repository.item import ItemRepo
-from {{ cookiecutter.project_slug }}.data.postgres.repository.item_dto import ItemDTO
-from {{ cookiecutter.project_slug }}.use_cases.base import BaseUseCase
+from src.api.serializers.items import ItemRequest, ItemResponse
+from src.data.postgres.repository.item import ItemRepo
+from src.data.postgres.repository.item_dto import ItemDTO
+from src.use_cases.base import BaseUseCase
 
 
 class CreateUser(BaseUseCase):

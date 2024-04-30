@@ -2,8 +2,8 @@ import logging
 
 from pydantic import BaseModel
 
-from {{ cookiecutter.project_slug }}.app.config import config
-from {{ cookiecutter.project_slug }}.use_cases.base import BaseUseCase
+from src.app.config import config
+from src.use_cases.base import BaseUseCase
 
 logger = logging.getLogger(config.APP_NAME)
 

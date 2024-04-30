@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from {{ cookiecutter.project_slug }}.app.web import create_app
+from src.app.web import create_app
 
 app: FastAPI = create_app()
 

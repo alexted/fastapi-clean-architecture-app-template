@@ -1,7 +1,7 @@
 import logging.config
 
 from .config import config
-from {{ cookiecutter.project_slug }}.utils.logging_filter import RequestIdFilter
+from src.utils.logging_filter import RequestIdFilter
 
 LOGGING_CONFIG = {
     'version': 1,

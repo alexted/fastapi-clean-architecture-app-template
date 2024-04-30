@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from {{ cookiecutter.project_slug }}.use_cases.sum import get_sum_use_case, SumResponse, Sum, SumRequest
+from src.use_cases.sum import get_sum_use_case, SumResponse, Sum, SumRequest
 
 routes = APIRouter()
 
