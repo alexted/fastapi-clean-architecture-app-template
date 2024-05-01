@@ -29,13 +29,10 @@ class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
     APP_NAME: str = "{{ cookiecutter.project_slug }}"
 
-    SENTRY_DSN: HttpUrl
+    SENTRY_DSN: HttpUrl = "https://omg.wtf/"
 
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
-    README_PATH = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-        'README.md',
-    )
+
     {% if cookiecutter.use_postgresql | lower == 'y' -%}
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 20
