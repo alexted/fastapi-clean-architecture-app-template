@@ -18,6 +18,7 @@ SQLAlchemy = {version = "*", extras = ["asyncio"]}
 {% if cookiecutter.use_alembic|lower == 'y' -%}
 alembic = "*"
 {% endif -%}
+pydantic-settings = "*"
 python-json-logger = "*"
 sentry-sdk = { version = "*", extras = ["fastapi"] }
 prometheus-fastapi-instrumentator = "*"
