@@ -1,15 +1,12 @@
 import re
 import sys
 
-
 PROJECT_SLUG_RE = re.compile(r'^[_a-zA-Z][_a-zA-Z0-9]+$')
 APP_NAME_RE = re.compile(r'^[a-zA-Z0-9-]+$')
-
 
 project_slug = '{{ cookiecutter.project_slug }}'
 use_postgresql = '{{ cookiecutter.use_postgresql }}'.lower()
 use_alembic = '{{ cookiecutter.use_alembic }}'.lower()
-
 
 if __name__ == '__main__':
     exit_code = 0

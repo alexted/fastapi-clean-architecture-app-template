@@ -2,8 +2,8 @@ import os
 from enum import Enum
 from pathlib import Path
 
-from pydantic_settings import BaseSettings
 from pydantic import HttpUrl, PostgresDsn
+from pydantic_settings import BaseSettings
 
 CONFIG_FILE = Path('.env').as_posix() if Path('.env').exists() else None
 
@@ -36,12 +36,13 @@ class AppConfig(BaseSettings):
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         'README.md',
     )
-    {% if cookiecutter.use_postgresql | lower == 'y' -%}
+    { % if cookiecutter.use_postgresql | lower == 'y' - %}
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 20
 
     DB_SCHEMA: str
-    {% endif %}
+    { % endif %}
+
     class Config:
         use_enum_values = True
 

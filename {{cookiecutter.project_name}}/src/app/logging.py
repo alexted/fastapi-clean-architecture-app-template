@@ -1,7 +1,8 @@
 import logging.config
 
-from .config import config
 from src.utils.logging_filter import RequestIdFilter
+
+from .config import config
 
 LOGGING_CONFIG = {
     'version': 1,

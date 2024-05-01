@@ -1,6 +1,6 @@
 services:
   {{ cookiecutter.project_name }}:
-    build: 
+    build:
       context: .
     restart: unless-stopped
     volumes:

@@ -1,7 +1,6 @@
 import os
 import shutil
 
-
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
 
 
@@ -24,7 +23,6 @@ def copy_directory(directory, destination):
 project_slug = '{{ cookiecutter.project_slug }}'
 use_postgresql = '{{ cookiecutter.use_postgresql }}'.lower()
 use_alembic = '{{ cookiecutter.use_alembic }}'.lower()
-
 
 if __name__ == '__main__':
     if use_alembic != 'y':
