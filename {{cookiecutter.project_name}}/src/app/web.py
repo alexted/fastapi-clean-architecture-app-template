@@ -2,7 +2,6 @@ import sentry_sdk
 from fastapi import APIRouter
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
-from markdown2 import markdown_path
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.exceptions import HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -25,7 +24,7 @@ def health_check():
 def create_app():
     init_logging()
 
-    app = FastAPI(title='{{ cookiecutter.project_name }}', description=markdown_path(config.README_PATH))
+    app = FastAPI(title='{{ cookiecutter.project_name }}', description="{{ cookiecutter.project_description }}")
 
     app.include_router(healthcheck_route, tags=['system'])
     app.include_router(api.sum_routes, prefix='/v1', tags=['v1'])

@@ -22,7 +22,6 @@ pydantic-settings = "*"
 python-json-logger = "*"
 sentry-sdk = { version = "*", extras = ["fastapi"] }
 prometheus-fastapi-instrumentator = "*"
-markdown2 = "*"
 inflection = "*"
 
 [tool.poetry.dev-dependencies]
