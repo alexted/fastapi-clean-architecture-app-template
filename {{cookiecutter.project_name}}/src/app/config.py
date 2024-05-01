@@ -36,12 +36,12 @@ class AppConfig(BaseSettings):
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         'README.md',
     )
-    { % if cookiecutter.use_postgresql | lower == 'y' - %}
+    {% if cookiecutter.use_postgresql | lower == 'y' -%}
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 20
 
     DB_SCHEMA: str
-    { % endif %}
+    {% endif %}
 
     class Config:
         use_enum_values = True
