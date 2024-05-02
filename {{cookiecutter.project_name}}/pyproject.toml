@@ -34,16 +34,6 @@ pytest-env = "*"
 pytest-cov = "*"
 httpx = "*"
 mypy = "*"
-flake8 = "*"
-flake8-broken-line = "*"
-flake8-builtins = "*"
-flake8-commas = "*"
-flake8-comprehensions = "*"
-flake8-mutable = "*"
-flake8-print = "*"
-flake8-cognitive-complexity = "*"
-flake8-functions = "*"
-flake8-quotes = "*"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,8 +1,13 @@
 import logging.config
 
-from src.utils.logging_filter import RequestIdFilter
-
 from .config import config
+
+
+class RequestIdFilter(logging.Filter):
+    def filter(self, record):
+        record.request_id = request_id_manager.get()
+        return True
+
 
 LOGGING_CONFIG = {
     'version': 1,

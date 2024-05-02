@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
+from pydantic import UUID4
+
 
 class ErrorType:
     VALIDATION_ERROR = 'VALIDATION_ERROR'
@@ -15,7 +17,7 @@ class ErrorType:
 
 @dataclass
 class Error:
-    status: int = None
+    code: int = None
     error: str = None
     message: str = None
-    detail: Any = None
+    trace_id: UUID4 = None

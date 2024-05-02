@@ -31,7 +31,7 @@ class FastAPIErrorHandler(BaseErrorHandler):
     def get_error(self, exception: HTTPException) -> Error:
         logger.debug(f'Handling exception: {type(exception)}: {exception}')
         return Error(
-            status=exception.status_code,
+            code=exception.status_code,
             error=underscore(parameterize(exception.detail)).upper(),
             message=exception.detail,
         )
@@ -43,8 +43,7 @@ class ValidationErrorHandler(BaseErrorHandler):
     def get_error(self, exception: RequestValidationError) -> Error:
         logger.debug(f'Handling exception: {type(exception)}: {exception}')
         return Error(
-            status=HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=exception.errors(),
+            code=HTTP_422_UNPROCESSABLE_ENTITY,
             error=ErrorType.VALIDATION_ERROR,
             message=ErrorType.VALIDATION_ERROR,
         )
@@ -55,7 +54,7 @@ class OurErrorHandler(BaseErrorHandler):
 
     def get_error(self, exc: OtherError) -> Error:
         logger.debug(f'Handling exception: {type(exc)}: {exc}')
-        return Error(status=exc.code, error=exc.error, message=exc.message, detail=exc.detail)
+        return Error(code=exc.code, error=exc.error, message=exc.message)
 
 
 class ExceptionsHandler:
@@ -74,4 +73,4 @@ class ExceptionsHandler:
                 return err
 
         logger.exception(exc)
-        return Error(status=500, error='INTERNAL_ERROR', message=str(exc), detail=None)
+        return Error(code=500, error='INTERNAL_ERROR', message=str(exc))

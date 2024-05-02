@@ -40,11 +40,11 @@ def error_handling_middleware(exceptions_handler: ExceptionsHandler):
 def _make_response(exceptions_handler: ExceptionsHandler, exc) -> JSONResponse:
     error = exceptions_handler.get_error(exc)
     data = {
-        'status': error.status,
+        'code': error.code,
         'error': error.error,
         'message': error.message,
-        'detail': error.detail,
+        'trace_id': error.trace_id,
         'timestamp': datetime.utcnow().isoformat()
     }
 
-    return JSONResponse(status_code=error.status, content=data)
+    return JSONResponse(status_code=error.code, content=data)
