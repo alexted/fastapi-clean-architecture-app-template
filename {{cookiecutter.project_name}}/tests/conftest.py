@@ -1,6 +1,6 @@
 import pytest
 
-from src.app.web import create_app
+from src.service.application import create_app
 {% if cookiecutter.use_postgresql|lower == 'y' %}
 from alembic.command import downgrade, upgrade
 from alembic.config import Config as AlembicConfig
@@ -8,7 +8,7 @@ from alembic.config import Config as AlembicConfig
 from src.data.postgres.engine import session_scope
 from src.data.postgres.models import Base, Item
 from tests.moks_data import items
-{% endif -%}
+{% endif %}
 
 
 @pytest.fixture
