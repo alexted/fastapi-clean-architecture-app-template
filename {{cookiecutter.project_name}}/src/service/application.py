@@ -2,15 +2,14 @@ import sentry_sdk
 from fastapi import APIRouter
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.exceptions import HTTPException
 from starlette.middleware import Middleware
 
-from src import api
+from src.api import v1_routes
 from .config import config, EnvironmentEnum
 from .logging import init_logging
 from .errors.handlers import ExceptionsHandler
-from .middlewares.error_handling import error_handler, COMMON_ERROR_HANDLERS, error_handling_middleware
+from .middlewares.error_handling import error_handler, COMMON_ERROR_HANDLERS
 from .middlewares.trace_id import CorrelationIdMiddleware
 
 healthcheck_route = APIRouter()
@@ -38,30 +37,7 @@ def create_app():
         },
     )
 
-    app.include_router(healthcheck_route, tags=['system'])
-    app.include_router(api.sum_routes, prefix='/v1', tags=['v1'])
+    app.include_router(healthcheck_route, tags=['service'])
+    app.include_router(v1_routes)
 
     return app
-
-    # init_logging()
-    #
-    # app = FastAPI(title='{{ cookiecutter.project_name }}', description="{{ cookiecutter.project_description }}")
-    #
-    # app.include_router(healthcheck_route, tags=['system'])
-    # app.include_router(api.sum_routes, prefix='/v1', tags=['v1'])
-    # {% if cookiecutter.use_postgresql|lower == 'y' -%}
-    # app.include_router(api.items_routes, prefix='/v1', tags=['v1'])
-    # {% endif %}
-    #
-    # app.exception_handlers[HTTPException] = error_handler(ExceptionsHandler(*COMMON_ERROR_HANDLERS))
-    # app.exception_handlers[RequestValidationError] = error_handler(ExceptionsHandler(*COMMON_ERROR_HANDLERS))
-    #
-    # if config.ENVIRONMENT == EnvironmentEnum.PROD:
-    #     sentry_sdk.init(environment=config.ENVIRONMENT, dsn=config.SENTRY_DSN)
-    #     app.add_middleware(SentryAsgiMiddleware)
-    # app.add_middleware(
-    #     BaseHTTPMiddleware, dispatch=error_handling_middleware(ExceptionsHandler(*COMMON_ERROR_HANDLERS)),
-    # )
-    # app.add_middleware(BaseHTTPMiddleware, dispatch=handle_request_id)
-    #
-    # return app
