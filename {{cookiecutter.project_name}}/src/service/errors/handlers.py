@@ -10,7 +10,7 @@ from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from ..errors.constants import Error, ErrorType
 from ..errors.exceptions import OtherError
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class BaseErrorHandler(ABC):

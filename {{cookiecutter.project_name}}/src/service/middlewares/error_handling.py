@@ -17,7 +17,7 @@ COMMON_ERROR_HANDLERS = [
     OurErrorHandler,
 ]
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 def error_handler(exceptions_handler: ExceptionsHandler):

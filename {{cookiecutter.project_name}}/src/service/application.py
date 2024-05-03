@@ -7,11 +7,11 @@ from starlette.exceptions import HTTPException
 from starlette.middleware import Middleware
 
 from src import api
-from src.app.config import config, EnvironmentEnum
-from src.app.logging import init_logging
-from src.utils.errors.handlers import ExceptionsHandler
-from src.utils.middlewares.error_handling import error_handler, COMMON_ERROR_HANDLERS, error_handling_middleware
-from src.utils.middlewares.trace_id import CorrelationIdMiddleware
+from .config import config, EnvironmentEnum
+from .logging import init_logging
+from .errors.handlers import ExceptionsHandler
+from .middlewares.error_handling import error_handler, COMMON_ERROR_HANDLERS, error_handling_middleware
+from .middlewares.trace_id import CorrelationIdMiddleware
 
 healthcheck_route = APIRouter()
 

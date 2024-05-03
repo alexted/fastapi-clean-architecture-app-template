@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
-from src.use_cases.numbers.divide import get_divide_case, DivideResponse
-from src.use_cases.numbers.multiply import get_multiply_use_case, MultiplyResponse
-from src.use_cases.numbers.subtract import get_subtract_use_case, SubtractResponse
-from src.use_cases.numbers.summarise import get_summarise_use_case, SummariseResponse
+from src.use_cases.numbers.divide import get_divide_case, DivideRequest, DivideResponse, DivideUseCase
+from src.use_cases.numbers.multiply import get_multiply_use_case, MultiplyRequest, MultiplyResponse, MultiplyUseCase
+from src.use_cases.numbers.subtract import get_subtract_use_case, SubtractRequest, SubtractResponse, SubtractUseCase
+from src.use_cases.numbers.summarise import get_summarise_use_case, SummariseRequest, SummariseResponse, SummariseUseCase
 
 routes = APIRouter(tags=['numbers'])
 

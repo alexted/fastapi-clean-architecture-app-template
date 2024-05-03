@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from src.app.app import create_app
+from src.service.application import create_app
 
 app: FastAPI = create_app()
 

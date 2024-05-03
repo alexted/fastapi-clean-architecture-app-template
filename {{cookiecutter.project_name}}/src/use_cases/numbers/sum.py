@@ -2,27 +2,26 @@ import logging
 
 from pydantic import BaseModel
 
-from src.app.config import config
 from src.use_cases.base import BaseUseCase
 
-logger = logging.getLogger(config.APP_NAME)
+logger = logging.getLogger()
 
 
-class SumRequest(BaseModel):
+class SummariseRequest(BaseModel):
     x: int
     y: int
 
 
-class SumResponse(BaseModel):
+class SummariseResponse(BaseModel):
     sum: int
 
 
-class Sum(BaseUseCase):
+class SummariseUseCase(BaseUseCase):
 
-    async def execute(self, request_object: SumRequest) -> SumResponse:
+    async def execute(self, request_object: SummariseRequest) -> SummariseResponse:
         logger.info('test message')
-        return SumResponse(sum=request_object.x + request_object.y)
+        return SummariseResponse(sum=request_object.x + request_object.y)
 
 
-async def get_sum_use_case():
-    return Sum()
+async def get_summarise_use_case():
+    return SummariseUseCase()

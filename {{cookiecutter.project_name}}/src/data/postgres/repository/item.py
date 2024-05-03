@@ -12,7 +12,7 @@ from src.data.postgres.repository.base_repo import AbstractRepository
 from src.data.postgres.repository.item_dto import ItemDTO
 from src.data.postgres.repository.item_dto import ItemFilters
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class ItemRepo(AbstractRepository):

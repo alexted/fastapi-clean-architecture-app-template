@@ -11,7 +11,7 @@ correlation_id: ContextVar[Optional[str]] = ContextVar('correlation_id', default
 if TYPE_CHECKING:
     from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-logger = logging.getLogger('')
+logger = logging.getLogger()
 
 
 def set_transaction_id(correlation_id: str) -> None:
