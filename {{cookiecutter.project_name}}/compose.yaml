@@ -1,0 +1,24 @@
+services:
+  {{ cookiecutter.project_name }}:
+    build:
+      context: .
+    restart: unless-stopped
+    volumes:
+      - '.:/usr/src/app'
+    ports:
+      - "5000:5000"
+    environment:
+      ENVIRONMENT: local
+
+{% if cookiecutter.use_postgresql|lower == 'y' -%}
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: {{ cookiecutter.project_slug }}
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+{%- endif %}

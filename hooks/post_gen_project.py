@@ -1,7 +1,6 @@
 import os
 import shutil
 
-
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
 
 
@@ -25,16 +24,15 @@ project_slug = '{{ cookiecutter.project_slug }}'
 use_postgresql = '{{ cookiecutter.use_postgresql }}'.lower()
 use_alembic = '{{ cookiecutter.use_alembic }}'.lower()
 
-
 if __name__ == '__main__':
     if use_alembic != 'y':
         remove_file('alembic.ini')
-        remove_directory(f'{project_slug}/data/postgres/migrations')
+        remove_directory(f'src/data/postgres/migrations')
 
     if use_postgresql != 'y':
-        remove_directory(f'{project_slug}/data')
-        remove_file(f'{project_slug}/api/endpoints/items.py')
-        remove_directory(f'{project_slug}/use_cases/items')
+        remove_directory(f'src/data')
+        remove_file(f'src/api/items.py')
+        remove_directory(f'src/use_cases/items')
         remove_file('tests/expected_data.py')
-        remove_file('tests/moks_data.py')
+        remove_file('tests/mock_data.py')
         remove_file('tests/test_items.py')
