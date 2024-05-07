@@ -12,7 +12,7 @@ orjson = "*"
 uvicorn = "*"
 gunicorn = "*"
 {% if cookiecutter.use_postgresql|lower == 'y' -%}
-psycopg = "*"
+asyncpg = "*"
 SQLAlchemy = {version = "*", extras = ["asyncio"]}
 {% endif -%}
 {% if cookiecutter.use_alembic|lower == 'y' -%}

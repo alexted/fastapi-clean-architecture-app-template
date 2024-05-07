@@ -1,25 +1,48 @@
-from typing import List
+from pydantic import NonNegativeInt
 
+from src.data.postgres.repository.item import ItemRepository
+from src.data.postgres.repository.item_dto import ItemDTO
 from pydantic import BaseModel
-
-from src.api.serializers.items import ItemResponse
-from src.data.postgres.repository.item import ItemRepo
-from src.data.postgres.repository.item_dto import ItemFilters, ItemDTO
 from src.use_cases.base import BaseUseCase
 
 
-class GetUserRequest(BaseModel):
-    item_id: int
+class GetItemRequest(BaseModel):
+    """
+
+    """
+    id: NonNegativeInt
 
 
-class GetUser(BaseUseCase):
-    def __init__(self, items_repo: ItemRepo):
-        self.items_repo: ItemRepo = items_repo
+class GetItemResponse(BaseModel):
+    """
 
-    async def execute(self, request_object: GetUserRequest) -> ItemResponse:
-        items: List[ItemDTO] = await self.items_repo.get(ItemFilters(ids=[request_object.item_id]))
-        return ItemResponse(**items[0].dict())
+    """
+    id: NonNegativeInt
+    name: str
+    description: str
+    price: NonNegativeInt
 
 
-async def get_get_item_use_case():
-    return GetUser(ItemRepo())
+class GetItemUseCase(BaseUseCase):
+    """
+
+    """
+    def __init__(self, item_repo: ItemRepository):
+        self.item_repo: ItemRepository = item_repo
+
+    async def execute(self, request_object: GetItemRequest) -> GetItemResponse:
+        """
+
+        :param request_object:
+        :return:
+        """
+        item: ItemDTO = await self.item_repo.get(request_object)
+        return GetItemResponse.construct(**item.dict())
+
+
+async def get_item_use_case() -> GetItemUseCase:
+    """
+
+    :return:
+    """
+    return GetItemUseCase(ItemRepository())

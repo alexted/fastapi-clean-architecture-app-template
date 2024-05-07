@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, Query
 from src.app.config import config
 
 engine = create_async_engine(
-    config.POSTGRES_DSN,
+    config.POSTGRES_DSN.unicode_string(),
     pool_size=config.POSTGRES_MAX_CONNECTIONS,
     pool_pre_ping=True,
     pool_recycle=60,

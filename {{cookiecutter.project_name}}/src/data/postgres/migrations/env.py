@@ -42,7 +42,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = app_config.POSTGRES_DSN
+    url = app_config.POSTGRES_DSN.unicode_string()
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -71,7 +71,7 @@ async def run_migrations_online():
     connectable = AsyncEngine(
         engine_from_config(
             # config.get_section(config.config_ini_section),
-            {'sqlalchemy.url': app_config.POSTGRES_DSN},
+            {'sqlalchemy.url': app_config.POSTGRES_DSN.unicode_string()},
             prefix='sqlalchemy.',
             poolclass=pool.NullPool,
             future=True,

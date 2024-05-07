@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from src.use_cases.base import BaseUseCase
 
 
-class CreateItemRequest(BaseModel):
+class ItemData(BaseModel):
     """
 
     """
@@ -15,7 +15,15 @@ class CreateItemRequest(BaseModel):
     price: NonNegativeInt
 
 
-class CreateItemResponse(BaseModel):
+class UpdateItemRequest(BaseModel):
+    """
+
+    """
+    id: NonNegativeInt
+    data: ItemData
+
+
+class UpdateItemResponse(BaseModel):
     """
 
     """
@@ -25,26 +33,26 @@ class CreateItemResponse(BaseModel):
     price: NonNegativeInt
 
 
-class CreateItemUseCase(BaseUseCase):
+class UpdateItemUseCase(BaseUseCase):
     """
 
     """
     def __init__(self, item_repo: ItemRepository):
         self.item_repo: ItemRepository = item_repo
 
-    async def execute(self, request_object: CreateItemRequest) -> CreateItemResponse:
+    async def execute(self, request_object: UpdateItemRequest) -> UpdateItemResponse:
         """
 
         :param request_object:
         :return:
         """
-        item: ItemDTO = await self.item_repo.create(request_object)
-        return CreateItemResponse.construct(**item.dict())
+        item: ItemDTO = await self.item_repo.update(request_object.id, request_object.data)
+        return UpdateItemResponse.construct(**item.dict())
 
 
-async def get_create_item_use_case() -> CreateItemUseCase:
+async def get_update_item_use_case() -> UpdateItemUseCase:
     """
 
     :return:
     """
-    return CreateItemUseCase(ItemRepository())
+    return UpdateItemUseCase(ItemRepository())

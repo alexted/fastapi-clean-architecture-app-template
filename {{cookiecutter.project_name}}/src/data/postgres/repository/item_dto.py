@@ -1,20 +1,16 @@
 import typing as t
 
-from pydantic import BaseModel, NoneStr
-
-from src.api.serializers.items import ItemResponse
+from pydantic import BaseModel
 
 
-class CreateItemDTO(BaseModel):
+class ItemDTO(BaseModel):
     id: int
     name: str
-    description: NoneStr
+    description: None | str
     price: float
 
-
-class ItemDTO(ItemResponse):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ItemFilters(BaseModel):

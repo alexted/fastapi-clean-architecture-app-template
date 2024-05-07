@@ -1,4 +1,3 @@
-import os
 from enum import Enum
 from pathlib import Path
 
@@ -37,7 +36,6 @@ class AppConfig(BaseSettings):
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 20
 
-    DB_SCHEMA: str
     {% endif %}
 
     class Config:
