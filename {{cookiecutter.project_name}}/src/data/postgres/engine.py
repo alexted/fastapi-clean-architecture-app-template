@@ -4,7 +4,7 @@ import functools
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, Query
 
-from src.app.config import config
+from src.service.config import config
 
 engine = create_async_engine(
     config.POSTGRES_DSN.unicode_string(),

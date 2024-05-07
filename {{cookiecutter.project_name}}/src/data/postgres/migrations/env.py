@@ -7,7 +7,7 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from src.data.postgres import models
-from src.app.config import config as app_config
+from src.service.config import config as app_config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
