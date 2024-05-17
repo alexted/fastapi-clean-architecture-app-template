@@ -5,9 +5,9 @@ from src.service.application import create_app
 from alembic.command import downgrade, upgrade
 from alembic.config import Config as AlembicConfig
 
-from src.data.postgres.engine import session_scope
-from src.data.postgres.models import Base, Item
-from tests.moks_data import items
+from src.service.postgres.engine import session_scope
+from src.service.postgres.models import Base, Item
+from tests.mock_data import items
 {% endif %}
 
 
@@ -17,7 +17,6 @@ def app():
     return app_instance
 
 {% if cookiecutter.use_postgresql|lower == 'y' %}
-
 @pytest.fixture(scope='session')
 def db_session():
     config = AlembicConfig('alembic.ini')

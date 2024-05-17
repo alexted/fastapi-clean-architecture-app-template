@@ -10,7 +10,7 @@ services:
     environment:
       ENVIRONMENT: local
 
-{% if cookiecutter.use_postgresql|lower == 'y' -%}
+{% if cookiecutter.use_postgresql|lower == 'y' %}
   postgres:
     image: postgres:alpine
     restart: unless-stopped
@@ -21,4 +21,12 @@ services:
       - postgresql_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-{%- endif %}
+{% endif %}
+
+{% if cookiecutter.use_redis|lower == 'y' %}
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+{% endif %}

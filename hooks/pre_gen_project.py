@@ -7,6 +7,8 @@ APP_NAME_RE = re.compile(r'^[a-zA-Z0-9-]+$')
 project_slug = '{{ cookiecutter.project_slug }}'
 use_postgresql = '{{ cookiecutter.use_postgresql }}'.lower()
 use_alembic = '{{ cookiecutter.use_alembic }}'.lower()
+use_kafka = '{{ cookiecutter.use_kafka }}'.lower()
+use_redis = '{{ cookiecutter.use_redis }}'.lower()
 
 if __name__ == '__main__':
     exit_code = 0

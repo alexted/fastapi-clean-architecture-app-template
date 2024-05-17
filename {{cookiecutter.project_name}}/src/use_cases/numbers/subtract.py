@@ -21,7 +21,3 @@ class SubtractUseCase(BaseUseCase):
     async def execute(self, request_object: SubtractRequest) -> SubtractResponse:
         logger.info('test message')
         return SubtractResponse(sum=request_object.x + request_object.y)
-
-
-async def get_subtract_use_case():
-    return SubtractUseCase()

@@ -1,3 +1,4 @@
+from typing import Annotated
 from pydantic import NonNegativeInt
 
 from src.data.postgres.repository.item import ItemRepository
@@ -27,7 +28,7 @@ class GetItemUseCase(BaseUseCase):
     """
 
     """
-    def __init__(self, item_repo: ItemRepository):
+    def __init__(self, item_repo: Annotated[ItemRepository, Depends(ItemRepository)]):
         self.item_repo: ItemRepository = item_repo
 
     async def execute(self, request_object: GetItemRequest) -> GetItemResponse:
@@ -38,11 +39,3 @@ class GetItemUseCase(BaseUseCase):
         """
         item: ItemDTO = await self.item_repo.get(request_object)
         return GetItemResponse.construct(**item.dict())
-
-
-async def get_item_use_case() -> GetItemUseCase:
-    """
-
-    :return:
-    """
-    return GetItemUseCase(ItemRepository())

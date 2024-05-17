@@ -21,7 +21,3 @@ class MultiplyUseCase(BaseUseCase):
     async def execute(self, request_object: MultiplyRequest) -> MultiplyResponse:
         logger.info('test message')
         return MultiplyResponse(sum=request_object.x + request_object.y)
-
-
-async def get_multiply_use_case():
-    return MultiplyUseCase()
