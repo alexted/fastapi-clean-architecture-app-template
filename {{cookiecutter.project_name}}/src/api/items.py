@@ -1,25 +1,17 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, Response, status
 from pydantic import NonNegativeInt
 
-from src.use_cases.items.create_item import (
-    get_create_item_use_case,
+from src.use_cases.items import (
     CreateItemRequest,
     CreateItemResponse,
-    CreateItemUseCase
-)
-from src.use_cases.items.delete_item import (
-    get_delete_item_use_case,
+    CreateItemUseCase,
     DeleteItemRequest,
-    DeleteItemUseCase
-)
-from src.use_cases.items.get_item import (
-    get_item_use_case,
+    DeleteItemUseCase,
     GetItemRequest,
     GetItemResponse,
-    GetItemUseCase
-)
-from src.use_cases.items.update_item import (
-    get_update_item_use_case,
+    GetItemUseCase,
     UpdateItemRequest,
     UpdateItemResponse,
     UpdateItemUseCase
@@ -29,8 +21,10 @@ routes = APIRouter(tags=['items'])
 
 
 @routes.post('/items', response_model=CreateItemResponse, status_code=status.HTTP_201_CREATED)
-async def create_item(item: CreateItemRequest,
-                      use_case: CreateItemUseCase = Depends(get_create_item_use_case)) -> CreateItemResponse:
+async def create_item(
+    item: CreateItemRequest,
+    use_case:  Annotated[CreateItemUseCase, Depends(CreateItemUseCase)]
+) -> CreateItemResponse:
     """
     Create item
     :param item:
@@ -42,7 +36,10 @@ async def create_item(item: CreateItemRequest,
 
 
 @routes.get('/items/{item_id}', response_model=GetItemResponse)
-async def get_item(item_id: NonNegativeInt, use_case: GetItemUseCase = Depends(get_item_use_case)) -> GetItemResponse:
+async def get_item(
+        item_id: NonNegativeInt,
+        use_case:  Annotated[GetItemUseCase, Depends(GetItemUseCase)]
+) -> GetItemResponse:
     """
     Get item by id
     :param item_id:
@@ -56,7 +53,8 @@ async def get_item(item_id: NonNegativeInt, use_case: GetItemUseCase = Depends(g
 
 @routes.put('/items/{item_id}', response_model=UpdateItemResponse)
 async def update_item(
-        item: UpdateItemRequest, use_case: UpdateItemUseCase = Depends(get_update_item_use_case)
+        item: UpdateItemRequest,
+        use_case:  Annotated[UpdateItemUseCase, Depends(UpdateItemUseCase)]
 ) -> UpdateItemResponse:
     """
     Update item
@@ -69,7 +67,7 @@ async def update_item(
 
 
 @routes.delete('/items/{item_id}')
-async def delete_item(item_id: NonNegativeInt, use_case: DeleteItemUseCase = Depends(get_delete_item_use_case)):
+async def delete_item(item_id: NonNegativeInt, use_case:  Annotated[DeleteItemUseCase, Depends(DeleteItemUseCase)]):
     """
     Delete item
     :param item_id:

@@ -1,16 +1,16 @@
 import logging
-import typing as t
+from typing import Annotated
 
-from sqlalchemy import insert, literal_column, delete, update
+from fastapi import Depends
+from sqlalchemy import delete, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
-from src.data.postgres.engine import db_session
-from src.data.postgres.models import Item
-from src.data.postgres.repository.base_repo import AbstractRepository
-from src.data.postgres.repository.item_dto import ItemDTO
-from src.data.postgres.repository.item_dto import ItemFilters
+from src.data.base import AbstractRepository
+from .dto import ItemDTO, ItemFilters
+from src.service.postgres.engine import get_db_session
+from src.service.postgres.models import Item
 
 logger = logging.getLogger()
 
@@ -19,6 +19,9 @@ class ItemRepository(AbstractRepository):
     """
 
     """
+    def __init__(self, db_session: Annotated[AsyncSession, Depends(get_db_session)]) -> None:
+        self.session: AsyncSession = db_session
+
     def convert_to_dto(self, obj) -> ItemDTO:
         """
 
@@ -27,7 +30,6 @@ class ItemRepository(AbstractRepository):
         """
         return ItemDTO.from_orm(obj)
 
-    @db_session
     async def create(self, obj_data, session: AsyncSession) -> ItemDTO:
         """
 
@@ -43,8 +45,7 @@ class ItemRepository(AbstractRepository):
 
         return self.convert_to_dto(result)
 
-    @db_session
-    async def get(self, filters: ItemFilters = None, session: AsyncSession = None) -> t.List[ItemDTO]:
+    async def get(self, filters: ItemFilters = None, session: AsyncSession = None) -> list[ItemDTO]:
         """
 
         :param filters:
@@ -62,7 +63,6 @@ class ItemRepository(AbstractRepository):
 
         return [self.convert_to_dto(res) for res in result]
 
-    @db_session
     async def update(self, item_id: int, data, session: AsyncSession) -> ItemDTO:
         """
 
@@ -77,7 +77,6 @@ class ItemRepository(AbstractRepository):
 
         return self.convert_to_dto(result)
 
-    @db_session
     async def delete(self, item_id: int, session: AsyncSession) -> ItemDTO:
         """
 

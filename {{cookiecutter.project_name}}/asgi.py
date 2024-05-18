@@ -1,8 +1,11 @@
 import uvicorn
-from fastapi import FastAPI
-from src.service.application import create_app
 
-app: FastAPI = create_app()
-
-if __name__ == '__main__':
-    uvicorn.run('asgi:app', host='127.0.0.1', port=5000, log_level='debug', reload=True, use_colors=True)
+if __name__ == "__main__":
+    uvicorn.run(
+        "src.service.application:create_app",
+        factory=True,
+        port=5000,
+        log_level="debug",
+        reload=True,
+        use_colors=True,
+    )

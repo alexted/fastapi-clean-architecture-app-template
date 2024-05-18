@@ -1,16 +1,29 @@
-from fastapi import APIRouter, Depends
-from src.use_cases.numbers.divide import get_divide_case, DivideRequest, DivideResponse, DivideUseCase
-from src.use_cases.numbers.multiply import get_multiply_use_case, MultiplyRequest, MultiplyResponse, MultiplyUseCase
-from src.use_cases.numbers.subtract import get_subtract_use_case, SubtractRequest, SubtractResponse, SubtractUseCase
-from src.use_cases.numbers.summarise import get_summarise_use_case, SummariseRequest, SummariseResponse, SummariseUseCase
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Query
+from src.use_cases.numbers import (
+    DivideRequest,
+    DivideResponse,
+    DivideUseCase,
+    MultiplyRequest,
+    MultiplyResponse,
+    MultiplyUseCase,
+    SubtractRequest,
+    SubtractResponse,
+    SubtractUseCase,
+    SummariseRequest,
+    SummariseResponse,
+    SummariseUseCase
+)
 
 routes = APIRouter(tags=['numbers'])
+
 
 
 @routes.post('/numbers', response_model=SummariseResponse)
 async def summarise_numbers(
         numbers: SummariseRequest,
-        use_case: SummariseUseCase = Depends(get_summarise_use_case)
+        use_case: Annotated[SummariseUseCase, Depends(SummariseUseCase)]
 ) -> SummariseResponse:
     result: SummariseResponse = await use_case.execute(numbers)
     return result
@@ -18,11 +31,11 @@ async def summarise_numbers(
 
 @routes.get('/numbers', response_model=SubtractResponse)
 async def subtract_numbers(
-        num_left: int,
-        num_right: int,
-        use_case: SubtractUseCase = Depends(get_subtract_use_case)
+        minuend: Annotated[int, Query(title="minuend", examples=[45678, 67890, 90123])],
+        subtrahend: Annotated[int, Query(title="subtrahend", examples=[12345, 45678, 78901])],
+        use_case: Annotated[SubtractUseCase, Depends(SubtractUseCase)]
 ) -> SubtractResponse:
-    request_object: SubtractRequest = SubtractRequest(left=num_left, right=num_right)
+    request_object: SubtractRequest = SubtractRequest(left_number=minuend, right_number=subtrahend)
     result: SubtractResponse = await use_case.execute(request_object)
     return result
 
@@ -30,7 +43,7 @@ async def subtract_numbers(
 @routes.put('/numbers', response_model=MultiplyResponse)
 async def multiply_numbers(
         numbers: MultiplyRequest,
-        use_case: MultiplyUseCase = Depends(get_multiply_use_case)
+        use_case: Annotated[MultiplyUseCase, Depends(MultiplyUseCase)]
 ) -> MultiplyResponse:
     result: MultiplyResponse = await use_case.execute(numbers)
     return result
@@ -38,10 +51,10 @@ async def multiply_numbers(
 
 @routes.delete('/numbers', response_model=DivideResponse)
 async def divide_numbers(
-        num_left: int,
-        num_right: int,
-        use_case: DivideUseCase = Depends(get_divide_case)
+        dividend: Annotated[int, Query(title="dividend", examples=[12345, 45678, 78901])],
+        divisor: Annotated[int, Query(title="divisor", examples=[12, 45, 901])],
+        use_case: Annotated[DivideUseCase, Depends(DivideUseCase)]
 ) -> DivideResponse:
-    request_object: DivideRequest = DivideRequest(left=num_left, right=num_right)
+    request_object: DivideRequest = DivideRequest(dividend=dividend, divisor=divisor)
     result: DivideResponse = await use_case.execute(request_object)
     return result

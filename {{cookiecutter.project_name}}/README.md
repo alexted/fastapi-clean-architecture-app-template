@@ -16,10 +16,6 @@ Kubernetes
 
 {{ cookiecutter.project_description }}
 
-## Terms of Reference
-
-* TODO
-
 ## Technical solution
 
 * TODO
@@ -38,14 +34,14 @@ It is possible to scale by `gunicorn`, by adding additional workers.
 ```bash
 $ poetry new {{ cookiecutter.project_name }}      // create a virtual environment
 $ cd {{ cookiecutter.project_name }}
-$ poetry shell              // activate the virtual environment for the current folder
+$ poetry shell                                    // activate the virtual environment for the current folder
 ```
 
 Install the necessary packages:
 
 ```bash
 ({{ cookiecutter.project_name }})$ poetry install --no-dev      // install the main project dependencies
-({{ cookiecutter.project_name }})$ poetry install       // install the main and dev dependencies of the project
+({{ cookiecutter.project_name }})$ poetry install               // install the main and dev dependencies of the project
 ```
 
 **Important**:
