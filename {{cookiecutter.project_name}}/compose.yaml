@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: password
-      POSTGRES_USER: {{ cookiecutter.project_slug }}
+      POSTGRES_USER: {{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     ports:
