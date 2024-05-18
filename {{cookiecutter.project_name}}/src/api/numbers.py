@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from src.use_cases.numbers import (
     DivideRequest,
     DivideResponse,
@@ -19,6 +19,7 @@ from src.use_cases.numbers import (
 routes = APIRouter(tags=['numbers'])
 
 
+
 @routes.post('/numbers', response_model=SummariseResponse)
 async def summarise_numbers(
         numbers: SummariseRequest,
@@ -30,11 +31,11 @@ async def summarise_numbers(
 
 @routes.get('/numbers', response_model=SubtractResponse)
 async def subtract_numbers(
-        num_left: Annotated[int, Query()],
-        num_right: Annotated[int, Query()],
+        minuend: Annotated[int, Query(title="minuend", examples=[45678, 67890, 90123])],
+        subtrahend: Annotated[int, Query(title="subtrahend", examples=[12345, 45678, 78901])],
         use_case: Annotated[SubtractUseCase, Depends(SubtractUseCase)]
 ) -> SubtractResponse:
-    request_object: SubtractRequest = SubtractRequest(left=num_left, right=num_right)
+    request_object: SubtractRequest = SubtractRequest(left_number=minuend, right_number=subtrahend)
     result: SubtractResponse = await use_case.execute(request_object)
     return result
 
@@ -50,10 +51,10 @@ async def multiply_numbers(
 
 @routes.delete('/numbers', response_model=DivideResponse)
 async def divide_numbers(
-        num_left: int,
-        num_right: int,
+        dividend: Annotated[int, Query(title="dividend", examples=[12345, 45678, 78901])],
+        divisor: Annotated[int, Query(title="divisor", examples=[12, 45, 901])],
         use_case: Annotated[DivideUseCase, Depends(DivideUseCase)]
 ) -> DivideResponse:
-    request_object: DivideRequest = DivideRequest(left=num_left, right=num_right)
+    request_object: DivideRequest = DivideRequest(dividend=dividend, divisor=divisor)
     result: DivideResponse = await use_case.execute(request_object)
     return result

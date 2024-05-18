@@ -45,7 +45,7 @@ class ValidationErrorHandler(BaseErrorHandler):
         return Error(
             code=HTTP_422_UNPROCESSABLE_ENTITY,
             error=ErrorType.VALIDATION_ERROR,
-            message=ErrorType.VALIDATION_ERROR,
+            message=str(exception.args),
         )
 
 
