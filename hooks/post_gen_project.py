@@ -20,7 +20,6 @@ def copy_directory(directory, destination):
     shutil.copytree(directory, destination)
 
 
-project_slug = '{{ cookiecutter.project_slug }}'
 use_postgresql = '{{ cookiecutter.use_postgresql }}'.lower()
 use_alembic = '{{ cookiecutter.use_alembic }}'.lower()
 use_kafka = '{{ cookiecutter.use_kafka }}'.lower()

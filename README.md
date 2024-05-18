@@ -1,17 +1,17 @@
-# FastAPI app template
+# FastAPI Clean Architecture application template
 
-### How to use
+## How to use
 
-#### Cookiecutter must be installed at system-wide or within the virtual environment
+### Cookiecutter must be installed system-wide or in your project's virtual environment
 
 ```bash
 pip install cookiecutter
 ```
 
-#### Init the project
+### Initialise the project
 
 ```bash
 cookiecutter git@github.com:alexted/fastapi-clean-architecture-app-template.git
 ```
 
-#### Then follow the installation instructions in the console
+### Follow wizard's installation instructions in the console
