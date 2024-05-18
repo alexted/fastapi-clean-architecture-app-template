@@ -35,16 +35,14 @@ class AppConfig(BaseSettings):
     {% if cookiecutter.use_postgresql | lower == 'y' -%}
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 20
-    {% endif %}
+    {% endif -%}
     {% if cookiecutter.use_redis | lower == 'y' -%}
     REDIS_DSN: RedisDsn
-    {% endif %}
+    {% endif -%}
     {% if cookiecutter.use_kafka | lower == 'y' -%}
     KAFKA_DSN: KafkaDsn | str
-    {% endif %}
-
+    {% endif -%}
     model_config = ConfigDict(use_enum_values=True)
-
 
 
 config: AppConfig = AppConfig(_env_file=CONFIG_FILE, _env_file_encoding='utf-8')
