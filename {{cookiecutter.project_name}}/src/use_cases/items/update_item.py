@@ -1,33 +1,27 @@
 from typing import Annotated
-from pydantic import NonNegativeInt
 
-from src.data.postgres.repository.item import ItemRepository
-from src.data.postgres.repository.item_dto import ItemDTO
-from pydantic import BaseModel
+from fastapi import Depends
+from pydantic import BaseModel, NonNegativeInt
+
+from src.data.items import ItemRepository, ItemDTO
 from src.use_cases.base import BaseUseCase
 
 
 class ItemData(BaseModel):
-    """
-
-    """
+    """  """
     name: str
     description: str
     price: NonNegativeInt
 
 
 class UpdateItemRequest(BaseModel):
-    """
-
-    """
+    """  """
     id: NonNegativeInt
     data: ItemData
 
 
 class UpdateItemResponse(BaseModel):
-    """
-
-    """
+    """  """
     id: NonNegativeInt
     name: str
     description: str
@@ -35,9 +29,7 @@ class UpdateItemResponse(BaseModel):
 
 
 class UpdateItemUseCase(BaseUseCase):
-    """
-
-    """
+    """  """
     def __init__(self, item_repo: Annotated[ItemRepository, Depends(ItemRepository)]):
         self.item_repo: ItemRepository = item_repo
 

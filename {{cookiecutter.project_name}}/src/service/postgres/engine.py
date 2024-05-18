@@ -1,8 +1,6 @@
-import contextlib
-import functools
+from collections.abc import Iterator
 
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, Query
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine, async_sessionmaker
 
 from src.service.config import config
 

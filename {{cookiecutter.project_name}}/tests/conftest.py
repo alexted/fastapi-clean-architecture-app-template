@@ -5,7 +5,7 @@ from src.service.application import create_app
 from alembic.command import downgrade, upgrade
 from alembic.config import Config as AlembicConfig
 
-from src.service.postgres.engine import session_scope
+from src.service.postgres.engine import get_db_session
 from src.service.postgres.models import Base, Item
 from tests.mock_data import items
 {% endif %}
@@ -35,16 +35,19 @@ async def clear_data(db_session):
 
     reference_value_tables = [f'{name}' for name in ('role',)]
 
-    async with session_scope() as session:
-        for name, table in Base.metadata.tables.items():
-            if name not in reference_value_tables:
-                await session.execute(table.delete())
+    session = get_db_session()
+
+    for name, table in Base.metadata.tables.items():
+        if name not in reference_value_tables:
+            await session.execute(table.delete())
 
 
 @pytest.fixture
 async def fill_db(event_loop):
     items_list = [Item(**item) for item in items]
-    async with session_scope() as session:
-        session.add_all(items_list)
-        await session.flush()
+
+    session = get_db_session()
+
+    session.add_all(items_list)
+    await session.flush()
 {% endif -%}

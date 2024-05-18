@@ -1,9 +1,9 @@
 from typing import Annotated
-from pydantic import NonNegativeInt
 
-from src.data.postgres.repository.item import ItemRepository
-from src.data.postgres.repository.item_dto import ItemDTO
-from pydantic import BaseModel
+from fastapi import Depends
+from pydantic import BaseModel, NonNegativeInt
+
+from src.data.items import ItemRepository, ItemDTO
 from src.use_cases.base import BaseUseCase
 
 
