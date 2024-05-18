@@ -8,7 +8,7 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from src.data.base import AbstractRepository
-from src.data.items import ItemDTO, ItemFilters
+from .dto import ItemDTO, ItemFilters
 from src.service.postgres.engine import get_db_session
 from src.service.postgres.models import Item
 
