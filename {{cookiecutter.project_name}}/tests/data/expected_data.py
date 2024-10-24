@@ -1,1 +1,1 @@
-v
+created_item = {}

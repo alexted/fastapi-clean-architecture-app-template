@@ -19,8 +19,6 @@ class Userinfo(BaseModel):
 
 class User(BaseModel):
     id: UUID
-    org_role: ProjectRole
-    project_role: OrganisationRole
 
 
 async def get_idp_client(config: Annotated[AppConfig, Depends(get_config)]) -> IDPService:
@@ -39,26 +37,6 @@ async def get_user_info(request: Request, idp_client: Annotated[IDPService, Depe
     except Exception as e:
         logger.error(f"Error getting userinfo: {type(e)}")
         raise HTTPException(status_code=401, detail="Cannot get userinfo") from e
-
-
-async def get_current_employee(
-    user_info: Annotated[Userinfo, Depends(get_user_info)],
-    employee_repo: Annotated[EmployeeRepository, Depends(EmployeeRepository)],
-) -> User:
-    employee: EmployeeDTO | None = await employee_repo.get(EmployeeFilters(ids=[user_info.sub]))
-    if not employee:
-        raise HTTPException(status_code=401, detail="User not found")
-
-    # TODO - Implement role mapping when employee roles will be implemented
-    return User(id=employee.id, role=ProjectRole.ADMIN)
-
-
-def require_role(roles: list[ProjectRole]) -> callable:
-    def dependency(current_user: EmployeeDTO = Depends(get_current_employee)) -> None:
-        if current_user.role not in roles:
-            raise HTTPException(status_code=403, detail="Forbidden")
-
-    return dependency
 
 
 # TODO - Implement project id validation

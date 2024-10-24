@@ -1,8 +1,8 @@
 import pytest
 from httpx import AsyncClient
 
-from tests.expected_data import created_item
-from tests.mock_data import items
+from tests.data.expected_data import created_item
+from tests.data.mock_data import items
 
 pytestmark = pytest.mark.asyncio
 
