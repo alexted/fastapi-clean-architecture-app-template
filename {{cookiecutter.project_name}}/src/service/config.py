@@ -1,48 +1,62 @@
-from enum import StrEnum
-from pathlib import Path
+from enum import Enum
+from functools import lru_cache
 
-from pydantic import ConfigDict, HttpUrl, PostgresDsn, RedisDsn, KafkaDsn
-from pydantic_settings import BaseSettings
-
-CONFIG_FILE = Path('.env').as_posix() if Path('.env').exists() else None
+from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class EnvironmentEnum(StrEnum):
-    LOCAL = 'LOCAL'
-    TESTING = 'TESTING'
-    TEST = 'TEST'
-    DEV = 'DEV'
-    STAGE = 'STAGE'
-    PROD = 'PROD'
+class EnvironmentEnum(str, Enum):
+    LOCAL = "LOCAL"
+    TESTING = "TESTING"
+    TEST = "TEST"
+    DEV = "DEV"
+    STAGE = "STAGE"
+    PROD = "PROD"
 
 
-class LoggingLevelEnum(StrEnum):
-    CRITICAL = 'CRITICAL'
-    ERROR = 'ERROR'
-    WARNING = 'WARNING'
-    INFO = 'INFO'
-    DEBUG = 'DEBUG'
+class LoggingLevelEnum(str, Enum):
+    CRITICAL = "CRITICAL"
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    INFO = "INFO"
+    DEBUG = "DEBUG"
 
 
 class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
-    APP_NAME: str = "{{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}"
+    APP_NAME: str = "HRM-Core"
 
-    SENTRY_DSN: HttpUrl = "https://omg.wtf/"
-
+    # Logging
+    SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
 
-    {% if cookiecutter.use_postgresql | lower == 'y' -%}
+    # Postgres
     POSTGRES_DSN: PostgresDsn
-    POSTGRES_MAX_CONNECTIONS: int = 20
-    {% endif -%}
-    {% if cookiecutter.use_redis | lower == 'y' -%}
+    POSTGRES_MAX_CONNECTIONS: int = 10
+
+    # Redis
     REDIS_DSN: RedisDsn
-    {% endif -%}
-    {% if cookiecutter.use_kafka | lower == 'y' -%}
+
+    # Kafka
     KAFKA_DSN: KafkaDsn | str
-    {% endif -%}
-    model_config = ConfigDict(use_enum_values=True)
+
+    # S3
+    S3_DOCS_BUCKET: str = "documents"
+    S3_IMAGES_BUCKET: str = "images"
+    S3_URL: str
+    S3_ACCESS_KEY: str
+    S3_SECRET_KEY: str
+    AWS_REGION_NAME: str | None = None
+
+    # Identity provider
+    IDP_URL: HttpUrl
+    IDP_CLIENT_SECRET: str
+
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", use_enum_values=True, extra="ignore", frozen=True
+    )
 
 
-config: AppConfig = AppConfig(_env_file=CONFIG_FILE, _env_file_encoding='utf-8')
+@lru_cache(maxsize=1)
+def get_config() -> AppConfig:
+    return AppConfig()

@@ -1,12 +1,14 @@
-# {{ cookiecutter.project_name }}
+# hrm-core
+
+Our alternative to PeopleForce
 
 ## Authors
 
-{{ cookiecutter.app_developer }}
+Uplatform team
 
 ## Implementation language
 
-python {{ cookiecutter.app_lang_version }}
+python 3.12
 
 ## Deployment environment
 
@@ -14,34 +16,34 @@ Kubernetes
 
 ## Service description
 
-{{ cookiecutter.project_description }}
+Implements the main business logic of the HRM system.
 
-## Technical solution
+## Documentation
 
-* TODO
+https://plab.atlassian.net/wiki/spaces/AI/pages/87425051/HRM
 
 ## Interaction with 3rd party services
 
-* TODO
+* Passport (IdP)
 
 ## Scalability
 
 Scalability is done by `Kubernetes` tools, by adding additional pods.
 It is possible to scale by `gunicorn`, by adding additional workers.
 
-## Dependency installation
+## Dependencies
+
+pre-requisites:
 
 ```bash
-$ poetry new {{ cookiecutter.project_name }}      // create a virtual environment
-$ cd {{ cookiecutter.project_name }}
-$ poetry shell                                    // activate the virtual environment for the current folder
+$ poetry new hrm-core && cd $_        // create a project virtual environment
 ```
 
 Install the necessary packages:
 
 ```bash
-({{ cookiecutter.project_name }})$ poetry install --no-dev      // install the main project dependencies
-({{ cookiecutter.project_name }})$ poetry install               // install the main and dev dependencies of the project
+(hrm-core)$ poetry install                // install all project dependencies
+(hrm-core)$ poetry install --only main    // install only main project dependencies
 ```
 
 **Important**:
@@ -53,7 +55,7 @@ You must also add this file to the git index.
 ## Startup inside Docker
 
 ```bash
-$ docker-compose up
+$ docker compose up
 ```
 
 ## Run tests
@@ -62,10 +64,10 @@ $ docker-compose up
 $ python -m pytest -vvs
 ```
 
-## Start the Flake code analyzer
+## Linter
 
 ```bash
-$ python -m flake8 -v
+$ python -m ruff format && python -m ruff check --fix --unsafe-fixes
 ```
 
 ## Set pre-commit hook
@@ -73,3 +75,130 @@ $ python -m flake8 -v
 ```bash
 $ pre-commit install
 ```
+
+## Environment variables
+
+These are the environment variables that you can set for the app to configure it and their default values:
+
+#### `ENVIRONMENT`
+
+String value which defines the runtime environment in which the application runs.
+
+Can have the following values:
+
+* `LOCAL`  *default*
+* `TESTING`
+* `TEST`
+* `STAGE`
+* `PROD`
+
+#### `APP_NAME`
+
+The string variable defining the service name.
+
+By default: `HRM-Core`
+
+### Logging
+
+#### `LOG_LEVEL`
+
+String value which defines the logging severity.
+
+Can have the following values:
+
+* `CRITICAL`
+* `ERROR`
+* `WARNING`
+* `INFO`  *default*
+* `DEBUG`
+
+#### `SENTRY_URL`
+
+The url that defines address of the Sentry service.
+
+By default, it's not set.
+
+### IdP
+
+#### `IDP_URL`
+
+The url of the Identity and Access Management (IDP) service.
+
+By default, it's not set.
+
+#### `IDP_PUBLIC_KEY`
+
+The public key of the Identity and Access Management (IdP) service.
+
+By default, it's not set.
+
+#### `IDP_CLIENT_SECRET`
+
+The credentials secret of the client (service).
+
+By default, it's not set.
+
+### Databases, MessageBrokers
+
+#### `POSTGRES_DSN`
+
+The dsn that defines connection string to of the PostgreSQL.
+
+By default, it's not set.
+
+#### `POSTGRES_MAX_CONNECTIONS`
+
+The int value to setting to limit the number of connections (and resources that are consumed by connections) to the
+PostgreSQL.
+
+By default, it's `10`.
+
+#### `REDIS_DSN`
+
+The dsn that defines connection string to of the Redis.
+
+By default, it's not set.
+
+#### `KAFKA_DSN`
+
+The dsn that defines connection string to of the Kafka.
+
+By default, it's not set.
+
+### S3
+
+#### `S3_URL`
+
+The string that defines url for S3.
+
+By default, it's not set.
+
+#### `S3_ACCESS_KEY`
+
+The string that defines key ID for AWS access.
+
+By default, it's not set.
+
+#### `S3_SECRET_KEY`
+
+The string that defines secret key of AWS account.
+
+By default, it's not set.
+
+#### `AWS_REGION_NAME`
+
+The string that defines region of AWS.
+
+By default, it's not set.
+
+#### `S3_DOCS_BUCKET`
+
+The string that defines S3 bucket name.
+
+By default, it's not set.
+
+#### `S3_IMAGES_BUCKET`
+
+The string that defines S3 bucket name.
+
+By default, it's not set.

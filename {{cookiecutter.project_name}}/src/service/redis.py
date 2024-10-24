@@ -1,12 +1,15 @@
-from collections.abc import Iterator
+from typing import Annotated
+from functools import lru_cache
 
-from redis.asyncio import Redis, ConnectionPool
+from fastapi import Depends
+from redis.asyncio import Redis
 
-from src.service.config import config
-
-pool = ConnectionPool.from_url(config.REDIS_DSN)
+from src.service.config import AppConfig, get_config
 
 
-async def get_redis_client() -> Iterator[Redis]:
-    client = Redis.from_pool(pool)
-    yield client
+@lru_cache(maxsize=1)
+def get_redis_client(config: Annotated[AppConfig, Depends(get_config)]) -> Redis:
+    """Provides Redis client"""
+    return Redis(
+        host=config.REDIS_DSN.host, port=config.REDIS_DSN.port, decode_responses=True, client_name=config.APP_NAME
+    )
