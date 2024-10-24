@@ -5,10 +5,8 @@ import logging
 from fastapi import Depends, Request, HTTPException
 from pydantic import BaseModel
 
-from src.constants import ProjectRole, OrganisationRole
 from src.data.authn.idp import IDPService
 from src.service.config import AppConfig, get_config
-from src.data.employees.repository import EmployeeDTO, EmployeeFilters, EmployeeRepository
 
 logger = logging.getLogger()
 

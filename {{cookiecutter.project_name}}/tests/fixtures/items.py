@@ -13,5 +13,5 @@ async def seed_item_type(db_session: AsyncSession) -> None:
 
 
 @pytest.fixture
-async def seed_item(item_type: Any, db_session: AsyncSession) -> None:
+async def seed_item(db_session: AsyncSession) -> None:
     ...
