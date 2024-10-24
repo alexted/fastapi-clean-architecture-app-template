@@ -1,7 +1,7 @@
 services:
-  {{ cookiecutter.project_name }}:
+  hrm-core:
     build:
-      context: .
+      context: hrm-core
     restart: unless-stopped
     volumes:
       - '.:/usr/src/app'
@@ -9,24 +9,40 @@ services:
       - "5000:5000"
     environment:
       ENVIRONMENT: local
+    depends_on:
+      - postgres
+      - redis
 
-{% if cookiecutter.use_postgresql|lower == 'y' %}
   postgres:
     image: postgres:alpine
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: password
-      POSTGRES_USER: {{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}
+      POSTGRES_USER: hrm_core
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-{% endif %}
 
-{% if cookiecutter.use_redis|lower == 'y' %}
   redis:
     image: redis:alpine
     restart: unless-stopped
     ports:
       - 6379:6379
-{% endif %}
+
+  minio:
+    image: minio/minio
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=12345678
+    volumes:
+      - minio_data:/data
+      - minio_data:/root/.minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --console-address ":9001"
+
+volumes:
+  postgresql_data:
+  minio_data:

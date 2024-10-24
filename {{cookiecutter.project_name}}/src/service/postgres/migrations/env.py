@@ -1,14 +1,14 @@
 import asyncio
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import pool
+from alembic.script import ScriptDirectory
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from alembic import context
-
-from src.service.postgres import models
-from src.service.config import config as app_config
+from src.service.config import AppConfig, get_config
+from src.service.postgres.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -23,13 +23,26 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = models.Base.metadata
-
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+config: AppConfig = get_config()
+
+
+def process_revision_directives(context, revision, directives) -> None:  # noqa ANN001
+    migration_script = directives[0]
+    head_revision = ScriptDirectory.from_config(context.config).get_current_head()
+
+    if head_revision is None:
+        new_rev_id = 1
+    else:
+        last_rev_id = int(head_revision.lstrip("0"))
+        new_rev_id = last_rev_id + 1
+    migration_script.rev_id = f"{new_rev_id:04}"
 
 
 def run_migrations_offline() -> None:
@@ -44,12 +57,12 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = app_config.POSTGRES_DSN.unicode_string()
     context.configure(
-        url=url,
+        url=config.POSTGRES_DSN.unicode_string(),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        process_revision_directives=process_revision_directives,
     )
 
     with context.begin_transaction():
@@ -57,7 +70,9 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection, target_metadata=target_metadata, process_revision_directives=process_revision_directives
+    )
 
     with context.begin_transaction():
         context.run_migrations()
@@ -70,9 +85,7 @@ async def run_async_migrations() -> None:
     """
 
     connectable = async_engine_from_config(
-        {"sqlalchemy.url": app_config.POSTGRES_DSN.unicode_string()},
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
+        {"sqlalchemy.url": config.POSTGRES_DSN.unicode_string()}, prefix="sqlalchemy.", poolclass=pool.NullPool
     )
 
     async with connectable.connect() as connection:
