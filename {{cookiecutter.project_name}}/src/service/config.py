@@ -3,7 +3,7 @@ from functools import lru_cache
 
 from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+from logging import DEBUG
 
 class EnvironmentEnum(str, Enum):
     LOCAL = "LOCAL"
@@ -24,30 +24,33 @@ class LoggingLevelEnum(str, Enum):
 
 class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
-    APP_NAME: str = "HRM-Core"
+    APP_NAME: str = "{{ cookiecutter.project_name }}"
 
     # Logging
     SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
-
+    {% if cookiecutter.use_postgresql | lower == 'y' %}
     # Postgres
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
-
+    {% endif %}
+    {% if cookiecutter.use_redis | lower == 'y' %}
     # Redis
     REDIS_DSN: RedisDsn
-
+    {% endif %}
+    {% if cookiecutter.use_kafka| lower == 'y' %}
     # Kafka
     KAFKA_DSN: KafkaDsn | str
-
+    {% endif %}
+    {% if cookiecutter.use_s3| lower == 'y' %}
     # S3
     S3_DOCS_BUCKET: str = "documents"
     S3_IMAGES_BUCKET: str = "images"
     S3_URL: str
     S3_ACCESS_KEY: str
     S3_SECRET_KEY: str
-    AWS_REGION_NAME: str | None = None
-
+    S3_REGION_NAME: str | None = None
+    {% endif %}
     # Identity provider
     IDP_URL: HttpUrl
     IDP_CLIENT_SECRET: str

@@ -35,8 +35,8 @@ if __name__ == '__main__':
         remove_directory(f'src/data/items')
         remove_file(f'src/api/items.py')
         remove_directory(f'src/use_cases/items')
-        remove_file('tests/expected_data.py')
-        remove_file('tests/mock_data.py')
+        remove_file('tests/data/expected_data.py')
+        remove_file('tests/data/mock_data.py')
         remove_file('tests/test_items.py')
 
     if use_kafka != 'y':

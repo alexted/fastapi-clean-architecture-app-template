@@ -1,5 +1,7 @@
+{% if cookiecutter.use_postgresql | lower == 'y' -%}
 import uuid
 from typing import BinaryIO
+{% endif -%}
 import asyncio
 from asyncio import AbstractEventLoop
 from collections.abc import Iterator, AsyncIterator, AsyncGenerator
@@ -12,11 +14,14 @@ from alembic.config import Config as AlembicConfig
 from alembic.command import upgrade, downgrade
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
+{% if cookiecutter.use_postgresql | lower == 'y' -%}
 from tests.data import mock_data
+{% endif -%}
 from src.service.config import get_config
 from src.service.application import create_app
+{% if cookiecutter.use_postgresql | lower == 'y' -%}
 from src.service.postgres.engine import get_db_session
-
+{% endif -%}
 
 TEST_APP_URL = "http://test"
 
@@ -79,8 +84,9 @@ def app(migrations: None, db_session: AsyncSession) -> FastAPI:
         finally:
             pass
 
+{% if cookiecutter.use_postgresql | lower == 'y' %}
     app_instance.dependency_overrides[get_db_session] = get_db_session_override
-
+{% endif %}
     return app_instance
 
 
@@ -89,7 +95,9 @@ async def client(app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url=TEST_APP_URL,
+        {% if cookiecutter.use_postgresql | lower == 'y' %}
         headers={"Authorization": f"Bearer {mock_data.employees[0]["id"]}"},
+        {% endif %}
     ) as client:
         yield client
 

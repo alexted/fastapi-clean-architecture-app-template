@@ -13,29 +13,38 @@ pydantic-settings = "*"
 orjson = "*"
 uvicorn = { version = "*", extras = ["standard"] }
 gunicorn = "*"
+{% if cookiecutter.use_postgresql|lower == 'y' -%}
 asyncpg = "*"
 sqlalchemy = { version = "*", extras = ["asyncio"] }
+{% endif -%}
+{% if cookiecutter.use_alembic|lower == 'y' -%}
 alembic = "*"
+{% endif -%}
 python-json-logger = "*"
 sentry-sdk = { version = "*", extras = ["fastapi"] }
 prometheus-fastapi-instrumentator = "*"
+{% if cookiecutter.use_redis|lower == 'y' -%}
 redis = { version = "*", extras = ["hiredis"] }
+{% endif -%}
+{% if cookiecutter.use_kafka|lower == 'y' -%}
 aiokafka = "*"
+{% endif -%}
+{% if cookiecutter.use_s3|lower == 'y' -%}
 aioboto3 = "*"
+{% endif -%}
 python-multipart = "*"
-pillow = "*"
-filetype = "*"
 httpx = "*"
 
 [tool.poetry.dev-dependencies]
+python-dotenv = "*"
 pre-commit = "*"
 ruff = "*"
 mypy = "*"
 pytest = "*"
+pytest-mock = "*"
 pytest-xdist = "*"
 pytest-cov = "*"
 pytest-env = "*"
-python-dotenv = "*"
 ipython = "*"
 
 [build-system]
@@ -43,12 +52,12 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "{{ cookiecutter.app_lang_version }}"
 ignore_missing_imports = true
 
 [tool.ruff]
 src = ["src"]
-target-version = "py312"
+target-version = "py{{ cookiecutter.app_lang_version|replace('.', '') }}"
 line-length = 120
 fix = true
 unsafe-fixes = true
@@ -73,13 +82,12 @@ select = [
 ]
 ignore = [
     "ANN101", # Checks that instance method self arguments have type annotations
+    "ANN102", #
     "D203", # one blank line before class, handled by pydocstyle
     "E501", # line too long, handled by black
     "B008", # do not perform function calls in argument defaults
     "C901", # too complex
     "W191", # indentation contains tabs
-    "ANN101", # type annotations for self are not necessary
-    "ANN102",
 ]
 
 [tool.ruff.lint.mccabe]
@@ -109,7 +117,7 @@ docstring-code-format = true
 docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
-minversion = "8.2"
+minversion = "8.3"
 testpaths = "tests"
 env = [
     "ENVIRONMENT = TESTING",
