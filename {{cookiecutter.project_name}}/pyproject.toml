@@ -4,17 +4,19 @@ version = "{{ cookiecutter.project_release }}"
 description = "{{ cookiecutter.project_description }}"
 authors = ["{{ cookiecutter.app_developer }}"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "*"
+orjson = "*"
+granian = "*"
 pydantic = {version = "*", extras = ["email"]}
 pydantic-settings = "*"
-orjson = "*"
-uvicorn = { version = "*", extras = ["standard"] }
-gunicorn = "*"
-{% if cookiecutter.use_postgresql|lower == 'y' -%}
+{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
 asyncpg = "*"
+{% endif -%}
+{% if cookiecutter.use_postgresql|lower == 'y' -%}
 sqlalchemy = { version = "*", extras = ["asyncio"] }
 {% endif -%}
 {% if cookiecutter.use_alembic|lower == 'y' -%}
@@ -36,7 +38,6 @@ python-multipart = "*"
 httpx = "*"
 
 [tool.poetry.dev-dependencies]
-python-dotenv = "*"
 pre-commit = "*"
 ruff = "*"
 mypy = "*"
@@ -45,7 +46,6 @@ pytest-mock = "*"
 pytest-xdist = "*"
 pytest-cov = "*"
 pytest-env = "*"
-ipython = "*"
 
 [build-system]
 requires = ["poetry-core"]
