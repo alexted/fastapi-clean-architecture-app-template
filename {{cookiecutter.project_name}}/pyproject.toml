@@ -119,9 +119,6 @@ docstring-code-line-length = 80
 [tool.pytest.ini_options]
 minversion = "8.3"
 testpaths = "tests"
-env = [
-    "ENVIRONMENT = TESTING",
-]
 
 [tool.coverage.run]
 source = ["src"]

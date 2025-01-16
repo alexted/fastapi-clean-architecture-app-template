@@ -12,7 +12,7 @@ class RequestIdFilter(logging.Filter):
 
 
 def init_logging(config: AppConfig) -> None:
-    LOGGING_CONFIG = {
+    logging.config.dictConfig({
         "version": 1,
         "filters": {"correlation_id": {"()": RequestIdFilter}},
         "formatters": {
@@ -32,6 +32,4 @@ def init_logging(config: AppConfig) -> None:
         },
         "loggers": {config.APP_NAME: {"level": config.LOG_LEVEL, "handlers": (["console"])}},
         "disable_existing_loggers": False,
-    }
-
-    logging.config.dictConfig(LOGGING_CONFIG)
+    })
