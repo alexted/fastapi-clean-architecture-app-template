@@ -8,40 +8,39 @@ authors = [
 license = {text = "My Private License"}
 readme = "README.md"
 requires-python = ">=3.12"
-dynamic = ["dependencies"]
+dependencies = [
+    "fastapi",
+    "orjson",
+    "granian",
+    "pydantic[email]",
+    "pydantic-settings",
+    {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
+    "asyncpg",
+    {% endif -%}
+    {% if cookiecutter.use_postgresql|lower == 'y' -%}
+    "sqlalchemy[asyncio]",
+    {% endif -%}
+    {% if cookiecutter.use_alembic|lower == 'y' -%}
+    "alembic",
+    {% endif -%}
+    "python-json-logger",
+    "sentry-sdk[fastapi]",
+    "prometheus-fastapi-instrumentator",
+    {% if cookiecutter.use_redis|lower == 'y' -%}
+    "redis[hiredis]",
+    {% endif -%}
+    {% if cookiecutter.use_kafka|lower == 'y' -%}
+    "aiokafka",
+    {% endif -%}
+    {% if cookiecutter.use_s3|lower == 'y' -%}
+    "aioboto3",
+    {% endif -%}
+    "python-multipart",
+    "httpx",
+]
 
 [tool.poetry]
 package-mode = false
-
-[tool.poetry.dependencies]
-fastapi = "*"
-orjson = "*"
-granian = "*"
-pydantic = {version = "*", extras = ["email"]}
-pydantic-settings = "*"
-{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
-asyncpg = "*"
-{% endif -%}
-{% if cookiecutter.use_postgresql|lower == 'y' -%}
-sqlalchemy = { version = "*", extras = ["asyncio"] }
-{% endif -%}
-{% if cookiecutter.use_alembic|lower == 'y' -%}
-alembic = "*"
-{% endif -%}
-python-json-logger = "*"
-sentry-sdk = { version = "*", extras = ["fastapi"] }
-prometheus-fastapi-instrumentator = "*"
-{% if cookiecutter.use_redis|lower == 'y' -%}
-redis = { version = "*", extras = ["hiredis"] }
-{% endif -%}
-{% if cookiecutter.use_kafka|lower == 'y' -%}
-aiokafka = "*"
-{% endif -%}
-{% if cookiecutter.use_s3|lower == 'y' -%}
-aioboto3 = "*"
-{% endif -%}
-python-multipart = "*"
-httpx = "*"
 
 [dependency-groups]
 dev = [
@@ -53,15 +52,6 @@ dev = [
     "pytest-cov",
     "pre-commit",
 ]
-
-#[tool.poetry.dev-dependencies]
-#ruff = "*"
-#mypy = "*"
-#pytest = "*"
-#pytest-mock = "*"
-#pytest-xdist = "*"
-#pytest-cov = "*"
-#pre-commit = "*"
 
 [build-system]
 requires = ['setuptools>=68.0.0', 'Cython>=3.0.0']
