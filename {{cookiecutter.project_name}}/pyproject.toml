@@ -15,12 +15,11 @@ package-mode = false
 
 [tool.poetry.dependencies]
 fastapi = "*"
+orjson = "*"
+granian = "*"
 pydantic = {version = "*", extras = ["email"]}
 pydantic-settings = "*"
-orjson = "*"
-uvicorn = { version = "*", extras = ["standard"] }
-gunicorn = "*"
-{% if cookiecutter.use_alembic|lower == 'y' or cookiecutter.use_postgresql|lower == 'y' -%}
+{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
 asyncpg = "*"
 {% endif -%}
 {% if cookiecutter.use_postgresql|lower == 'y' -%}
@@ -136,9 +135,6 @@ docstring-code-line-length = 80
 [tool.pytest.ini_options]
 minversion = "8.3"
 testpaths = "tests"
-env = [
-    "ENVIRONMENT = TESTING",
-]
 
 [tool.coverage.run]
 source = ["src"]
