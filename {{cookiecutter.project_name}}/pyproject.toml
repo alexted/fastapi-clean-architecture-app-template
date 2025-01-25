@@ -11,7 +11,7 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi",
     "orjson",
-    "granian",
+    "granian[pname]",
     "pydantic[email]",
     "pydantic-settings",
     {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
@@ -44,6 +44,7 @@ package-mode = false
 
 [dependency-groups]
 dev = [
+    "watchfiles",
     "ruff",
     "mypy",
     "pytest",
