@@ -1,14 +1,14 @@
 # {{ cookiecutter.project_name }}
 
-{{ cookiecutter.description }}
+{{ cookiecutter.project_description }}
 
 ## Authors
 
-Uplatform team
+{{ cookiecutter.app_developer }}
 
 ## Implementation language
 
-python 3.12
+Python {{ cookiecutter.app_lang_version }}
 
 ## Deployment environment
 
@@ -20,12 +20,12 @@ TODO
 
 ## Interaction with 3rd party services
 
-* Passport (IdP)
+TODO
 
 ## Scalability
 
 Scalability is done by `Kubernetes` tools, by adding additional pods.
-It is possible to scale by `gunicorn`, by adding additional workers.
+It is possible to scale by `granian`, by adding additional workers.
 
 ## Dependencies
 
@@ -54,10 +54,10 @@ You must also add this file to the git index.
 $ docker compose up
 ```
 
-## Run tests
+## Set pre-commit hook
 
 ```bash
-$ python -m pytest -vvs
+$ pre-commit install
 ```
 
 ## Linter
@@ -66,10 +66,10 @@ $ python -m pytest -vvs
 $ python -m ruff format && python -m ruff check --fix --unsafe-fixes
 ```
 
-## Set pre-commit hook
+## Run tests
 
 ```bash
-$ pre-commit install
+$ python -m pytest -vvs
 ```
 
 ## Environment variables
