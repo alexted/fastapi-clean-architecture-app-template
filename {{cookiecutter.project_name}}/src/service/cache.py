@@ -11,5 +11,5 @@ from src.service.config import AppConfig, get_config
 def get_cache_client(config: Annotated[AppConfig, Depends(get_config)]) -> Redis:
     """Provides Redis client"""
     return Redis(
-        host=config.REDIS_DSN.host, port=config.REDIS_DSN.port, decode_responses=True, client_name=config.APP_NAME
+        host=config.CACHE_DSN.host, port=config.CACHE_DSN.port, decode_responses=True, client_name=config.APP_NAME
     )

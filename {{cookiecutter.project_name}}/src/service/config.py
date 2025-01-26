@@ -36,7 +36,7 @@ class AppConfig(BaseSettings):
     {% endif %}
     {% if cookiecutter.use_cache | lower == 'y' %}
     # Redis
-    REDIS_DSN: RedisDsn
+    CACHE_DSN: RedisDsn
     {% endif %}
     {% if cookiecutter.use_kafka| lower == 'y' %}
     # Kafka

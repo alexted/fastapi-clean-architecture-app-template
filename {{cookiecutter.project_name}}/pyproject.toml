@@ -14,6 +14,9 @@ dependencies = [
     "granian[pname]",
     "pydantic[email]",
     "pydantic-settings",
+    {% if cookiecutter.use_jwt|lower == 'y' -%}
+    "pyjwt[crypto]",
+    {% endif -%}
     {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
     "asyncpg",
     {% endif -%}

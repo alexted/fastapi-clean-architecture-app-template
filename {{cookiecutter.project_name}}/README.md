@@ -83,7 +83,6 @@ String value which defines the runtime environment in which the application runs
 Can have the following values:
 
 * `LOCAL`  *default*
-* `TESTING`
 * `TEST`
 * `STAGE`
 * `PROD`
@@ -113,7 +112,7 @@ Can have the following values:
 The url that defines address of the Sentry service.
 
 By default, it's not set.
-
+{% if cookiecutter.use_jwt|lower == 'y' -%}
 ### IdP
 
 #### `IDP_URL`
@@ -133,9 +132,9 @@ By default, it's not set.
 The credentials secret of the client (service).
 
 By default, it's not set.
-
+{% endif -%}
+{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
 ### Databases, MessageBrokers
-
 #### `POSTGRES_DSN`
 
 The dsn that defines connection string to of the PostgreSQL.
@@ -148,19 +147,22 @@ The int value to setting to limit the number of connections (and resources that 
 PostgreSQL.
 
 By default, it's `10`.
+{% endif -%}
+{% if cookiecutter.use_cache|lower == 'y' -%}
+#### `CACHE_DSN`
 
-#### `REDIS_DSN`
-
-The dsn that defines connection string to of the Redis.
+The dsn that defines connection string to of the cache server.
 
 By default, it's not set.
-
+{% endif -%}
+{% if cookiecutter.use_kafka|lower == 'y' -%}
 #### `KAFKA_DSN`
 
 The dsn that defines connection string to of the Kafka.
 
 By default, it's not set.
-
+{% endif -%}
+{% if cookiecutter.use_s3|lower == 'y' -%}
 ### S3
 
 #### `S3_URL`
@@ -180,21 +182,4 @@ By default, it's not set.
 The string that defines secret key of AWS account.
 
 By default, it's not set.
-
-#### `AWS_REGION_NAME`
-
-The string that defines region of AWS.
-
-By default, it's not set.
-
-#### `S3_DOCS_BUCKET`
-
-The string that defines S3 bucket name.
-
-By default, it's not set.
-
-#### `S3_IMAGES_BUCKET`
-
-The string that defines S3 bucket name.
-
-By default, it's not set.
+{% endif -%}
