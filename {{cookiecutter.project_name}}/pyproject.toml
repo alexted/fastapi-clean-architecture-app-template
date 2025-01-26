@@ -26,7 +26,7 @@ dependencies = [
     "python-json-logger",
     "sentry-sdk[fastapi]",
     "prometheus-fastapi-instrumentator",
-    {% if cookiecutter.use_redis|lower == 'y' -%}
+    {% if cookiecutter.use_cache|lower == 'y' -%}
     "redis[hiredis]",
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}

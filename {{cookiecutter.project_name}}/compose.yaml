@@ -1,7 +1,7 @@
 services:
-  hrm-core:
+  {{ cookiecutter.project_name }}:
     build:
-      context: hrm-core
+      context: .
     restart: unless-stopped
     volumes:
       - '.:/usr/src/app'
@@ -10,26 +10,35 @@ services:
     environment:
       ENVIRONMENT: local
     depends_on:
+      {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
       - postgres
-      - redis
+      {% endif -%}
+      {% if cookiecutter.use_cache|lower == 'y' -%}
+      - cache
+      {% endif -%}
 
+  {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
   postgres:
     image: postgres:alpine
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: password
-      POSTGRES_USER: hrm_core
+      POSTGRES_USER: {{ cookiecutter.project_name }}
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  {% endif -%}
 
-  redis:
-    image: redis:alpine
+  {% if cookiecutter.use_cache|lower == 'y' -%}
+  cache:
+    image: valkey/valkey:alpine
     restart: unless-stopped
     ports:
       - 6379:6379
+  {% endif -%}
 
+  {% if cookiecutter.use_s3|lower == 'y' -%}
   minio:
     image: minio/minio
     environment:
@@ -42,7 +51,12 @@ services:
       - 9000:9000
       - 9001:9001
     command: server /data --console-address ":9001"
+  {% endif -%}
 
 volumes:
+  {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
   postgresql_data:
+  {% endif -%}
+  {% if cookiecutter.use_s3|lower == 'y' -%}
   minio_data:
+  {% endif -%}

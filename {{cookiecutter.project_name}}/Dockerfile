@@ -20,7 +20,7 @@ RUN adduser \
     --shell "/sbin/nologin" \
     --no-create-home \
     --uid "${UID}" \
-    {{ cookiecutter.project_name }}
+    svc-{{ cookiecutter.project_name }}
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
@@ -30,7 +30,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install .
 
 # Switch to the non-privileged user to run the application.
-USER {{ cookiecutter.project_name }}
+USER svc-{{ cookiecutter.project_name }}
 
 # Copy project files
 COPY . .
@@ -39,4 +39,4 @@ COPY . .
 EXPOSE 5000
 
 # Execute script to start the application web server
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+ENTRYPOINT ["bash", "./entrypoint.sh"]

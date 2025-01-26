@@ -35,8 +35,8 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         title=config.APP_NAME,
-        description="Service that implements the main business logic of the HRM system.",
-        version="0.2.0",
+        description="{{ cookiecutter.description }}",
+        version="{{ cookiecutter.app_version }}",
         exception_handlers={
             HTTPException: FastAPIErrorHandler.get_handler(),
             RequestValidationError: ValidationErrorHandler.get_handler(),
@@ -51,9 +51,7 @@ def create_app() -> FastAPI:
             "scopes": ("openid", "email"),
             "usePkceWithAuthorizationCodeGrant": False,
         },
-        license_info={"name": "UPlatform Proprietary Software License", "url": "https://uplatform.com/license"},
-        docs_url="/docs" if config.ENVIRONMENT is not EnvironmentEnum.PROD else None,
-        redoc_url="/redoc" if config.ENVIRONMENT is not EnvironmentEnum.PROD else None,
+        license_info={"name": "Proprietary Software License", "url": "https://{{ cookiecutter.project_name }}.com/license"},
     )
 
     app.add_middleware(BaseHTTPMiddleware, dispatch=handle_correlation_id)

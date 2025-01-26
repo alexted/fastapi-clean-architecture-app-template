@@ -1,6 +1,6 @@
-# hrm-core
+# {{ cookiecutter.project_name }}
 
-Our alternative to PeopleForce
+{{ cookiecutter.description }}
 
 ## Authors
 
@@ -14,13 +14,9 @@ python 3.12
 
 Kubernetes
 
-## Service description
-
-Implements the main business logic of the HRM system.
-
 ## Documentation
 
-https://plab.atlassian.net/wiki/spaces/AI/pages/87425051/HRM
+TODO
 
 ## Interaction with 3rd party services
 
@@ -36,14 +32,14 @@ It is possible to scale by `gunicorn`, by adding additional workers.
 pre-requisites:
 
 ```bash
-$ poetry new hrm-core && cd $_        // create a project virtual environment
+$ poetry new {{ cookiecutter.project_name }} && cd $_        // create a project virtual environment
 ```
 
 Install the necessary packages:
 
 ```bash
-(hrm-core)$ poetry install                // install all project dependencies
-(hrm-core)$ poetry install --only main    // install only main project dependencies
+({{ cookiecutter.project_name }})$ poetry install                // install all project dependencies
+({{ cookiecutter.project_name }})$ poetry install --only main    // install only main project dependencies
 ```
 
 **Important**:
@@ -96,7 +92,7 @@ Can have the following values:
 
 The string variable defining the service name.
 
-By default: `HRM-Core`
+By default: `{{ cookiecutter.project_name }}`
 
 ### Logging
 

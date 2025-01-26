@@ -7,6 +7,6 @@
   "use_postgresql": "n",
   "use_alembic": "n",
   "use_kafka": "n",
-  "use_redis": "n",
+  "use_cache": "n",
   "use_s3": "n"
 }
