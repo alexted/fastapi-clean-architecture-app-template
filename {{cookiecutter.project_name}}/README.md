@@ -1,49 +1,45 @@
-# hrm-core
+# {{ cookiecutter.project_name }}
 
-Our alternative to PeopleForce
+{{ cookiecutter.project_description }}
 
 ## Authors
 
-Uplatform team
+{{ cookiecutter.app_developer }}
 
 ## Implementation language
 
-python 3.12
+Python {{ cookiecutter.app_lang_version }}
 
 ## Deployment environment
 
 Kubernetes
 
-## Service description
-
-Implements the main business logic of the HRM system.
-
 ## Documentation
 
-https://plab.atlassian.net/wiki/spaces/AI/pages/87425051/HRM
+TODO
 
 ## Interaction with 3rd party services
 
-* Passport (IdP)
+TODO
 
 ## Scalability
 
 Scalability is done by `Kubernetes` tools, by adding additional pods.
-It is possible to scale by `gunicorn`, by adding additional workers.
+It is possible to scale by `granian`, by adding additional workers.
 
 ## Dependencies
 
 pre-requisites:
 
 ```bash
-$ poetry new hrm-core && cd $_        // create a project virtual environment
+$ poetry new {{ cookiecutter.project_name }} && cd $_        // create a project virtual environment
 ```
 
 Install the necessary packages:
 
 ```bash
-(hrm-core)$ poetry install                // install all project dependencies
-(hrm-core)$ poetry install --only main    // install only main project dependencies
+({{ cookiecutter.project_name }})$ poetry install                // install all project dependencies
+({{ cookiecutter.project_name }})$ poetry install --only main    // install only main project dependencies
 ```
 
 **Important**:
@@ -58,10 +54,10 @@ You must also add this file to the git index.
 $ docker compose up
 ```
 
-## Run tests
+## Set pre-commit hook
 
 ```bash
-$ python -m pytest -vvs
+$ pre-commit install
 ```
 
 ## Linter
@@ -70,10 +66,10 @@ $ python -m pytest -vvs
 $ python -m ruff format && python -m ruff check --fix --unsafe-fixes
 ```
 
-## Set pre-commit hook
+## Run tests
 
 ```bash
-$ pre-commit install
+$ python -m pytest -vvs
 ```
 
 ## Environment variables
@@ -87,7 +83,6 @@ String value which defines the runtime environment in which the application runs
 Can have the following values:
 
 * `LOCAL`  *default*
-* `TESTING`
 * `TEST`
 * `STAGE`
 * `PROD`
@@ -96,7 +91,7 @@ Can have the following values:
 
 The string variable defining the service name.
 
-By default: `HRM-Core`
+By default: `{{ cookiecutter.project_name }}`
 
 ### Logging
 
@@ -117,7 +112,7 @@ Can have the following values:
 The url that defines address of the Sentry service.
 
 By default, it's not set.
-
+{% if cookiecutter.use_jwt|lower == 'y' -%}
 ### IdP
 
 #### `IDP_URL`
@@ -137,9 +132,9 @@ By default, it's not set.
 The credentials secret of the client (service).
 
 By default, it's not set.
-
+{% endif -%}
+{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
 ### Databases, MessageBrokers
-
 #### `POSTGRES_DSN`
 
 The dsn that defines connection string to of the PostgreSQL.
@@ -152,19 +147,22 @@ The int value to setting to limit the number of connections (and resources that 
 PostgreSQL.
 
 By default, it's `10`.
+{% endif -%}
+{% if cookiecutter.use_cache|lower == 'y' -%}
+#### `CACHE_DSN`
 
-#### `REDIS_DSN`
-
-The dsn that defines connection string to of the Redis.
+The dsn that defines connection string to of the cache server.
 
 By default, it's not set.
-
+{% endif -%}
+{% if cookiecutter.use_kafka|lower == 'y' -%}
 #### `KAFKA_DSN`
 
 The dsn that defines connection string to of the Kafka.
 
 By default, it's not set.
-
+{% endif -%}
+{% if cookiecutter.use_s3|lower == 'y' -%}
 ### S3
 
 #### `S3_URL`
@@ -184,21 +182,4 @@ By default, it's not set.
 The string that defines secret key of AWS account.
 
 By default, it's not set.
-
-#### `AWS_REGION_NAME`
-
-The string that defines region of AWS.
-
-By default, it's not set.
-
-#### `S3_DOCS_BUCKET`
-
-The string that defines S3 bucket name.
-
-By default, it's not set.
-
-#### `S3_IMAGES_BUCKET`
-
-The string that defines S3 bucket name.
-
-By default, it's not set.
+{% endif -%}

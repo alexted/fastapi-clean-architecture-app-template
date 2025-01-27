@@ -5,7 +5,7 @@ from collections.abc import Callable
 from fastapi import Request, Response
 from fastapi.concurrency import iterate_in_threadpool
 
-logger: Logger = getLogger("hrm")
+logger: Logger = getLogger("{{ cookiecutter.project_name }}")
 
 
 async def log_requests(request: Request, call_next: Callable) -> Response:

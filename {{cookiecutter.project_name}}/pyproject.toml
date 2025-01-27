@@ -1,55 +1,65 @@
-[tool.poetry]
+[project]
 name = "{{ cookiecutter.project_name }}"
 version = "{{ cookiecutter.project_release }}"
 description = "{{ cookiecutter.project_description }}"
-authors = ["{{ cookiecutter.app_developer }}"]
+authors = [
+    {name = "{{ cookiecutter.app_developer }}",email = "dev@email.io"}
+]
+license = {text = "My Private License"}
 readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "orjson",
+    "granian[pname]",
+    "pydantic[email]",
+    "pydantic-settings",
+    {% if cookiecutter.use_jwt|lower == 'y' -%}
+    "pyjwt[crypto]",
+    {% endif -%}
+    {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
+    "asyncpg",
+    {% endif -%}
+    {% if cookiecutter.use_postgresql|lower == 'y' -%}
+    "sqlalchemy[asyncio]",
+    {% endif -%}
+    {% if cookiecutter.use_alembic|lower == 'y' -%}
+    "alembic",
+    {% endif -%}
+    "python-json-logger",
+    "sentry-sdk[fastapi]",
+    "prometheus-fastapi-instrumentator",
+    {% if cookiecutter.use_cache|lower == 'y' -%}
+    "redis[hiredis]",
+    {% endif -%}
+    {% if cookiecutter.use_kafka|lower == 'y' -%}
+    "aiokafka",
+    {% endif -%}
+    {% if cookiecutter.use_s3|lower == 'y' -%}
+    "aioboto3",
+    {% endif -%}
+    "python-multipart",
+    "httpx",
+]
+
+[tool.poetry]
 package-mode = false
 
-[tool.poetry.dependencies]
-python = "^3.12"
-fastapi = "*"
-orjson = "*"
-granian = "*"
-pydantic = {version = "*", extras = ["email"]}
-pydantic-settings = "*"
-{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
-asyncpg = "*"
-{% endif -%}
-{% if cookiecutter.use_postgresql|lower == 'y' -%}
-sqlalchemy = { version = "*", extras = ["asyncio"] }
-{% endif -%}
-{% if cookiecutter.use_alembic|lower == 'y' -%}
-alembic = "*"
-{% endif -%}
-python-json-logger = "*"
-sentry-sdk = { version = "*", extras = ["fastapi"] }
-prometheus-fastapi-instrumentator = "*"
-{% if cookiecutter.use_redis|lower == 'y' -%}
-redis = { version = "*", extras = ["hiredis"] }
-{% endif -%}
-{% if cookiecutter.use_kafka|lower == 'y' -%}
-aiokafka = "*"
-{% endif -%}
-{% if cookiecutter.use_s3|lower == 'y' -%}
-aioboto3 = "*"
-{% endif -%}
-python-multipart = "*"
-httpx = "*"
-
-[tool.poetry.dev-dependencies]
-pre-commit = "*"
-ruff = "*"
-mypy = "*"
-pytest = "*"
-pytest-mock = "*"
-pytest-xdist = "*"
-pytest-cov = "*"
-pytest-env = "*"
+[dependency-groups]
+dev = [
+    "watchfiles",
+    "ruff",
+    "mypy",
+    "pytest",
+    "pytest-mock",
+    "pytest-xdist",
+    "pytest-cov",
+    "pre-commit",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ['setuptools>=68.0.0', 'Cython>=3.0.0']
+build-backend = 'setuptools.build_meta'
 
 [tool.mypy]
 python_version = "{{ cookiecutter.app_lang_version }}"
