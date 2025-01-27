@@ -30,6 +30,12 @@ pytest_plugins = ("tests.fixtures.items",)
 
 # @pytest.fixture(scope="session")
 # def event_loop(request: pytest.FixtureRequest) -> Iterator[AbstractEventLoop]:
+#     """
+#     (Now is deprecated?)
+#     Required per
+#     https://github.com/pytest-dev/pytest-asyncio/issues/706
+#     https://github.com/pytest-dev/pytest-asyncio/discussions/587
+#     """
 #     loop = asyncio.get_event_loop_policy().new_event_loop()
 #     try:
 #         yield loop
