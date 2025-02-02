@@ -1,4 +1,4 @@
 from .base import Base
-from .items import Items
+from .items import Item
 
-__all__ = ['Base', 'Items']
+__all__ = ['Base', 'Item']

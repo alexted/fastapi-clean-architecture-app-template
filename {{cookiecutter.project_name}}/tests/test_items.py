@@ -17,7 +17,7 @@ async def test_create_item(client):
     assert response.json() == created_item
 
 
-async def test_get_item(fill_db, client):
+async def test_get_item(seed_items, client):
     response = await client.get('/v1/items/102')
 
     assert response.status_code == 200

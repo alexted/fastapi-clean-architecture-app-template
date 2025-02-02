@@ -19,7 +19,6 @@ from src.use_cases.numbers import (
 routes = APIRouter(tags=['numbers'])
 
 
-
 @routes.post('/summarise', response_model=SummariseResponse)
 async def summarise_numbers(
         numbers: SummariseRequest,
