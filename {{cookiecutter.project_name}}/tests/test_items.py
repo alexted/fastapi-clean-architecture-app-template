@@ -8,9 +8,9 @@ pytestmark = pytest.mark.anyio
 
 async def test_create_item(client):
     response = await client.post('/v1/items', json={
-        "name": "Item 1",
+        "name": "Item 4",
         "description": "This is awesome item!",
-        "price": 100
+        "price": 400
     })
 
     assert response.status_code == 201

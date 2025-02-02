@@ -7,10 +7,11 @@ from sqlalchemy import NullPool
 from alembic.config import Config as AlembicConfig
 from alembic.command import upgrade, downgrade
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from filelock import FileLock
 
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
 from tests.data import mock_data
-{% endif -%}
+{% endif %}
 from src.service.config import get_config
 from src.service.application import create_app
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
@@ -32,13 +33,17 @@ def anyio_backend() -> str:
 
 {% if cookiecutter.use_postgresql|lower == 'y' %}
 @pytest.fixture(scope="session", autouse=True)
-def migrations() -> None:
+def migrations(tmp_path_factory) -> None:
     alembic_config = AlembicConfig("alembic.ini")
     alembic_config.attributes["configure_logger"] = False
 
-    upgrade(alembic_config, "head")
-    yield "on head"
-    downgrade(alembic_config, "base")
+    root_tmp_dir = tmp_path_factory.getbasetemp().parent
+
+    fn = root_tmp_dir / "data.json"
+    with FileLock(str(fn) + ".lock"):
+        upgrade(alembic_config, "head")
+        yield "on head"
+        downgrade(alembic_config, "base")
 
 
 @pytest.fixture(scope="session")
