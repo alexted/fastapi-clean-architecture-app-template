@@ -10,7 +10,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def add(self, obj_data: BaseModel) -> BaseModel:
+    def create(self, obj_data: BaseModel) -> BaseModel:
         raise NotImplementedError
 
     @abc.abstractmethod

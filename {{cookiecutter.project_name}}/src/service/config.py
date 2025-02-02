@@ -37,11 +37,11 @@ class AppConfig(BaseSettings):
     {% if cookiecutter.use_cache | lower == 'y' %}
     # Redis
     CACHE_DSN: RedisDsn
-    {% endif %}
+    {% endif -%}
     {% if cookiecutter.use_kafka| lower == 'y' %}
     # Kafka
     KAFKA_DSN: KafkaDsn | str
-    {% endif %}
+    {% endif -%}
     {% if cookiecutter.use_s3| lower == 'y' %}
     # S3
     S3_DOCS_BUCKET: str = "documents"
@@ -50,7 +50,7 @@ class AppConfig(BaseSettings):
     S3_ACCESS_KEY: str
     S3_SECRET_KEY: str
     S3_REGION_NAME: str | None = None
-    {% endif %}
+    {% endif -%}
     # Identity provider
     IDP_URL: HttpUrl
     IDP_CLIENT_SECRET: str

@@ -1,20 +1,20 @@
 items = [
     {
-        'id': 1,
-        'name': 'test1',
-        'description': 'description for test item 1',
+        'id': 101,
+        'name': 'item 101',
+        'description': 'the first item',
         'price': 100,
     },
     {
-        'id': 2,
-        'name': 'test2',
-        'description': 'description for test item 2',
+        'id': 102,
+        'name': 'item 102',
+        'description': 'the second item',
         'price': 200,
     },
     {
-        'id': 3,
-        'name': 'test3',
-        'description': 'description for test item 3',
+        'id': 103,
+        'name': 'item 103',
+        'description': 'the third item',
         'price': 300,
     },
 ]

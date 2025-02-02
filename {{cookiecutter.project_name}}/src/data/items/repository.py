@@ -20,7 +20,7 @@ class ItemRepository(AbstractRepository):
 
     """
     def __init__(self, db_session: Annotated[AsyncSession, Depends(get_db_session)]) -> None:
-        self.session: AsyncSession = db_session
+        self._session: AsyncSession = db_session
 
     def convert_to_dto(self, obj) -> ItemDTO:
         """
@@ -30,63 +30,59 @@ class ItemRepository(AbstractRepository):
         """
         return ItemDTO.from_orm(obj)
 
-    async def create(self, obj_data, session: AsyncSession) -> ItemDTO:
+    async def create(self, obj_data) -> ItemDTO:
         """
 
         :param obj_data:
-        :param session:
         :return:
         """
         item_data = obj_data.dict()
 
         stmt = insert(Item).values(**item_data).returning(Item)
 
-        result = (await session.execute(stmt)).scalar_one_or_none()
+        result = (await self._session.execute(stmt)).scalar_one_or_none()
 
         return self.convert_to_dto(result)
 
-    async def get(self, filters: ItemFilters = None, session: AsyncSession = None) -> list[ItemDTO]:
+    async def get(self, filters: ItemFilters = None) -> list[ItemDTO]:
         """
 
         :param filters:
-        :param session:
         :return:
         """
 
         query = select(Item).options(selectinload("*"))
 
         if filters:
-            if filters.ids:
-                query = query.where(Item.id.in_(filters.ids))
+            if filters.id:
+                query = query.where(Item.id.in_(filters.id))
 
-        result = (await session.execute(query)).scalars().all()
+        result = (await self._session.execute(query)).scalars().all()
 
         return [self.convert_to_dto(res) for res in result]
 
-    async def update(self, item_id: int, data, session: AsyncSession) -> ItemDTO:
+    async def update(self, item_id: int, data) -> ItemDTO:
         """
 
         :param item_id:
         :param data:
-        :param session:
         :return:
         """
         orm_stmt = update(Item).where(Item.id == item_id).values(data.dict()).returning(Item)
 
-        result = (await session.execute(orm_stmt)).scalar_one_or_none()
+        result = (await self._session.execute(orm_stmt)).scalar_one_or_none()
 
         return self.convert_to_dto(result)
 
-    async def delete(self, item_id: int, session: AsyncSession) -> ItemDTO:
+    async def delete(self, item_id: int) -> ItemDTO:
         """
 
         :param item_id:
-        :param session:
         :return:
         """
 
         orm_stmt = delete(Item).where(Item.id == item_id).execution_options(populate_existing=True)
 
-        result = (await session.execute(orm_stmt)).scalar_one_or_none()
+        result = (await self._session.execute(orm_stmt)).scalar_one_or_none()
 
         return self.convert_to_dto(result)
