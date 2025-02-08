@@ -34,14 +34,14 @@ class AppConfig(BaseSettings):
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
     {% endif %}
-    {% if cookiecutter.use_redis | lower == 'y' %}
+    {% if cookiecutter.use_cache | lower == 'y' %}
     # Redis
-    REDIS_DSN: RedisDsn
-    {% endif %}
+    CACHE_DSN: RedisDsn
+    {% endif -%}
     {% if cookiecutter.use_kafka| lower == 'y' %}
     # Kafka
     KAFKA_DSN: KafkaDsn | str
-    {% endif %}
+    {% endif -%}
     {% if cookiecutter.use_s3| lower == 'y' %}
     # S3
     S3_DOCS_BUCKET: str = "documents"
@@ -50,7 +50,7 @@ class AppConfig(BaseSettings):
     S3_ACCESS_KEY: str
     S3_SECRET_KEY: str
     S3_REGION_NAME: str | None = None
-    {% endif %}
+    {% endif -%}
     # Identity provider
     IDP_URL: HttpUrl
     IDP_CLIENT_SECRET: str

@@ -32,9 +32,6 @@ async def get_user_info(request: Request, idp_client: Annotated[IDPService, Depe
     try:
         user_info = await idp_client.get_user_info(token_parts[1])
         return Userinfo.model_validate(user_info) if user_info is not None else None
-    except Exception as e:
-        logger.error(f"Error getting userinfo: {type(e)}")
-        raise HTTPException(status_code=401, detail="Cannot get userinfo") from e
-
-
-# TODO - Implement project id validation
+    except Exception as err:
+        logger.error(f"Error getting userinfo: {type(err)}")
+        raise HTTPException(status_code=401, detail="Cannot get userinfo") from err

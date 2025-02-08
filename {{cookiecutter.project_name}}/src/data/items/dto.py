@@ -1,5 +1,3 @@
-import typing as t
-
 from pydantic import BaseModel
 
 
@@ -14,4 +12,4 @@ class ItemDTO(BaseModel):
 
 
 class ItemFilters(BaseModel):
-    ids: t.List[int]
+    id: list[int]

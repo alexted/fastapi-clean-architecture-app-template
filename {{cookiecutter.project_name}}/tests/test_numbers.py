@@ -1,12 +1,31 @@
 import pytest
-from httpx import AsyncClient
 
-pytestmark = pytest.mark.asyncio
+pytestmark = pytest.mark.anyio
 
 
-async def test_sum(app):
-    async with AsyncClient(app=app, base_url='http://127.0.0.1:5000') as ac:
-        response = await ac.post('/v1/sum', json={"x": 4, "y": 6})
+async def test_sum(client):
+    response = await client.post('/v1/summarise', json={"x": 4, "y": 6})
 
     assert response.status_code == 200
     assert response.json() == {"sum": 10}
+
+
+async def test_sub(client):
+    response = await client.get('/v1/subtract', params={"minuend": 9, "subtrahend": 4})
+
+    assert response.status_code == 200
+    assert response.json() == {"result": 5}
+
+
+async def test_multi(client):
+    response = await client.put('/v1/multiply', json={"x": 3, "y": 3})
+
+    assert response.status_code == 200
+    assert response.json() == {"result": 9}
+
+
+async def test_div(client):
+    response = await client.delete('/v1/divide', params={"dividend": 9, "divisor": 3})
+
+    assert response.status_code == 200
+    assert response.json() == {"result": 3}

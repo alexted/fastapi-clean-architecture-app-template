@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 from pydantic import BaseModel, NonNegativeInt
 
-from src.data.items import ItemRepository, ItemDTO
+from src.data.items import ItemRepository, ItemDTO, ItemFilters
 from src.use_cases.base import BaseUseCase
 
 
@@ -37,5 +37,5 @@ class GetItemUseCase(BaseUseCase):
         :param request_object:
         :return:
         """
-        item: ItemDTO = await self.item_repo.get(request_object)
-        return GetItemResponse.construct(**item.dict())
+        item: list[ItemDTO] = await self.item_repo.get(ItemFilters(id=[request_object.id]))
+        return GetItemResponse.model_construct(**item[0].model_dump())

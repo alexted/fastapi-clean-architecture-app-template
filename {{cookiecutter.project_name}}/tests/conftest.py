@@ -1,9 +1,3 @@
-{% if cookiecutter.use_postgresql | lower == 'y' -%}
-import uuid
-from typing import BinaryIO
-{% endif -%}
-import asyncio
-from asyncio import AbstractEventLoop
 from collections.abc import Iterator, AsyncIterator, AsyncGenerator
 
 from httpx import AsyncClient, ASGITransport
@@ -13,10 +7,11 @@ from sqlalchemy import NullPool
 from alembic.config import Config as AlembicConfig
 from alembic.command import upgrade, downgrade
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from filelock import FileLock
 
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
 from tests.data import mock_data
-{% endif -%}
+{% endif %}
 from src.service.config import get_config
 from src.service.application import create_app
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
@@ -28,15 +23,6 @@ TEST_APP_URL = "http://test"
 pytest_plugins = ("tests.fixtures.items",)
 
 
-@pytest.fixture(scope="session")
-def event_loop(request: pytest.FixtureRequest) -> Iterator[AbstractEventLoop]:
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    try:
-        yield loop
-    finally:
-        loop.close()
-
-
 @pytest.fixture(scope="module")
 def anyio_backend() -> str:
     """
@@ -45,14 +31,19 @@ def anyio_backend() -> str:
     return "asyncio"
 
 
+{% if cookiecutter.use_postgresql|lower == 'y' %}
 @pytest.fixture(scope="session", autouse=True)
-def migrations() -> None:
+def migrations(tmp_path_factory) -> None:
     alembic_config = AlembicConfig("alembic.ini")
     alembic_config.attributes["configure_logger"] = False
 
-    upgrade(alembic_config, "head")
-    yield "on head"
-    downgrade(alembic_config, "base")
+    root_tmp_dir = tmp_path_factory.getbasetemp().parent
+
+    fn = root_tmp_dir / "data.json"
+    with FileLock(str(fn) + ".lock"):
+        upgrade(alembic_config, "head")
+        yield "on head"
+        downgrade(alembic_config, "base")
 
 
 @pytest.fixture(scope="session")
@@ -72,21 +63,22 @@ async def db_session(db_engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
             yield session
         finally:
             await session.rollback()
+{% endif %}
 
 
 @pytest.fixture
-def app(migrations: None, db_session: AsyncSession) -> FastAPI:
+def app({% if cookiecutter.use_postgresql|lower == 'y' -%}migrations: None, db_session: AsyncSession{% endif -%}) -> FastAPI:
     app_instance = create_app()
 
+    {% if cookiecutter.use_postgresql | lower == 'y' %}
     def get_db_session_override() -> Iterator[AsyncSession]:
         try:
             yield db_session
         finally:
             pass
 
-{% if cookiecutter.use_postgresql | lower == 'y' %}
     app_instance.dependency_overrides[get_db_session] = get_db_session_override
-{% endif %}
+    {% endif %}
     return app_instance
 
 
@@ -95,20 +87,8 @@ async def client(app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url=TEST_APP_URL,
-        {% if cookiecutter.use_postgresql | lower == 'y' %}
-        headers={"Authorization": f"Bearer {mock_data.employees[0]["id"]}"},
+        {% if cookiecutter.use_jwt | lower == 'y' %}
+        headers={"Authorization": f"Bearer {mock_data.items[0]["id"]}"},
         {% endif %}
     ) as client:
         yield client
-
-
-@pytest.fixture(autouse=True)
-async def seed_data(db_session: AsyncSession) -> None:
-    ...
-    # db_session.add_all([Project(**_) for _ in mock_data.projects])
-    # db_session.add_all([User(**_) for _ in mock_data.users])
-    # await db_session.flush()
-    # db_session.add_all([Employee(**_) for _ in mock_data.employees])
-    # db_session.add_all([UserProjectRole(**_) for _ in mock_data.user_project_roles])
-    # db_session.add_all([Department(**_) for _ in mock_data.departments])
-    # await db_session.flush()
