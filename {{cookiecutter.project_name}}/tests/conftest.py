@@ -3,20 +3,20 @@ from collections.abc import Iterator, AsyncIterator, AsyncGenerator
 from httpx import AsyncClient, ASGITransport
 import pytest
 from fastapi import FastAPI
+from filelock import FileLock
 from sqlalchemy import NullPool
 from alembic.config import Config as AlembicConfig
 from alembic.command import upgrade, downgrade
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
-from filelock import FileLock
 
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
 from tests.data import mock_data
-{% endif %}
+{% endif -%}
 from src.service.config import get_config
 from src.service.application import create_app
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
 from src.service.postgres.engine import get_db_session
-{% endif -%}
+{% endif %}
 
 TEST_APP_URL = "http://test"
 
@@ -31,7 +31,7 @@ def anyio_backend() -> str:
     return "asyncio"
 
 
-{% if cookiecutter.use_postgresql|lower == 'y' %}
+{%- if cookiecutter.use_postgresql|lower == 'y' %}
 @pytest.fixture(scope="session", autouse=True)
 def migrations(tmp_path_factory) -> None:
     alembic_config = AlembicConfig("alembic.ini")
@@ -63,14 +63,14 @@ async def db_session(db_engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
             yield session
         finally:
             await session.rollback()
-{% endif %}
+{% endif -%}
 
 
 @pytest.fixture
 def app({% if cookiecutter.use_postgresql|lower == 'y' -%}migrations: None, db_session: AsyncSession{% endif -%}) -> FastAPI:
     app_instance = create_app()
 
-    {% if cookiecutter.use_postgresql | lower == 'y' %}
+    {%- if cookiecutter.use_postgresql | lower == 'y' %}
     def get_db_session_override() -> Iterator[AsyncSession]:
         try:
             yield db_session
@@ -83,12 +83,12 @@ def app({% if cookiecutter.use_postgresql|lower == 'y' -%}migrations: None, db_s
 
 
 @pytest.fixture()
-async def client(app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
+async def client(app: FastAPI) -> AsyncGenerator[AsyncClient]:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url=TEST_APP_URL,
         {% if cookiecutter.use_jwt | lower == 'y' %}
-        headers={"Authorization": f"Bearer {mock_data.items[0]["id"]}"},
+        headers={"Authorization": f"Bearer {mock_data.items[0]['id']}"},
         {% endif %}
     ) as client:
         yield client

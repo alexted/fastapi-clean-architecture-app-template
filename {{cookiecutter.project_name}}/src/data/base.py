@@ -1,5 +1,4 @@
 import abc
-import typing as t
 
 from pydantic import BaseModel
 
@@ -14,5 +13,5 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get(self, filters: BaseModel) -> t.List[BaseModel]:
+    def get(self, filters: BaseModel) -> list[BaseModel]:
         raise NotImplementedError

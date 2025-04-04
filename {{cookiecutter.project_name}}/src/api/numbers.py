@@ -16,10 +16,10 @@ from src.use_cases.numbers import (
     SummariseUseCase
 )
 
-routes = APIRouter(tags=['numbers'])
+routes = APIRouter(tags=["numbers"])
 
 
-@routes.post('/summarise', response_model=SummariseResponse)
+@routes.post("/summarise", response_model=SummariseResponse)
 async def summarise_numbers(
         numbers: SummariseRequest,
         use_case: Annotated[SummariseUseCase, Depends(SummariseUseCase)]
@@ -28,7 +28,7 @@ async def summarise_numbers(
     return result
 
 
-@routes.get('/subtract', response_model=SubtractResponse)
+@routes.get("/subtract", response_model=SubtractResponse)
 async def subtract_numbers(
         minuend: Annotated[int, Query(title="minuend", examples=[45678, 67890, 90123])],
         subtrahend: Annotated[int, Query(title="subtrahend", examples=[12345, 45678, 78901])],
@@ -39,7 +39,7 @@ async def subtract_numbers(
     return result
 
 
-@routes.put('/multiply', response_model=MultiplyResponse)
+@routes.put("/multiply", response_model=MultiplyResponse)
 async def multiply_numbers(
         numbers: MultiplyRequest,
         use_case: Annotated[MultiplyUseCase, Depends(MultiplyUseCase)]
@@ -48,7 +48,7 @@ async def multiply_numbers(
     return result
 
 
-@routes.delete('/divide', response_model=DivideResponse)
+@routes.delete("/divide", response_model=DivideResponse)
 async def divide_numbers(
         dividend: Annotated[int, Query(title="dividend", examples=[12345, 45678, 78901])],
         divisor: Annotated[int, Query(title="divisor", examples=[12, 45, 901])],

@@ -3,11 +3,11 @@ name = "{{ cookiecutter.project_name }}"
 version = "{{ cookiecutter.project_release }}"
 description = "{{ cookiecutter.project_description }}"
 authors = [
-    {name = "{{ cookiecutter.app_developer }}",email = "dev@email.io"}
+    { name = "{{ cookiecutter.app_developer }}", email = "dev@email.io" }
 ]
-license = {text = "My Private License"}
+license = { text = "My Private License" }
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">={{ cookiecutter.project_name }}"
 dependencies = [
     "fastapi",
     "orjson",

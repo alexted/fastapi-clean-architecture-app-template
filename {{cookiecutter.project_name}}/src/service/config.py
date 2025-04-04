@@ -3,7 +3,6 @@ from functools import lru_cache
 
 from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from logging import DEBUG
 
 class EnvironmentEnum(str, Enum):
     LOCAL = "LOCAL"
@@ -33,7 +32,7 @@ class AppConfig(BaseSettings):
     # Postgres
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
-    {% endif %}
+    {% endif -%}
     {% if cookiecutter.use_cache | lower == 'y' %}
     # Redis
     CACHE_DSN: RedisDsn

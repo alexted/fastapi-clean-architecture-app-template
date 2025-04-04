@@ -12,4 +12,4 @@ v1_routes.include_router(numbers_routes)
 v1_routes.include_router(items_routes)
 {% endif -%}
 
-__all__ = ('v1_routes',)
+__all__ = ("v1_routes",)
