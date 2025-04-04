@@ -7,7 +7,7 @@ authors = [
 ]
 license = {text = "My Private License"}
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">={{ cookiecutter.project_name }}"
 dependencies = [
     "fastapi",
     "orjson",
