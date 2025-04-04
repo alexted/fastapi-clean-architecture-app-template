@@ -1,24 +1,22 @@
-import logging
 from typing import Annotated
+import logging
 
 from fastapi import Depends
-from sqlalchemy import delete, insert, update
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select, delete, insert, update
 from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.data.base import AbstractRepository
-from .dto import ItemDTO, ItemFilters
 from src.service.postgres.engine import get_db_session
 from src.service.postgres.models import Item
+
+from .dto import ItemDTO, ItemFilters
 
 logger = logging.getLogger()
 
 
 class ItemRepository(AbstractRepository):
-    """
-
-    """
+    """ Items storage """
     def __init__(self, db_session: Annotated[AsyncSession, Depends(get_db_session)]) -> None:
         self._session: AsyncSession = db_session
 

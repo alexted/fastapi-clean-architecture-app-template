@@ -112,7 +112,7 @@ Can have the following values:
 The url that defines address of the Sentry service.
 
 By default, it's not set.
-{% if cookiecutter.use_jwt|lower == 'y' -%}
+{% if cookiecutter.use_jwt|lower == 'y' %}
 ### IdP
 
 #### `IDP_URL`
@@ -133,8 +133,9 @@ The credentials secret of the client (service).
 
 By default, it's not set.
 {% endif -%}
-{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
+{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' %}
 ### Databases, MessageBrokers
+
 #### `POSTGRES_DSN`
 
 The dsn that defines connection string to of the PostgreSQL.
@@ -148,21 +149,21 @@ PostgreSQL.
 
 By default, it's `10`.
 {% endif -%}
-{% if cookiecutter.use_cache|lower == 'y' -%}
+{% if cookiecutter.use_cache|lower == 'y' %}
 #### `CACHE_DSN`
 
 The dsn that defines connection string to of the cache server.
 
 By default, it's not set.
 {% endif -%}
-{% if cookiecutter.use_kafka|lower == 'y' -%}
+{% if cookiecutter.use_kafka|lower == 'y' %}
 #### `KAFKA_DSN`
 
 The dsn that defines connection string to of the Kafka.
 
 By default, it's not set.
 {% endif -%}
-{% if cookiecutter.use_s3|lower == 'y' -%}
+{% if cookiecutter.use_s3|lower == 'y' %}
 ### S3
 
 #### `S3_URL`

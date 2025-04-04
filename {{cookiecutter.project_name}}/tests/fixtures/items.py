@@ -1,8 +1,8 @@
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.service.postgres.models import Item
 from tests.data.mock_data import items
+from src.service.postgres.models import Item
 
 
 @pytest.fixture

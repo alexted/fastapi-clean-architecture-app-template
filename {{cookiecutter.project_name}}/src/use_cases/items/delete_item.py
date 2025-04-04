@@ -8,16 +8,13 @@ from src.use_cases.base import BaseUseCase
 
 
 class DeleteItemRequest(BaseModel):
-    """
+    """ """
 
-    """
     id: NonNegativeInt
 
 
 class DeleteItemUseCase(BaseUseCase):
-    """
 
-    """
     def __init__(self, item_repo: Annotated[ItemRepository, Depends(ItemRepository)]):
         self.item_repo: ItemRepository = item_repo
 

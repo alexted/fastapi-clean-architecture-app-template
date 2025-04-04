@@ -19,5 +19,5 @@ class DivideResponse(BaseModel):
 class DivideUseCase(BaseUseCase):
 
     async def execute(self, request_object: DivideRequest) -> DivideResponse:
-        logger.info('test message')
+        logger.info("test message")
         return DivideResponse(result=request_object.dividend / request_object.divisor)

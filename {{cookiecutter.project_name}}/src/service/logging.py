@@ -1,6 +1,6 @@
-from logging import LogRecord
 import logging.config
 
+from logging import LogRecord
 from .config import AppConfig
 from .middlewares.correlation_id import CORRELATION_ID
 
@@ -12,24 +12,26 @@ class RequestIdFilter(logging.Filter):
 
 
 def init_logging(config: AppConfig) -> None:
-    logging.config.dictConfig({
-        "version": 1,
-        "filters": {"correlation_id": {"()": RequestIdFilter}},
-        "formatters": {
-            "default": {
-                "format": "%(levelname)s::%(asctime)s:%(name)s.%(funcName)s:%(correlation_id)s\n%(message)s\n",
-                "datefmt": "%Y-%m-%d %H:%M:%S",
-            }
-        },
-        "handlers": {
-            "console": {
-                "level": config.LOG_LEVEL,
-                "class": "logging.StreamHandler",
-                "formatter": "default",
-                "stream": "ext://sys.stdout",
-                "filters": ["correlation_id"],
-            }
-        },
-        "loggers": {config.APP_NAME: {"level": config.LOG_LEVEL, "handlers": (["console"])}},
-        "disable_existing_loggers": False,
-    })
+    logging.config.dictConfig(
+        {
+            "version": 1,
+            "filters": {"correlation_id": {"()": RequestIdFilter}},
+            "formatters": {
+                "default": {
+                    "format": "%(levelname)s::%(asctime)s:%(name)s.%(funcName)s:%(correlation_id)s\n%(message)s\n",
+                    "datefmt": "%Y-%m-%d %H:%M:%S",
+                }
+            },
+            "handlers": {
+                "console": {
+                    "level": config.LOG_LEVEL,
+                    "class": "logging.StreamHandler",
+                    "formatter": "default",
+                    "stream": "ext://sys.stdout",
+                    "filters": ["correlation_id"],
+                }
+            },
+            "loggers": {config.APP_NAME: {"level": config.LOG_LEVEL, "handlers": (["console"])}},
+            "disable_existing_loggers": False,
+        }
+    )

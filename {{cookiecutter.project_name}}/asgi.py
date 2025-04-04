@@ -1,6 +1,6 @@
 from granian import Granian
-from granian.constants import Interfaces
 from granian.log import LogLevels
+from granian.constants import Interfaces
 
 if __name__ == "__main__":
     Granian(
