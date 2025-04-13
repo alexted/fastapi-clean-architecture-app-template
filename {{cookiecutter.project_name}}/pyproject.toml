@@ -11,7 +11,7 @@ requires-python = ">={{ cookiecutter.project_name }}"
 dependencies = [
     "fastapi",
     "orjson",
-    "granian[pname]",
+    "granian[reload, pname]",
     "pydantic[email]",
     "pydantic-settings",
     {% if cookiecutter.use_jwt|lower == 'y' -%}
@@ -40,6 +40,16 @@ dependencies = [
     {% endif -%}
     "python-multipart",
     "httpx",
+    "opentelemetry-distro",
+    "opentelemetry-sdk",
+    "opentelemetry-exporter-otlp",
+    "opentelemetry-instrumentation",
+    "opentelemetry-instrumentation-fastapi",
+    "opentelemetry-instrumentation-sqlalchemy",
+    "opentelemetry-instrumentation-redis",
+    "opentelemetry-instrumentation-botocore",
+    "opentelemetry-instrumentation-aiokafka",
+    "opentelemetry-instrumentation-httpx",
 ]
 
 [tool.poetry]
@@ -47,7 +57,6 @@ package-mode = false
 
 [dependency-groups]
 dev = [
-    "watchfiles",
     "ruff",
     "mypy",
     "pytest",
