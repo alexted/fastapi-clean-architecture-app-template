@@ -16,7 +16,8 @@ from src.service.middlewares.error_handling import (
 )
 
 from .config import AppConfig, EnvironmentEnum, get_config
-from .logging import init_logging
+from .logging_config import init_logging
+from .telemetry import setup_otel
 from .constants import responses
 from .middlewares.log_requests import log_requests
 from .middlewares.correlation_id import handle_correlation_id
@@ -57,8 +58,10 @@ def create_app() -> FastAPI:
     app.add_middleware(BaseHTTPMiddleware, dispatch=handle_correlation_id)
     app.add_middleware(BaseHTTPMiddleware, dispatch=log_requests)  # Note: logs request and response bodies
 
+    setup_otel(config)
+
     if config.ENVIRONMENT == EnvironmentEnum.PROD:
-        sentry_sdk.init(dsn=config.SENTRY_DSN, enable_tracing=True)
+        sentry_sdk.init(dsn=config.SENTRY_URL, enable_tracing=True)
         Instrumentator(excluded_handlers=["/health", "/metrics"]).instrument(app).expose(app, include_in_schema=False)
 
     app.include_router(healthcheck_route, tags=["service"])

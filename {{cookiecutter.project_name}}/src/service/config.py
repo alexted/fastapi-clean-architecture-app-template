@@ -25,9 +25,15 @@ class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
     APP_NAME: str = "{{ cookiecutter.project_name }}"
 
-    # Logging
-    SENTRY_DSN: HttpUrl | None = None
+    # Observability
+    TELEMETRY_URL: HttpUrl | None = None
+    SENTRY_URL: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
+
+    # Identity provider
+    IDP_URL: HttpUrl
+    IDP_CLIENT_SECRET: str
+
     {% if cookiecutter.use_postgresql | lower == 'y' %}
     # Postgres
     POSTGRES_DSN: PostgresDsn
@@ -43,16 +49,13 @@ class AppConfig(BaseSettings):
     {% endif -%}
     {% if cookiecutter.use_s3| lower == 'y' %}
     # S3
-    S3_DOCS_BUCKET: str = "documents"
-    S3_IMAGES_BUCKET: str = "images"
-    S3_URL: str
+    S3_URL: HttpUrl
     S3_ACCESS_KEY: str
     S3_SECRET_KEY: str
     S3_REGION_NAME: str | None = None
-    {% endif -%}
-    # Identity provider
-    IDP_URL: HttpUrl
-    IDP_CLIENT_SECRET: str
+    S3_DOCS_BUCKET: str = "documents"
+    S3_IMAGES_BUCKET: str = "images"
+    {% endif %}
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", use_enum_values=True, extra="ignore", frozen=True
