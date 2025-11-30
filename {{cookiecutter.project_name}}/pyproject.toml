@@ -3,7 +3,7 @@ name = "{{ cookiecutter.project_name }}"
 version = "{{ cookiecutter.project_release }}"
 description = "{{ cookiecutter.project_description }}"
 authors = [
-    { name = "{{ cookiecutter.app_developer }}", email = "dev@email.io" }
+    { name = "{{ cookiecutter.app_developer }}", email = "author@mail.dev" }
 ]
 license = { text = "My Private License" }
 readme = "README.md"
