@@ -162,25 +162,4 @@ By default, it's not set.
 The dsn that defines connection string to of the Kafka.
 
 By default, it's not set.
-{% endif -%}
-{% if cookiecutter.use_s3|lower == 'y' %}
-### S3
-
-#### `S3_URL`
-
-The string that defines url for S3.
-
-By default, it's not set.
-
-#### `S3_ACCESS_KEY`
-
-The string that defines key ID for AWS access.
-
-By default, it's not set.
-
-#### `S3_SECRET_KEY`
-
-The string that defines secret key of AWS account.
-
-By default, it's not set.
-{% endif -%}
+{% endif %}

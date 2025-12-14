@@ -30,33 +30,15 @@ services:
       - "5432:5432"
   {% endif -%}
 
-  {% if cookiecutter.use_cache|lower == 'y' %}
+{% if cookiecutter.use_cache|lower == 'y' %}
   cache:
     image: valkey/valkey:alpine
     restart: unless-stopped
     ports:
       - "6379:6379"
-  {% endif -%}
-
-  {% if cookiecutter.use_s3|lower == 'y' %}
-  minio:
-    image: minio/minio
-    environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=12345678
-    volumes:
-      - minio_data:/data
-      - minio_data:/root/.minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    command: server /data --console-address ":9001"
-  {% endif -%}
+{% endif %}
 
 volumes:
-  {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' %}
+{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' %}
   postgresql_data:
-  {% endif -%}
-  {% if cookiecutter.use_s3|lower == 'y' %}
-  minio_data:
-  {% endif -%}
+{% endif %}
