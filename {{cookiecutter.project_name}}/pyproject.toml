@@ -34,8 +34,7 @@ dependencies = [
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
     "aiokafka",
-    {% endif %}
-    "python-multipart",
+    {% endif -%}
     "httpx",
 ]
 
