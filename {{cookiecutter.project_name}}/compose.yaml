@@ -1,5 +1,5 @@
 services:
-  {{ cookiecutter.project_name }}:
+  app:
     build:
       context: .
     restart: unless-stopped
@@ -17,7 +17,7 @@ services:
       - cache
       {% endif -%}
 
-  {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' %}
+{% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' %}
   postgres:
     image: postgres:alpine
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
       - postgresql_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  {% endif -%}
+{% endif -%}
 
 {% if cookiecutter.use_cache|lower == 'y' %}
   cache:
@@ -36,9 +36,9 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
-{% endif %}
+{% endif -%}
 
-volumes:
 {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' %}
+volumes:
   postgresql_data:
-{% endif %}
+{%- endif %}
