@@ -1,7 +1,7 @@
-import logging.config
+import log_config.config
 
-from logging import LogRecord
-from .config import AppConfig
+from log_config import LogRecord
+from .settings import AppConfig
 from .middlewares.correlation_id import CORRELATION_ID
 
 
@@ -27,7 +27,7 @@ def init_logging(config: AppConfig) -> None:
                     "level": config.LOG_LEVEL,
                     "class": "logging.StreamHandler",
                     "formatter": "default",
-                    "stream": "ext://sys.stdout",
+                    "stream": "interceptors://sys.stdout",
                     "filters": ["correlation_id"],
                 }
             },

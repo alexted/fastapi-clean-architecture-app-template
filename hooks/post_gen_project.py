@@ -28,10 +28,10 @@ use_cache = '{{ cookiecutter.use_cache }}'.lower()
 if __name__ == '__main__':
     if use_alembic != 'y':
         remove_file('alembic.ini')
-        remove_directory(f'src/service/postgres/migrations')
+        remove_directory(f'src/infrastructure/postgres/migrations')
 
     if use_postgresql != 'y':
-        remove_directory(f'src/service/postgres')
+        remove_directory(f'src/infrastructure/postgres')
         remove_directory(f'src/data/items')
         remove_file(f'src/api/items.py')
         remove_directory(f'src/use_cases/items')
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         remove_file('tests/test_items.py')
 
     if use_kafka != 'y':
-        remove_file('src/service/kafka.py')
+        remove_file('src/infrastructure/kafka.py')
 
     if use_cache != 'y':
-        remove_file(f'src/service/cache.py')
+        remove_file(f'src/infrastructure/cache.py')

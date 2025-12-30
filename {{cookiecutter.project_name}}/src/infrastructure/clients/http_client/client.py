@@ -74,7 +74,7 @@ class HttpClient:
         **kwargs: dict,
     ) -> httpx.Response:
         """
-        Call the API method of the service. Repeats the interface of the request method of the httpx library
+        Call the API method of the infrastructure. Repeats the interface of the request method of the httpx library
 
         :param path:
         :param method:

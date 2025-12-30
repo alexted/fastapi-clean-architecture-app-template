@@ -15,8 +15,8 @@ from src.service.middlewares.error_handling import (
     ValidationErrorHandler,
 )
 
-from .config import AppConfig, EnvironmentEnum, get_config
-from .logging import init_logging
+from .settings import AppConfig, EnvironmentEnum, get_config
+from .log_config import init_logging
 from .constants import responses
 from .middlewares.log_requests import log_requests
 from .middlewares.correlation_id import handle_correlation_id
@@ -61,7 +61,7 @@ def create_app() -> FastAPI:
         sentry_sdk.init(dsn=config.SENTRY_DSN, enable_tracing=True)
         Instrumentator(excluded_handlers=["/health", "/metrics"]).instrument(app).expose(app, include_in_schema=False)
 
-    app.include_router(healthcheck_route, tags=["service"])
+    app.include_router(healthcheck_route, tags=["infrastructure"])
     app.include_router(v1_routes)
 
     return app

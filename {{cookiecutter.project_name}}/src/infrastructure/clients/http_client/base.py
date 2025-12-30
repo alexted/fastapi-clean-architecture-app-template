@@ -11,7 +11,7 @@ from src.service.errors.exceptions import ExternalServiceError
 def handle_response_middleware(service_name: str) -> t.Callable:
     async def check_response(data: dict, handler: t.Callable) -> Response:
         """
-        Middleware to check the response of the remote service. If the response is negative, an error is generated
+        Middleware to check the response of the remote infrastructure. If the response is negative, an error is generated
         """
 
         response: httpx.Response = await handler(data)

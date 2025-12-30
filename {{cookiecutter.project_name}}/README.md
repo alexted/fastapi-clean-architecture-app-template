@@ -38,8 +38,8 @@ $ poetry new {{ cookiecutter.project_name }} && cd $_        // create a project
 Install the necessary packages:
 
 ```bash
-({{ cookiecutter.project_name }})$ poetry install                // install all project dependencies
-({{ cookiecutter.project_name }})$ poetry install --only main    // install only main project dependencies
+({{ cookiecutter.project_name }})$ poetry install                // install all project interceptors
+({{ cookiecutter.project_name }})$ poetry install --only main    // install only main project interceptors
 ```
 
 **Important**:

@@ -4,7 +4,7 @@ from granian.constants import Interfaces
 
 if __name__ == "__main__":
     Granian(
-        "src.service.application:create_app",
+        "src.infrastructure.application:create_app",
         factory=True,
         reload=True,
         port=5000,
