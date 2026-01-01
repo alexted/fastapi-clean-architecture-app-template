@@ -7,7 +7,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.api import v1_routes
-from errors.exceptions import OtherError
+from .errors.exceptions import OtherError
 from .middlewares.error_handling import (
     ExceptionHandler,
     OtherErrorHandler,
