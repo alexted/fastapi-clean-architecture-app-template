@@ -8,6 +8,5 @@
   "use_alembic": "n",
   "use_jwt": "n",
   "use_cache": "n",
-  "use_kafka": "n",
-  "use_s3": "n"
+  "use_kafka": "n"
 }

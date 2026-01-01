@@ -2,9 +2,9 @@ from enum import StrEnum
 import typing as t
 from functools import wraps
 
-from src.service.config import AppConfig
-from src.service.http.base import BaseClient, handle_response_middleware
-from src.service.http.client import ApiCall, HttpClient
+from src.infrastructure.clients.http_client.base import BaseClient, handle_response_middleware
+from src.infrastructure.clients.http_client.client import HttpClient, ApiCall
+from src.infrastructure.core.settings import AppConfig
 
 
 class ContentType(StrEnum):
@@ -45,7 +45,7 @@ class IDPService(BaseClient):
         return wrapped
 
     async def get_service_access_token(self) -> str:
-        """Get service access token"""
+        """Get infrastructure access token"""
         result = await self._sign_in(
             headers={"Content-Type": ContentType.FORM.value},
             data={
