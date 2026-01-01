@@ -37,13 +37,13 @@ def setup_otel(config: AppConfig):
 
     # Auto-instrumentation
     FastAPIInstrumentor().instrument()
-    {% if cookiecutter.use_postgresql | lower == 'y' - %}
+    {% if cookiecutter.use_postgresql | lower == 'y' -%}
     SQLAlchemyInstrumentor().instrument()
-    {% endif - %}
-    {% if cookiecutter.use_cache | lower == 'y' - %}
+    {% endif -%}
+    {% if cookiecutter.use_cache | lower == 'y' -%}
     RedisInstrumentor().instrument()
-    {% endif - %}
-    {% if cookiecutter.use_kafka | lower == 'y' - %}
+    {% endif -%}
+    {% if cookiecutter.use_kafka | lower == 'y' -%}
     AIOKafkaInstrumentor().instrument()
-    {% endif - %}
+    {% endif -%}
     HTTPXClientInstrumentor().instrument()
