@@ -6,13 +6,18 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+{% if cookiecutter.use_postgresql|lower == 'y' -%}
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
+{% endif -%}
+{% if cookiecutter.use_cache|lower == 'y' -%}
 from opentelemetry.instrumentation.redis import RedisInstrumentor
-from opentelemetry.instrumentation.botocore import BotocoreInstrumentor
+{% endif -%}
+{% if cookiecutter.use_kafka|lower == 'y' -%}
 from opentelemetry.instrumentation.aiokafka import AIOKafkaInstrumentor
+{% endif -%}
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
-from src.service.config import AppConfig
+from src.infrastructure.core.settings import AppConfig
 
 
 def setup_otel(config: AppConfig):
@@ -32,8 +37,13 @@ def setup_otel(config: AppConfig):
 
     # Auto-instrumentation
     FastAPIInstrumentor().instrument()
+    {% if cookiecutter.use_postgresql | lower == 'y' - %}
     SQLAlchemyInstrumentor().instrument()
+    {% endif - %}
+    {% if cookiecutter.use_cache | lower == 'y' - %}
     RedisInstrumentor().instrument()
-    BotocoreInstrumentor().instrument()
+    {% endif - %}
+    {% if cookiecutter.use_kafka | lower == 'y' - %}
     AIOKafkaInstrumentor().instrument()
+    {% endif - %}
     HTTPXClientInstrumentor().instrument()

@@ -41,10 +41,15 @@ dependencies = [
     "opentelemetry-exporter-otlp",
     "opentelemetry-instrumentation",
     "opentelemetry-instrumentation-fastapi",
+    {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "opentelemetry-instrumentation-sqlalchemy",
+    {% endif -%}
+    {% if cookiecutter.use_cache|lower == 'y' -%}
     "opentelemetry-instrumentation-redis",
-    "opentelemetry-instrumentation-botocore",
+    {% endif -%}
+    {% if cookiecutter.use_kafka|lower == 'y' -%}
     "opentelemetry-instrumentation-aiokafka",
+    {% endif -%}
     "opentelemetry-instrumentation-httpx",
 ]
 

@@ -28,6 +28,7 @@ class AppConfig(BaseSettings):
     # Logging
     SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
+    TELEMETRY_URL: HttpUrl | None = None
     {% if cookiecutter.use_postgresql | lower == 'y' %}
     # Postgres
     POSTGRES_DSN: PostgresDsn
