@@ -7,8 +7,8 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.data.base import AbstractRepository
-from src.service.postgres.engine import get_db_session
-from src.service.postgres.models import Item
+from ...infrastructure.clients.postgres.engine import get_db_session
+from ...infrastructure.clients.postgres.models import Item
 
 from .dto import ItemDTO, ItemFilters
 

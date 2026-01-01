@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import Depends, Response, APIRouter, status
 from pydantic import NonNegativeInt
 
-from src.use_cases.items import (
+from src.domain.use_cases.items import (
     GetItemRequest,
     GetItemResponse,
     GetItemUseCase,
