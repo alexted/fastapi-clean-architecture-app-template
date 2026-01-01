@@ -4,7 +4,7 @@ from fastapi import Depends
 from pydantic import BaseModel, NonNegativeInt
 
 from src.data.items import ItemRepository
-from src.use_cases.base import BaseUseCase
+from src.domain.use_cases.base import BaseUseCase
 
 
 class DeleteItemRequest(BaseModel):

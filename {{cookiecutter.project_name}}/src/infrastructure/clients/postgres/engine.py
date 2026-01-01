@@ -5,7 +5,7 @@ from collections.abc import AsyncGenerator
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from src.service.config import AppConfig, get_config
+from src.infrastructure.core.settings import AppConfig, get_config
 
 
 @lru_cache(maxsize=1)

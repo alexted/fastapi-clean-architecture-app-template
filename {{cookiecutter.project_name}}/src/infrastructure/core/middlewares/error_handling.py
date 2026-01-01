@@ -10,8 +10,8 @@ from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from fastapi.responses import ORJSONResponse
 from fastapi.exceptions import HTTPException, RequestValidationError
 
-from src.service.errors.constants import ErrorType
-from src.service.errors.exceptions import OtherError
+from ..errors.constants import ErrorType
+from ..errors.exceptions import OtherError
 
 from .correlation_id import CORRELATION_ID
 

@@ -2,7 +2,7 @@ import logging
 
 from pydantic import BaseModel
 
-from src.use_cases.base import BaseUseCase
+from src.domain.use_cases.base import BaseUseCase
 
 logger = logging.getLogger()
 

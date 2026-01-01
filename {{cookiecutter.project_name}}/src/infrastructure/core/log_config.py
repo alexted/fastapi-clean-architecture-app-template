@@ -1,12 +1,11 @@
-import log_config.config
+import logging
 
-from log_config import LogRecord
 from .settings import AppConfig
 from .middlewares.correlation_id import CORRELATION_ID
 
 
 class RequestIdFilter(logging.Filter):
-    def filter(self, record: LogRecord) -> bool:  # noqa: A003
+    def filter(self, record: logging.LogRecord) -> bool:  # noqa: A003
         record.correlation_id = CORRELATION_ID.get()
         return True
 

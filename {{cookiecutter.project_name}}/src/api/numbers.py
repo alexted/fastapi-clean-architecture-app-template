@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
-from src.use_cases.numbers import (
+from src.domain.use_cases.numbers import (
     DivideRequest,
     DivideResponse,
     DivideUseCase,

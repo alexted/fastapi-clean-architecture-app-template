@@ -12,10 +12,10 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
 from tests.data import mock_data
 {% endif -%}
-from src.service.config import get_config
-from src.service.application import create_app
+from src.infrastructure.core.settings import get_config
+from src.infrastructure.core.application import create_app
 {% if cookiecutter.use_postgresql | lower == 'y' -%}
-from src.service.postgres.engine import get_db_session
+from src.infrastructure.clients.postgres.engine import get_db_session
 {% endif %}
 
 TEST_APP_URL = "http://test"

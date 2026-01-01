@@ -6,7 +6,7 @@ from collections.abc import Iterator
 from fastapi import Depends
 from aiokafka import AIOKafkaProducer
 
-from src.service.config import AppConfig, get_config
+from src.infrastructure.core.settings import AppConfig, get_config
 
 
 @lru_cache(maxsize=1)

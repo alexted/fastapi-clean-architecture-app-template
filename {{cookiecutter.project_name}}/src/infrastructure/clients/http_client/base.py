@@ -4,8 +4,8 @@ import typing as t
 import httpx
 from httpx import Response
 
-from src.service.http.client import HttpClient
-from src.service.errors.exceptions import ExternalServiceError
+from src.infrastructure.clients.http_client.client import HttpClient
+from src.infrastructure.core.errors.exceptions import ExternalServiceError
 
 
 def handle_response_middleware(service_name: str) -> t.Callable:
