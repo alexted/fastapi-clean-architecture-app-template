@@ -18,4 +18,4 @@ cookiecutter git@github.com:alexted/fastapi-clean-architecture-app-template.git
 
 ## License
 
-[MIT](LICENSE)
+[The Apache License 2.0](LICENSE)
