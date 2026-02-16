@@ -7,7 +7,7 @@ from alembic.script import ScriptDirectory
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from src.infrastructure.core.settings import get_config, AppConfig
+from src.infrastructure.core.settings import AppConfig, get_config
 from src.infrastructure.clients.postgres.models import Base
 
 # this is the Alembic Config object, which provides
@@ -30,7 +30,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-config: AppConfig = get_config()
+app_config: AppConfig = get_config()
 
 
 def process_revision_directives(context, revision, directives) -> None:  # noqa ANN001
@@ -58,7 +58,7 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=config.POSTGRES_DSN.unicode_string(),
+        url=app_config.POSTGRES_DSN.unicode_string(),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -85,7 +85,7 @@ async def run_async_migrations() -> None:
     """
 
     connectable = async_engine_from_config(
-        {"sqlalchemy.url": config.POSTGRES_DSN.unicode_string()}, prefix="sqlalchemy.", poolclass=pool.NullPool
+        {"sqlalchemy.url": app_config.POSTGRES_DSN.unicode_string()}, prefix="sqlalchemy.", poolclass=pool.NullPool
     )
 
     async with connectable.connect() as connection:

@@ -32,7 +32,9 @@ def health_check() -> Response:
 
 def create_app() -> FastAPI:
     config: AppConfig = get_config()
+
     init_logging(config)
+    init_database(config)
 
     app = FastAPI(
         title=config.APP_NAME,

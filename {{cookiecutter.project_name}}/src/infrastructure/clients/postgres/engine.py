@@ -1,16 +1,17 @@
-from typing import Annotated
-from functools import lru_cache
 from collections.abc import AsyncGenerator
 
-from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from src.infrastructure.core.settings import AppConfig, get_config
+from src.infrastructure.core.settings import AppConfig
+
+engine: AsyncEngine = None
+session_factory: async_sessionmaker[AsyncSession] = None
 
 
-@lru_cache(maxsize=1)
-def get_db_connection(config: Annotated[AppConfig, Depends(get_config)]) -> AsyncEngine:
-    return create_async_engine(
+def init_database(config: AppConfig) -> None:
+    global engine, session_factory
+
+    engine = create_async_engine(
         config.POSTGRES_DSN.unicode_string(),
         pool_size=config.POSTGRES_MAX_CONNECTIONS,
         pool_pre_ping=True,
@@ -21,14 +22,17 @@ def get_db_connection(config: Annotated[AppConfig, Depends(get_config)]) -> Asyn
         },
     )
 
-
-@lru_cache(maxsize=1)
-def get_session_factory(engine: Annotated[AsyncEngine, Depends(get_db_connection)]) -> async_sessionmaker:
-    return async_sessionmaker(engine, expire_on_commit=False)
+    session_factory = async_sessionmaker(engine, expire_on_commit=False)
 
 
-async def get_db_session(
-    async_session_factory: Annotated[AsyncEngine, Depends(get_session_factory)],
-) -> AsyncGenerator[AsyncSession]:
-    async with async_session_factory.begin() as session:
+async def get_db_session() -> AsyncGenerator[AsyncSession]:
+    session = session_factory()
+    try:
         yield session
+        # При необходимости можно автоматически коммитить, если не было исключений
+        # await session.commit()
+    except Exception:
+        await session.rollback()
+        raise
+    finally:
+        await session.close()
