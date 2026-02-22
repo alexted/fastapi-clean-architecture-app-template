@@ -9,7 +9,7 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 {% if cookiecutter.use_postgresql|lower == 'y' -%}
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 {% endif -%}
-{% if cookiecutter.use_cache|lower == 'y' -%}
+{% if cookiecutter.use_redis|lower == 'y' -%}
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 {% endif -%}
 {% if cookiecutter.use_kafka|lower == 'y' -%}
@@ -40,7 +40,7 @@ def setup_otel(config: AppConfig):
     {% if cookiecutter.use_postgresql | lower == 'y' -%}
     SQLAlchemyInstrumentor().instrument()
     {% endif -%}
-    {% if cookiecutter.use_cache | lower == 'y' -%}
+    {% if cookiecutter.use_redis | lower == 'y' -%}
     RedisInstrumentor().instrument()
     {% endif -%}
     {% if cookiecutter.use_kafka | lower == 'y' -%}

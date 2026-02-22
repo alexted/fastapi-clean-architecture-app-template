@@ -27,7 +27,7 @@ dependencies = [
     "python-json-logger",
     "sentry-sdk[fastapi]",
     "prometheus-fastapi-instrumentator",
-    {% if cookiecutter.use_cache|lower == 'y' -%}
+    {% if cookiecutter.use_redis|lower == 'y' -%}
     "redis[hiredis]",
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
@@ -42,7 +42,7 @@ dependencies = [
     {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "opentelemetry-instrumentation-sqlalchemy",
     {% endif -%}
-    {% if cookiecutter.use_cache|lower == 'y' -%}
+    {% if cookiecutter.use_redis|lower == 'y' -%}
     "opentelemetry-instrumentation-redis",
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}

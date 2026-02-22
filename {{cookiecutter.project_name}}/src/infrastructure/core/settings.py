@@ -34,7 +34,7 @@ class AppConfig(BaseSettings):
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
     {% endif -%}
-    {% if cookiecutter.use_cache | lower == 'y' %}
+    {% if cookiecutter.use_redis | lower == 'y' %}
     # Redis
     CACHE_DSN: RedisDsn
     {% endif -%}

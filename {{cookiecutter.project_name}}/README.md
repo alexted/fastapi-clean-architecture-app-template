@@ -149,7 +149,7 @@ PostgreSQL.
 
 By default, it's `10`.
 {% endif -%}
-{% if cookiecutter.use_cache|lower == 'y' %}
+{% if cookiecutter.use_redis|lower == 'y' %}
 #### `CACHE_DSN`
 
 The dsn that defines connection string to of the cache server.
