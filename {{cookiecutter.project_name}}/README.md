@@ -69,7 +69,7 @@ $ python -m ruff format && python -m ruff check --fix --unsafe-fixes
 ## Run tests
 
 ```bash
-$ python -m pytest -vvs
+$ python -m pytest -n auto --dist loadscope -vvs
 ```
 
 ## Environment variables
