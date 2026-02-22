@@ -7,7 +7,6 @@ from collections.abc import Callable, Coroutine
 from fastapi import Request
 from pydantic import BaseModel
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
-from fastapi.responses import ORJSONResponse
 from fastapi.exceptions import HTTPException, RequestValidationError
 
 from ..errors.constants import ErrorType
@@ -39,11 +38,11 @@ class BaseErrorHandler(ABC):
     def get_handler(cls) -> Callable[[Request, Exception], Coroutine]:
         instance = cls()
 
-        async def handler(request: Request, exception: Exception) -> ORJSONResponse:
+        async def handler(request: Request, exception: Exception) -> Response:
             logger.debug(f"Handling exception: {type(exception)}: {exception}")
 
             error = instance._get_error(request, exception)
-            return ORJSONResponse(status_code=error.status_code, content=error.data.model_dump())
+            return Response(status_code=error.status_code, content=error.data.model_dump())
 
         return handler
 

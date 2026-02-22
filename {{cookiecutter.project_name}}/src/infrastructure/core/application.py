@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response, APIRouter, HTTPException
 import sentry_sdk
 from starlette.status import HTTP_200_OK
-from fastapi.responses import ORJSONResponse
+
 from fastapi.exceptions import RequestValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
@@ -46,7 +46,6 @@ def create_app() -> FastAPI:
             OtherError: OtherErrorHandler.get_handler(),
             Exception: ExceptionHandler.get_handler(),
         },
-        default_response_class=ORJSONResponse,
         responses=responses,
         swagger_ui_init_oauth={
             "clientId": config.APP_NAME.lower(),

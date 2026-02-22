@@ -5,12 +5,10 @@ description = "{{ cookiecutter.project_description }}"
 authors = [
     { name = "{{ cookiecutter.app_developer }}", email = "author@mail.dev" }
 ]
-license = { text = "My Private License" }
 readme = "README.md"
 requires-python = ">={{ cookiecutter.app_lang_version }}"
 dependencies = [
     "fastapi",
-    "orjson",
     "granian[reload, pname]",
     "pydantic[email]",
     "pydantic-settings",
@@ -68,7 +66,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=82", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.mypy]
@@ -137,7 +135,7 @@ docstring-code-format = true
 docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
-minversion = "8.3"
+minversion = "9.3"
 testpaths = "tests"
 
 [tool.coverage.run]
