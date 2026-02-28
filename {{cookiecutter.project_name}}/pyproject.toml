@@ -135,7 +135,7 @@ docstring-code-format = true
 docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
-minversion = "9.3"
+minversion = "9"
 testpaths = "tests"
 
 [tool.coverage.run]

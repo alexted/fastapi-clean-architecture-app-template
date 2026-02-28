@@ -17,7 +17,6 @@ class SummariseResponse(BaseModel):
 
 
 class SummariseUseCase(BaseUseCase):
-
     async def execute(self, request_object: SummariseRequest) -> SummariseResponse:
         logger.info("test message")
         return SummariseResponse(sum=request_object.x + request_object.y)

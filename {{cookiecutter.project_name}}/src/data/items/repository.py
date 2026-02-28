@@ -2,21 +2,22 @@ from typing import Annotated
 import logging
 
 from fastapi import Depends
-from sqlalchemy import select, delete, insert, update
+from sqlalchemy import delete, insert, select, update
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.data.base import AbstractRepository
-from ...infrastructure.clients.postgres.engine import get_db_session
-from ...infrastructure.clients.postgres.models import Item
 
 from .dto import ItemDTO, ItemFilters
+from ...infrastructure.clients.postgres.engine import get_db_session
+from ...infrastructure.clients.postgres.models import Item
 
 logger = logging.getLogger()
 
 
 class ItemRepository(AbstractRepository):
-    """ Items storage """
+    """Items storage"""
+
     def __init__(self, db_session: Annotated[AsyncSession, Depends(get_db_session)]) -> None:
         self._session: AsyncSession = db_session
 
@@ -26,7 +27,7 @@ class ItemRepository(AbstractRepository):
         :param obj:
         :return:
         """
-        return ItemDTO.from_orm(obj)
+        return ItemDTO.model_validate(obj)
 
     async def create(self, obj_data) -> ItemDTO:
         """
@@ -34,7 +35,7 @@ class ItemRepository(AbstractRepository):
         :param obj_data:
         :return:
         """
-        item_data = obj_data.dict()
+        item_data = obj_data.model_dump()
 
         stmt = insert(Item).values(**item_data).returning(Item)
 
@@ -51,9 +52,8 @@ class ItemRepository(AbstractRepository):
 
         query = select(Item).options(selectinload("*"))
 
-        if filters:
-            if filters.id:
-                query = query.where(Item.id.in_(filters.id))
+        if filters and filters.id:
+            query = query.where(Item.id.in_(filters.id))
 
         result = (await self._session.execute(query)).scalars().all()
 
@@ -66,7 +66,7 @@ class ItemRepository(AbstractRepository):
         :param data:
         :return:
         """
-        orm_stmt = update(Item).where(Item.id == item_id).values(data.dict()).returning(Item)
+        orm_stmt = update(Item).where(Item.id == item_id).values(data.model_dump()).returning(Item)
 
         result = (await self._session.execute(orm_stmt)).scalar_one_or_none()
 

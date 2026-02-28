@@ -5,16 +5,8 @@ import pytest
 import asyncpg
 from fastapi import FastAPI
 from alembic.config import Config as AlembicConfig
-from alembic.command import upgrade, downgrade
-from sqlalchemy import NullPool
-from sqlalchemy.ext.asyncio import (
-    AsyncEngine,
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-    AsyncConnection,
-    AsyncTransaction
-)
+from alembic.command import upgrade
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
 from tests.data import mock_data
 from src.infrastructure.core.settings import AppConfig, get_config
@@ -26,7 +18,7 @@ TEST_APP_URL = "http://test"
 pytest_plugins = ("tests.fixtures.items",)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def anyio_backend() -> str:
     """
     # Required per https://anyio.readthedocs.io/en/stable/testing.html#using-async-fixtures-with-higher-scopes
@@ -37,7 +29,7 @@ def anyio_backend() -> str:
 @pytest.fixture(scope="session")
 async def db_engine(worker_id: str) -> AsyncIterator[AsyncEngine]:
     config: AppConfig = get_config()
-    db_dsn: str = config.POSTGRES_DSN.unicode_string()
+    db_dsn: str = config.POSTGRES_DSN.unicode_string().replace("+asyncpg", "")
     schema: str = f"test_{worker_id}"
 
     conn: asyncpg.Connection = await asyncpg.connect(db_dsn)
@@ -47,12 +39,11 @@ async def db_engine(worker_id: str) -> AsyncIterator[AsyncEngine]:
         await conn.close()
 
     engine: AsyncEngine = create_async_engine(
-        db_dsn,
+        config.POSTGRES_DSN.unicode_string(),
         echo=False,
         pool_size=config.POSTGRES_MAX_CONNECTIONS,
         pool_pre_ping=True,
-        poolclass=NullPool,
-        connect_args={"server_settings": {"application_name": schema}, "search_path": schema},
+        connect_args={"server_settings": {"application_name": schema, "search_path": schema}},
     )
 
     yield engine

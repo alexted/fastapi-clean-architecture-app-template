@@ -1,15 +1,17 @@
-from pydantic import BaseModel
+from typing import Annotated
+from decimal import Decimal
+
+from pydantic import Field, BaseModel, ConfigDict
 
 
 class ItemDTO(BaseModel):
-    id: int
+    id: PositiveInt
     name: str
-    description: None | str
-    price: float
+    description: str | None
+    price: Annotated[Decimal, Field(max_digits=16, decimal_places=8, ge=0)]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ItemFilters(BaseModel):
-    id: list[int]
+    id: list[PositiveInt]

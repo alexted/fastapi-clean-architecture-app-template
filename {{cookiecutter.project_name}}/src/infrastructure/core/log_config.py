@@ -1,3 +1,4 @@
+import sys
 import logging
 
 from .settings import AppConfig
@@ -26,7 +27,7 @@ def init_logging(config: AppConfig) -> None:
                     "level": config.LOG_LEVEL,
                     "class": "logging.StreamHandler",
                     "formatter": "default",
-                    "stream": "interceptors://sys.stdout",
+                    "stream": sys.stdout,  # бывш "ext://sys.stdout",
                     "filters": ["correlation_id"],
                 }
             },

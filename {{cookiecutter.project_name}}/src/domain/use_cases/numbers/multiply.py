@@ -17,7 +17,6 @@ class MultiplyResponse(BaseModel):
 
 
 class MultiplyUseCase(BaseUseCase):
-
     async def execute(self, request_object: MultiplyRequest) -> MultiplyResponse:
         logger.info("test message")
         return MultiplyResponse(result=request_object.x * request_object.y)

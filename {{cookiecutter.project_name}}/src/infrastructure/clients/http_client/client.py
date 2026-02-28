@@ -37,7 +37,7 @@ class HttpClient:
         self._session_params: dict = session_params
         self.__session: httpx.AsyncClient | None = None
 
-    async def __aenter__(self) -> "HttpClient":
+    async def __aenter__(self) -> HttpClient:
         return self
 
     async def __aexit__(self, exc_type: str, exc_val: str, exc_tb: str) -> None:

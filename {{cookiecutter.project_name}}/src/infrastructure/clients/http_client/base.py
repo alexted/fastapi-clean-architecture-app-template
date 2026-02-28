@@ -4,8 +4,8 @@ import typing as t
 import httpx
 from httpx import Response
 
-from src.infrastructure.clients.http_client.client import HttpClient
 from src.infrastructure.core.errors.exceptions import ExternalServiceError
+from src.infrastructure.clients.http_client.client import HttpClient
 
 
 def handle_response_middleware(service_name: str) -> t.Callable:
@@ -38,7 +38,7 @@ class BaseClient:
         self._client: HttpClient = HttpClient(base_url=url, headers=headers, **kwargs)
         self._init_api(self._client)
 
-    async def __aenter__(self) -> "BaseClient":
+    async def __aenter__(self) -> BaseClient:
         return self
 
     async def __aexit__(self, exc_type: str, exc_val: str, exc_tb: str) -> None:

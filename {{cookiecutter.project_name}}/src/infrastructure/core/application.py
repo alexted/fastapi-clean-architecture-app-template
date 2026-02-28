@@ -1,26 +1,21 @@
 from fastapi import FastAPI, Response, APIRouter, HTTPException
 import sentry_sdk
 from starlette.status import HTTP_200_OK
-
 from fastapi.exceptions import RequestValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.api import v1_routes
-from .errors.exceptions import OtherError
-from .middlewares.error_handling import (
-    ExceptionHandler,
-    OtherErrorHandler,
-    FastAPIErrorHandler,
-    ValidationErrorHandler,
-)
 
 from .settings import AppConfig, EnvironmentEnum, get_config
-from .log_config import init_logging
-from .telemetry import setup_otel
 from .constants import responses
+from .telemetry import setup_otel
+from .log_config import init_logging
+from .errors.exceptions import OtherError
+from ..clients.postgres.engine import init_database
 from .middlewares.log_requests import log_requests
 from .middlewares.correlation_id import handle_correlation_id
+from .middlewares.error_handling import ExceptionHandler, OtherErrorHandler, FastAPIErrorHandler, ValidationErrorHandler
 
 healthcheck_route = APIRouter(include_in_schema=False)
 
@@ -53,15 +48,14 @@ def create_app() -> FastAPI:
             "scopes": ("openid", "email"),
             "usePkceWithAuthorizationCodeGrant": False,
         },
-        license_info={"name": "Proprietary Software License", "url": "https://{{ cookiecutter.project_name }}.com/license"},
     )
 
     app.add_middleware(BaseHTTPMiddleware, dispatch=handle_correlation_id)
     app.add_middleware(BaseHTTPMiddleware, dispatch=log_requests)  # Note: logs request and response bodies
 
-    setup_otel(config)
-
     if config.ENVIRONMENT == EnvironmentEnum.PROD:
+        setup_otel(config)
+
         sentry_sdk.init(dsn=config.SENTRY_URL, enable_tracing=True)
         Instrumentator(excluded_handlers=["/health", "/metrics"]).instrument(app).expose(app, include_in_schema=False)
 
