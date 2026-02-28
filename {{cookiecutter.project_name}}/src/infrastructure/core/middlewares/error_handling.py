@@ -6,14 +6,12 @@ from collections.abc import Callable, Coroutine
 
 from fastapi import Request
 from pydantic import BaseModel
-from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
-from fastapi.responses import ORJSONResponse
+from starlette.status import HTTP_422_UNPROCESSABLE_CONTENT
 from fastapi.exceptions import HTTPException, RequestValidationError
 
+from .correlation_id import CORRELATION_ID
 from ..errors.constants import ErrorType
 from ..errors.exceptions import OtherError
-
-from .correlation_id import CORRELATION_ID
 
 logger = logging.getLogger()
 
@@ -39,11 +37,11 @@ class BaseErrorHandler(ABC):
     def get_handler(cls) -> Callable[[Request, Exception], Coroutine]:
         instance = cls()
 
-        async def handler(request: Request, exception: Exception) -> ORJSONResponse:
+        async def handler(request: Request, exception: Exception) -> Response:
             logger.debug(f"Handling exception: {type(exception)}: {exception}")
 
             error = instance._get_error(request, exception)
-            return ORJSONResponse(status_code=error.status_code, content=error.data.model_dump())
+            return Response(status_code=error.status_code, content=error.data.model_dump())
 
         return handler
 
@@ -64,7 +62,7 @@ class FastAPIErrorHandler(BaseErrorHandler):
 class ValidationErrorHandler(BaseErrorHandler):
     def _get_error(self, request: Request, exception: RequestValidationError) -> Error:
         return Error(
-            status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=HTTP_422_UNPROCESSABLE_CONTENT,
             data=ErrorSchema(
                 error=ErrorType.VALIDATION_ERROR,
                 message=exception.errors(),

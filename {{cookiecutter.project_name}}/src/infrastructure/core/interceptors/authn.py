@@ -6,7 +6,7 @@ from fastapi import Depends, Request, HTTPException
 from pydantic import BaseModel
 
 from src.data.authn.idp import IDPService
-from src.infrastructure.core.settings import get_config, AppConfig
+from src.infrastructure.core.settings import AppConfig, get_config
 
 logger = logging.getLogger()
 

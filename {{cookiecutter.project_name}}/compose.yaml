@@ -13,7 +13,7 @@ services:
       {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
       - postgres
       {% endif -%}
-      {% if cookiecutter.use_cache|lower == 'y' -%}
+      {% if cookiecutter.use_redis|lower == 'y' -%}
       - cache
       {% endif -%}
 
@@ -30,7 +30,7 @@ services:
       - "5432:5432"
 {% endif -%}
 
-{% if cookiecutter.use_cache|lower == 'y' %}
+{% if cookiecutter.use_redis|lower == 'y' %}
   cache:
     image: valkey/valkey:alpine
     restart: unless-stopped

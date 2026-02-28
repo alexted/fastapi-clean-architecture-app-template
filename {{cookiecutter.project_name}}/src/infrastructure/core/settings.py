@@ -1,10 +1,11 @@
-from enum import Enum
+from enum import StrEnum
 from functools import lru_cache
 
 from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class EnvironmentEnum(str, Enum):
+
+class EnvironmentEnum(StrEnum):
     LOCAL = "LOCAL"
     TESTING = "TESTING"
     TEST = "TEST"
@@ -13,7 +14,7 @@ class EnvironmentEnum(str, Enum):
     PROD = "PROD"
 
 
-class LoggingLevelEnum(str, Enum):
+class LoggingLevelEnum(StrEnum):
     CRITICAL = "CRITICAL"
     ERROR = "ERROR"
     WARNING = "WARNING"
@@ -33,11 +34,11 @@ class AppConfig(BaseSettings):
     # Postgres
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
-    {% endif -%}
-    {% if cookiecutter.use_cache | lower == 'y' %}
+    {% endif %}
+    {% if cookiecutter.use_redis | lower == 'y' %}
     # Redis
     CACHE_DSN: RedisDsn
-    {% endif -%}
+    {% endif %}
     {% if cookiecutter.use_kafka| lower == 'y' %}
     # Kafka
     KAFKA_DSN: KafkaDsn | str

@@ -2,9 +2,9 @@ from enum import StrEnum
 import typing as t
 from functools import wraps
 
-from src.infrastructure.clients.http_client.base import BaseClient, handle_response_middleware
-from src.infrastructure.clients.http_client.client import HttpClient, ApiCall
 from src.infrastructure.core.settings import AppConfig
+from src.infrastructure.clients.http_client.base import BaseClient, handle_response_middleware
+from src.infrastructure.clients.http_client.client import ApiCall, HttpClient
 
 
 class ContentType(StrEnum):
@@ -77,5 +77,5 @@ class IDPService(BaseClient):
         )
 
     @staticmethod
-    def new(config: AppConfig) -> "IDPService":
+    def new(config: AppConfig) -> IDPService:
         return IDPService(config.IDP_URL, config.IDP_CLIENT_SECRET, config.APP_NAME)

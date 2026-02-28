@@ -5,12 +5,10 @@ description = "{{ cookiecutter.project_description }}"
 authors = [
     { name = "{{ cookiecutter.app_developer }}", email = "author@mail.dev" }
 ]
-license = { text = "My Private License" }
 readme = "README.md"
 requires-python = ">={{ cookiecutter.app_lang_version }}"
 dependencies = [
     "fastapi",
-    "orjson",
     "granian[reload, pname]",
     "pydantic[email]",
     "pydantic-settings",
@@ -29,7 +27,7 @@ dependencies = [
     "python-json-logger",
     "sentry-sdk[fastapi]",
     "prometheus-fastapi-instrumentator",
-    {% if cookiecutter.use_cache|lower == 'y' -%}
+    {% if cookiecutter.use_redis|lower == 'y' -%}
     "redis[hiredis]",
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
@@ -44,7 +42,7 @@ dependencies = [
     {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "opentelemetry-instrumentation-sqlalchemy",
     {% endif -%}
-    {% if cookiecutter.use_cache|lower == 'y' -%}
+    {% if cookiecutter.use_redis|lower == 'y' -%}
     "opentelemetry-instrumentation-redis",
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
@@ -68,8 +66,8 @@ dev = [
 ]
 
 [build-system]
-requires = ['setuptools>=68.0.0', 'Cython>=3.0.0']
-build-backend = 'setuptools.build_meta'
+requires = ["setuptools>=82", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.mypy]
 python_version = "{{ cookiecutter.app_lang_version }}"
@@ -137,7 +135,7 @@ docstring-code-format = true
 docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
-minversion = "8.3"
+minversion = "9"
 testpaths = "tests"
 
 [tool.coverage.run]

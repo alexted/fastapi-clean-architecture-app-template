@@ -2,28 +2,23 @@ from collections.abc import Iterator, AsyncIterator, AsyncGenerator
 
 from httpx import AsyncClient, ASGITransport
 import pytest
+import asyncpg
 from fastapi import FastAPI
-from filelock import FileLock
-from sqlalchemy import NullPool
 from alembic.config import Config as AlembicConfig
-from alembic.command import upgrade, downgrade
+from alembic.command import upgrade
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-{% if cookiecutter.use_postgresql | lower == 'y' -%}
 from tests.data import mock_data
-{% endif -%}
-from src.infrastructure.core.settings import get_config
+from src.infrastructure.core.settings import AppConfig, get_config
 from src.infrastructure.core.application import create_app
-{% if cookiecutter.use_postgresql | lower == 'y' -%}
 from src.infrastructure.clients.postgres.engine import get_db_session
-{% endif %}
 
 TEST_APP_URL = "http://test"
 
 pytest_plugins = ("tests.fixtures.items",)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def anyio_backend() -> str:
     """
     # Required per https://anyio.readthedocs.io/en/stable/testing.html#using-async-fixtures-with-higher-scopes
@@ -31,46 +26,83 @@ def anyio_backend() -> str:
     return "asyncio"
 
 
-{%- if cookiecutter.use_postgresql|lower == 'y' %}
-@pytest.fixture(scope="session", autouse=True)
-def migrations(tmp_path_factory) -> None:
-    alembic_config = AlembicConfig("alembic.ini")
-    alembic_config.attributes["configure_logger"] = False
-
-    root_tmp_dir = tmp_path_factory.getbasetemp().parent
-
-    fn = root_tmp_dir / "data.json"
-    with FileLock(str(fn) + ".lock"):
-        upgrade(alembic_config, "head")
-        yield "on head"
-        downgrade(alembic_config, "base")
-
-
 @pytest.fixture(scope="session")
-def db_engine() -> AsyncEngine:
-    return create_async_engine(get_config().POSTGRES_DSN.unicode_string(), poolclass=NullPool)
+async def db_engine(worker_id: str) -> AsyncIterator[AsyncEngine]:
+    config: AppConfig = get_config()
+    db_dsn: str = config.POSTGRES_DSN.unicode_string().replace("+asyncpg", "")
+    schema: str = f"test_{worker_id}"
+
+    conn: asyncpg.Connection = await asyncpg.connect(db_dsn)
+    try:
+        await conn.execute(f'CREATE SCHEMA IF NOT EXISTS "{schema}"')
+    finally:
+        await conn.close()
+
+    engine: AsyncEngine = create_async_engine(
+        config.POSTGRES_DSN.unicode_string(),
+        echo=False,
+        pool_size=config.POSTGRES_MAX_CONNECTIONS,
+        pool_pre_ping=True,
+        connect_args={"server_settings": {"application_name": schema, "search_path": schema}},
+    )
+
+    yield engine
+
+    await engine.dispose()
+
+    conn: asyncpg.Connection = await asyncpg.connect(db_dsn)
+    try:
+        await conn.execute(f'DROP SCHEMA IF EXISTS "{schema}" CASCADE')
+    finally:
+        await conn.close()
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="session", autouse=True)
+async def migrations(db_engine: AsyncEngine) -> None:
+    alembic_cfg = AlembicConfig("alembic.ini")
+    alembic_cfg.attributes["configure_logger"] = False
+
+    def run_upgrade(connection) -> None:
+        alembic_cfg.attributes["connection"] = connection
+        upgrade(alembic_cfg, "head")
+
+    async with db_engine.begin() as conn:
+        await conn.run_sync(run_upgrade)
+
+    yield "on head"
+
+    # def run_downgrade(connection) -> None:
+    #     alembic_cfg.attributes["connection"] = connection
+    #     downgrade(alembic_cfg, "base")
+    #
+    # async with db_engine.begin() as conn:
+    #     await conn.run_sync(run_downgrade)
+
+
+@pytest.fixture
 async def db_session(db_engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
     """
     Create a transactional test database session.
     https://docs.sqlalchemy.org/en/latest/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
     """
-    # expose session
-    async with async_sessionmaker(db_engine, expire_on_commit=False).begin() as session:
-        try:
-            yield session
-        finally:
-            await session.rollback()
-{% endif -%}
+    connection = await db_engine.connect()
+    transaction = await connection.begin()
+    async_session = async_sessionmaker(bind=connection, expire_on_commit=False)
+    session = async_session()
+
+    try:
+        yield session
+    finally:
+        await session.rollback()
+        await session.close()
+        await transaction.rollback()
+        await connection.close()
 
 
 @pytest.fixture
-def app({% if cookiecutter.use_postgresql|lower == 'y' -%}migrations: None, db_session: AsyncSession{% endif -%}) -> FastAPI:
+def app(migrations: None, db_session: AsyncSession) -> FastAPI:
     app_instance = create_app()
 
-    {%- if cookiecutter.use_postgresql | lower == 'y' %}
     def get_db_session_override() -> Iterator[AsyncSession]:
         try:
             yield db_session
@@ -78,7 +110,7 @@ def app({% if cookiecutter.use_postgresql|lower == 'y' -%}migrations: None, db_s
             pass
 
     app_instance.dependency_overrides[get_db_session] = get_db_session_override
-    {% endif %}
+
     return app_instance
 
 
@@ -87,8 +119,6 @@ async def client(app: FastAPI) -> AsyncGenerator[AsyncClient]:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url=TEST_APP_URL,
-        {% if cookiecutter.use_jwt | lower == 'y' %}
         headers={"Authorization": f"Bearer {mock_data.items[0]['id']}"},
-        {% endif %}
     ) as client:
         yield client

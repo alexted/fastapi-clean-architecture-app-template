@@ -4,7 +4,7 @@ from functools import lru_cache
 from fastapi import Depends
 from redis.asyncio import Redis
 
-from src.infrastructure.core.settings import get_config, AppConfig
+from src.infrastructure.core.settings import AppConfig, get_config
 
 
 @lru_cache(maxsize=1)

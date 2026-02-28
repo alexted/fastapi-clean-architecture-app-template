@@ -1,4 +1,7 @@
-from sqlalchemy import Column, String, Integer, BigInteger
+from decimal import Decimal
+
+from sqlalchemy import String, Numeric, BigInteger
+from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
 
@@ -6,10 +9,10 @@ from .base import Base
 class Item(Base):
     __tablename__ = "items"
 
-    id = Column(BigInteger, primary_key=True)
-    name = Column(String(200), nullable=False)
-    description = Column(String(2048))
-    price = Column(Integer, nullable=False)
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    name: Mapped[str] = mapped_column(String(256), nullable=False)
+    description: Mapped[str | None] = mapped_column(String(2048))
+    price: Mapped[Decimal] = mapped_column(Numeric(16, 8), nullable=False)
 
     def __repr__(self) -> str:
-        return f"Item(resource_id={self.id}, name={self.name})"
+        return f"<Item id={self.id} name={self.name} price={self.price}>"
