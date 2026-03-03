@@ -35,7 +35,6 @@ def setup_otel(config: AppConfig) -> None:
     span_processor = BatchSpanProcessor(otlp_exporter)
     provider.add_span_processor(span_processor)
 
-    # Auto-instrumentation
     FastAPIInstrumentor().instrument()
     {% if cookiecutter.use_postgresql | lower == 'y' -%}
     SQLAlchemyInstrumentor().instrument()

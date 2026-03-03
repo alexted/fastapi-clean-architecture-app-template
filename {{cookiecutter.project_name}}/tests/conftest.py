@@ -71,13 +71,6 @@ async def migrations(db_engine: AsyncEngine) -> None:
 
     yield "on head"
 
-    # def run_downgrade(connection) -> None:
-    #     alembic_cfg.attributes["connection"] = connection
-    #     downgrade(alembic_cfg, "base")
-    #
-    # async with db_engine.begin() as conn:
-    #     await conn.run_sync(run_downgrade)
-
 
 @pytest.fixture
 async def db_session(db_engine: AsyncEngine) -> AsyncIterator[AsyncSession]:

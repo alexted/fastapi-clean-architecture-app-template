@@ -26,24 +26,19 @@ class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
     APP_NAME: str = "{{ cookiecutter.project_name }}"
 
-    # Logging
     SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
     TELEMETRY_URL: HttpUrl | None = None
     {% if cookiecutter.use_postgresql | lower == 'y' %}
-    # Postgres
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
     {% endif %}
     {% if cookiecutter.use_redis | lower == 'y' %}
-    # Redis
     CACHE_DSN: RedisDsn
     {% endif %}
     {% if cookiecutter.use_kafka| lower == 'y' %}
-    # Kafka
     KAFKA_DSN: KafkaDsn | str
     {% endif %}
-    # Identity provider
     IDP_URL: HttpUrl
     IDP_CLIENT_SECRET: str
 

@@ -22,8 +22,6 @@ async def log_requests(request: Request, call_next: Callable) -> Response:
         else:
             request_body: bytes = b"file"
 
-        # Any exception in the code is caught by exception_handlers and always returns a response,
-        # so a response is always expected here
         response: Response = await call_next(request)
 
         response_body = [chunk async for chunk in response.body_iterator]

@@ -25,7 +25,7 @@ dependencies = [
     "alembic",
     {% endif -%}
     "python-json-logger",
-    "sentry-sdk[fastapi]",
+    "sentry-sdk[fastapi, opentelemetry-otlp]",
     "prometheus-fastapi-instrumentator",
     {% if cookiecutter.use_redis|lower == 'y' -%}
     "redis[hiredis]",

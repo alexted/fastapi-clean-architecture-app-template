@@ -16,7 +16,6 @@ from ..errors.exceptions import OtherError
 logger = logging.getLogger()
 
 
-# Standard error response format
 class ErrorSchema(BaseModel):
     error: str
     message: str | list[dict[str, Any]]
