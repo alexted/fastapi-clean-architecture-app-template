@@ -1,9 +1,15 @@
-from time import time
-from logging import Logger, getLogger
-from collections.abc import Callable
+from __future__ import annotations
 
-from fastapi import Request, Response
+from time import time
+from typing import TYPE_CHECKING
+from logging import Logger, getLogger
+
 from fastapi.concurrency import iterate_in_threadpool
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from fastapi import Request, Response
 
 logger: Logger = getLogger("{{ cookiecutter.project_name }}")
 

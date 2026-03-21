@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 from datetime import datetime
 from unittest.mock import Mock
@@ -13,7 +15,7 @@ class EqMock:
     def __init__(self, remember: bool = False) -> None:
         self.remember: bool = remember
 
-    def __eq__(self, other: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, other: Any) -> bool:
         if self.remember and self.value is not None:
             return self.value == other
         else:

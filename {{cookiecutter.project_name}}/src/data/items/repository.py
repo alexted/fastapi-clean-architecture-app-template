@@ -1,16 +1,20 @@
-from typing import Annotated
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Annotated
 import logging
 
 from fastapi import Depends
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.orm import selectinload
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.data.base import AbstractRepository
 
 from .dto import ItemDTO, ItemFilters
 from ...infrastructure.clients.postgres.engine import get_db_session
 from ...infrastructure.clients.postgres.models import Item
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger()
 

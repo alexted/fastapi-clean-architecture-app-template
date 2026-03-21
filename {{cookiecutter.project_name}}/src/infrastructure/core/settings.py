@@ -1,8 +1,13 @@
+from __future__ import annotations
+
 from enum import StrEnum
+from typing import TYPE_CHECKING
 from functools import lru_cache
 
-from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+if TYPE_CHECKING:
+    from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
 
 
 class EnvironmentEnum(StrEnum):
@@ -29,16 +34,16 @@ class AppConfig(BaseSettings):
     SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
     TELEMETRY_URL: HttpUrl | None = None
-    {% if cookiecutter.use_postgresql | lower == 'y' %}
+{% if cookiecutter.use_postgresql | lower == 'y' %}
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
-    {% endif %}
-    {% if cookiecutter.use_redis | lower == 'y' %}
+{% endif -%}
+{% if cookiecutter.use_redis | lower == 'y' %}
     CACHE_DSN: RedisDsn
-    {% endif %}
-    {% if cookiecutter.use_kafka| lower == 'y' %}
+{% endif -%}
+{% if cookiecutter.use_kafka| lower == 'y' %}
     KAFKA_DSN: KafkaDsn | str
-    {% endif %}
+{% endif %}
     IDP_URL: HttpUrl
     IDP_CLIENT_SECRET: str
 

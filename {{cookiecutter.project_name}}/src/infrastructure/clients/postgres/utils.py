@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sqlalchemy.sql import expression
 from sqlalchemy.types import DateTime
 from sqlalchemy.ext.compiler import compiles

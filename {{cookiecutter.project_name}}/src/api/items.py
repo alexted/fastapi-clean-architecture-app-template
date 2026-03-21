@@ -1,7 +1,8 @@
-from typing import Annotated
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Annotated
 
 from fastapi import Depends, Response, APIRouter, status
-from pydantic import PositiveInt
 
 from src.domain.use_cases.items import (
     GetItemRequest,
@@ -16,6 +17,12 @@ from src.domain.use_cases.items import (
     CreateItemResponse,
     UpdateItemResponse,
 )
+from src.domain.use_cases.items.list_items import ListItemsRequest, ListItemsUseCase, ListItemsResponse
+
+if TYPE_CHECKING:
+    from pydantic import PositiveInt
+
+    from src.domain.use_cases.items.update_item import NewItemData
 
 routes = APIRouter(tags=["items"])
 

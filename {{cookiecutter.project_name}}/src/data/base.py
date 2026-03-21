@@ -1,11 +1,17 @@
-import abc
+from __future__ import annotations
 
-from pydantic import BaseModel
+import abc
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
+
+    from src.infrastructure.clients.postgres.models import Base
 
 
 class AbstractRepository(abc.ABC):
     @abc.abstractmethod
-    def convert_to_dto(self, obj) -> BaseModel:
+    def convert_to_dto(self, obj: Base) -> BaseModel:
         raise NotImplementedError
 
     @abc.abstractmethod

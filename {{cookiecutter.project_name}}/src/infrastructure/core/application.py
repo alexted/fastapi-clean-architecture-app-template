@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from fastapi import FastAPI, Response, APIRouter, HTTPException
 import sentry_sdk
-from sentry_sdk.integrations.otlp import OTLPIntegration
 from starlette.status import HTTP_200_OK
 from fastapi.exceptions import RequestValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
+from sentry_sdk.integrations.otlp import OTLPIntegration
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.api import v1_routes
@@ -55,13 +57,10 @@ def create_app() -> FastAPI:
     app.add_middleware(BaseHTTPMiddleware, dispatch=log_requests)
 
     if config.ENVIRONMENT == EnvironmentEnum.PROD:
-        setup_otel(config)
+        setup_otel(config, app)
 
         sentry_sdk.init(
-            dsn=config.SENTRY_URL,
-            integrations=[OTLPIntegration()],
-            send_default_pii=True,
-            enable_logs=True,
+            dsn=config.SENTRY_URL, integrations=[OTLPIntegration()], send_default_pii=True, enable_logs=True
         )
         Instrumentator(excluded_handlers=["/health", "/metrics"]).instrument(app).expose(app, include_in_schema=False)
 

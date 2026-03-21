@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 from enum import StrEnum
 import typing as t
 from functools import wraps
 
-from src.infrastructure.core.settings import AppConfig
 from src.infrastructure.clients.http_client.base import BaseClient, handle_response_middleware
 from src.infrastructure.clients.http_client.client import ApiCall, HttpClient
 
+if t.TYPE_CHECKING:
+    from src.infrastructure.core.settings import AppConfig
 
 class ContentType(StrEnum):
     FORM = "application/x-www-form-urlencoded"

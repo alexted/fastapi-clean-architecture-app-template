@@ -1,6 +1,10 @@
-import abc
+from __future__ import annotations
 
-from pydantic import BaseModel
+import abc
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
 
 
 class BaseUseCase(abc.ABC):

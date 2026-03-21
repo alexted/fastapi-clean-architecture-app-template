@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 data_to_create_user = {
     "first_name": "first_name",
     "last_name": "last_name",

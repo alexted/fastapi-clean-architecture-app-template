@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">={{ cookiecutter.app_lang_version }}"
 dependencies = [
     "fastapi",
-    "granian[reload, pname]",
+    "granian[reload,pname]",
     "pydantic[email]",
     "pydantic-settings",
     {% if cookiecutter.use_jwt|lower == 'y' -%}
@@ -25,30 +25,30 @@ dependencies = [
     "alembic",
     {% endif -%}
     "python-json-logger",
-    "sentry-sdk[fastapi, opentelemetry-otlp]",
+    "sentry-sdk[fastapi,opentelemetry-otlp]",
     "prometheus-fastapi-instrumentator",
     {% if cookiecutter.use_redis|lower == 'y' -%}
     "redis[hiredis]",
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
-    "aiokafka",
+    "aiokafka[lz4,zstd]",
     {% endif -%}
-    "httpx",
+    "nats-py",
+    "httpx[http2]",
+    "taskiq",
     "opentelemetry-distro",
-    "opentelemetry-sdk",
-    "opentelemetry-exporter-otlp",
-    "opentelemetry-instrumentation",
+#    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
     "opentelemetry-instrumentation-fastapi",
     {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "opentelemetry-instrumentation-sqlalchemy",
     {% endif -%}
+    "opentelemetry-instrumentation-httpx",
     {% if cookiecutter.use_redis|lower == 'y' -%}
     "opentelemetry-instrumentation-redis",
-    {% endif -%}
+        {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
     "opentelemetry-instrumentation-aiokafka",
     {% endif -%}
-    "opentelemetry-instrumentation-httpx",
 ]
 
 [tool.poetry]
@@ -66,8 +66,8 @@ dev = [
 ]
 
 [build-system]
-requires = ["setuptools>=82", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 python_version = "{{ cookiecutter.app_lang_version }}"
@@ -94,28 +94,41 @@ select = [
     "Q", # flake8-quotes
     "SIM", # flake8-simplify
     "T", # flake8-type-checking
-    "B", # flake8-bandit
+    "T20",
+    "S", # flake8-bandit
     "C", # flake8-copyright
     "UP", # pyupgrade
+    "TCH",
+    "FA",
+    "FAST",
+    "ASYNC",
+    "PERF",
+    "RUF",
+    "PT"
 ]
 ignore = [
-    "ANN101", # Checks that instance method self arguments have type annotations
-    "ANN102", #
     "D203", # one blank line before class, handled by pydocstyle
-    "E501", # line too long, handled by black
-    "B008", # do not perform function calls in argument defaults
-    "C901", # too complex
-    "W191", # indentation contains tabs
+    "S105",  # hardcoded secrets/passwords/tokens
+    "ASYNC109",  # timeout in func agruments
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "S101"]
+"src/infrastructure/clients/postgres/migrations/*" = ["ANN"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
 
 [tool.ruff.lint.flake8-type-checking]
 exempt-modules = ["typing", "typing_extensions"]
+runtime-evaluated-base-classes = ["pydantic.BaseModel", "sqlalchemy.orm.DeclarativeBase"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path", "pydantic.Field"]
 
 [tool.ruff.lint.flake8-bandit]
 check-typed-exception = true
+hardcoded-tmp-directory = ["/tmp", "/var/tmp", "/dev/shm"]
 
 [tool.ruff.lint.isort]
 length-sort = true
@@ -124,6 +137,7 @@ order-by-type = true
 force-sort-within-sections = true
 split-on-trailing-comma = false
 known-first-party = ["src"]
+required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -135,8 +149,8 @@ docstring-code-format = true
 docstring-code-line-length = 80
 
 [tool.pytest.ini_options]
-minversion = "9"
-testpaths = "tests"
+minversion = "9.0"
+testpaths = ["tests"]
 
 [tool.coverage.run]
 source = ["src"]

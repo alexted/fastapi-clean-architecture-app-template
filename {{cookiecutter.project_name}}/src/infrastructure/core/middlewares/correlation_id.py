@@ -1,10 +1,17 @@
-from uuid import uuid7
-from contextvars import ContextVar
-from collections.abc import Callable
+from __future__ import annotations
 
-from fastapi import Request, Response
+from uuid import uuid7
+from typing import TYPE_CHECKING
+from contextvars import ContextVar
+
 import sentry_sdk
 from opentelemetry import trace
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from fastapi import Request, Response
+
 
 CORRELATION_ID: ContextVar[str | None] = ContextVar("correlation_id", default=None)
 

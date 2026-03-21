@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import sys
+from typing import TYPE_CHECKING
 import logging
 
 from opentelemetry import trace
 from pythonjsonlogger.json import JsonFormatter
 
-from .settings import AppConfig
 from .middlewares.correlation_id import CORRELATION_ID
+
+if TYPE_CHECKING:
+    from .settings import AppConfig
 
 
 class RequestIdFilter(logging.Filter):
@@ -15,8 +20,8 @@ class RequestIdFilter(logging.Filter):
         span = trace.get_current_span()
         if span.is_recording():
             ctx = span.get_span_context()
-            record.trace_id = format(ctx.trace_id, '032x')
-            record.span_id = format(ctx.span_id, '016x')
+            record.trace_id = format(ctx.trace_id, "032x")
+            record.span_id = format(ctx.span_id, "016x")
         else:
             record.trace_id = None
             record.span_id = None
@@ -39,7 +44,7 @@ def init_logging(config: AppConfig) -> None:
                     "format": "%(levelname)s %(asctime)s %(name)s %(funcName)s %(correlation_id)s %(trace_id)s %(span_id)s %(message)s",
                     "datefmt": "%Y-%m-%d %H:%M:%S",
                     "json_ensure_ascii": False,
-                }
+                },
             },
             "handlers": {
                 "console": {

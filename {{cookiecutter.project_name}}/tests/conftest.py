@@ -1,9 +1,10 @@
-from collections.abc import Iterator, AsyncIterator, AsyncGenerator
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 
 from httpx import AsyncClient, ASGITransport
 import pytest
 import asyncpg
-from fastapi import FastAPI
 from alembic.config import Config as AlembicConfig
 from alembic.command import upgrade
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
@@ -12,6 +13,11 @@ from tests.data import mock_data
 from src.infrastructure.core.settings import AppConfig, get_config
 from src.infrastructure.core.application import create_app
 from src.infrastructure.clients.postgres.engine import get_db_session
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, AsyncIterator, AsyncGenerator
+
+    from fastapi import FastAPI
 
 TEST_APP_URL = "http://test"
 
@@ -58,7 +64,7 @@ async def db_engine(worker_id: str) -> AsyncIterator[AsyncEngine]:
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def migrations(db_engine: AsyncEngine) -> None:
+async def migrations(db_engine: AsyncEngine) -> AsyncGenerator[str, Any]:
     alembic_cfg = AlembicConfig("alembic.ini")
     alembic_cfg.attributes["configure_logger"] = False
 
@@ -107,7 +113,7 @@ def app(migrations: None, db_session: AsyncSession) -> FastAPI:
     return app_instance
 
 
-@pytest.fixture()
+@pytest.fixture
 async def client(app: FastAPI) -> AsyncGenerator[AsyncClient]:
     async with AsyncClient(
         transport=ASGITransport(app=app),
