@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import StrEnum
 from functools import lru_cache
 
@@ -26,24 +28,19 @@ class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
     APP_NAME: str = "{{ cookiecutter.project_name }}"
 
-    # Logging
     SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
     TELEMETRY_URL: HttpUrl | None = None
-    {% if cookiecutter.use_postgresql | lower == 'y' %}
-    # Postgres
+{% if cookiecutter.use_postgresql | lower == 'y' %}
     POSTGRES_DSN: PostgresDsn
     POSTGRES_MAX_CONNECTIONS: int = 10
-    {% endif %}
-    {% if cookiecutter.use_redis | lower == 'y' %}
-    # Redis
+{% endif -%}
+{% if cookiecutter.use_redis | lower == 'y' %}
     CACHE_DSN: RedisDsn
-    {% endif %}
-    {% if cookiecutter.use_kafka| lower == 'y' %}
-    # Kafka
+{% endif -%}
+{% if cookiecutter.use_kafka| lower == 'y' %}
     KAFKA_DSN: KafkaDsn | str
-    {% endif %}
-    # Identity provider
+{% endif %}
     IDP_URL: HttpUrl
     IDP_CLIENT_SECRET: str
 

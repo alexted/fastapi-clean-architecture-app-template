@@ -1,4 +1,6 @@
-from typing import Any
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 import asyncio
 import threading
 import traceback
@@ -6,11 +8,13 @@ from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import pool
-from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from src.infrastructure.core.settings import AppConfig, get_config
 from src.infrastructure.clients.postgres.models import Base
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine import Connection
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -88,8 +92,8 @@ async def run_async_migrations() -> None:
 
 def _run_async_migrations_in_thread() -> None:
     """
-    Вспомогательная обёртка: запускает asyncio.run(run_async_migrations()) в отдельном потоке.
-    Используется только как фолбэк, если мы оказались в уже запущенном loop и нет переданного connection.
+    Helper wrapper: executes `asyncio.run(run_async_migrations())` in a separate thread.
+    Used strictly as a fallback when an event loop is already running and no connection has been provided.
     """
     exc_holder: dict[str, Any] = {"exc": None, "tb": None}
 
@@ -112,40 +116,34 @@ def _run_async_migrations_in_thread() -> None:
 
 def run_migrations_online() -> None:
     """
-    Универсальная логика запуска миграций в 'online' режиме.
+    Universal migration execution logic for 'online' mode.
 
-    Поведение:
-    1) Если caller передал `config.attributes['connection']` — используем его.
-       - Если это AsyncConnection (имеет run_sync) — вызываем connection.run_sync(do_run_migrations)
-       - Иначе считаем его sync Connection и вызываем do_run_migrations(connection)
-    2) Иначе — запускаем стандартный async-путь через run_async_migrations().
-       - Если в текущем потоке есть запущенный event loop, то как фолбэк запускаем async-путь в отдельном потоке.
+    Behavior:
+    1) If the caller provides `config.attributes['connection']`, it is used directly:
+       - If it is an AsyncConnection (has `run_sync`),
+       we invoke `connection.run_sync(do_run_migrations)`.
+       - Otherwise, it is treated as a synchronous Connection,
+       and `do_run_migrations(connection)` is called.
+    2) Otherwise, the standard asynchronous path is initiated via `run_async_migrations()`:
+       - If an event loop is already running in the current thread,
+       the async path is executed in a separate thread as a fallback.
     """
     cfg_connection = context.config.attributes.get("connection")
     if cfg_connection is not None:
-        # Определяем асинхронное ли это подключение (duck-typing)
         if hasattr(cfg_connection, "run_sync"):
-            # AsyncConnection: run_sync примет do_run_migrations(sync_conn)
-            # cfg_connection может быть sqlalchemy.ext.asyncio.Connection
-            # в таком случае run_sync — coroutine method? В doc: connection.run_sync(sync_callable)
             cfg_connection.run_sync(do_run_migrations)
         else:
-            # Sync Connection — вызываем напрямую
             do_run_migrations(cfg_connection)
         return
 
-    # Нет переданного connection — стандартный путь (создаём свой async engine)
-    # Но не вызываем asyncio.run() если loop уже живёт в этом процессе.
     try:
         running_loop = asyncio.get_running_loop()
     except RuntimeError:
         running_loop = None
 
     if running_loop is None or not running_loop.is_running():
-        # обычный путь (CLI)
         asyncio.run(run_async_migrations())
     else:
-        # фолбэк: запускаем в отдельном потоке, чтобы не ломать существующий loop
         _run_async_migrations_in_thread()
 
 

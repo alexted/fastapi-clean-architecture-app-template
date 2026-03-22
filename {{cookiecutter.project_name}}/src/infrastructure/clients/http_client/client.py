@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json as jsonlib
 import typing as t
 import logging
@@ -25,8 +27,8 @@ class HttpClient:
     def __init__(
         self,
         base_url: str,
-        query_params: dict = None,
-        headers: dict = None,
+        query_params: dict | None = None,
+        headers: dict | None = None,
         verify: bool = False,
         **session_params: dict,
     ) -> None:
@@ -61,16 +63,16 @@ class HttpClient:
 
         return self.__session
 
-    async def call(  # noqa: CFQ002
+    async def call(
         self,
         path: str = "",
         method: str = "GET",
-        data: dict = None,
-        json: dict = None,
-        params: dict = None,
-        headers: dict = None,
-        timeout: int = None,
-        files: bytes = None,
+        data: dict | None = None,
+        json: dict | None = None,
+        params: dict | None = None,
+        headers: dict | None = None,
+        timeout: int | None = None,  # noqa ASYNC109
+        files: bytes | None = None,
         **kwargs: dict,
     ) -> httpx.Response:
         """
@@ -135,13 +137,13 @@ class ApiCall:
 
         return await self._client.call(path=path, **parameters)
 
-    async def __call__(  # noqa: CFQ002
+    async def __call__(
         self,
-        data: dict = None,
-        json: dict = None,
-        params: dict = None,
-        path_params: dict = None,
-        headers: dict = None,
+        data: dict | None = None,
+        json: dict | None = None,
+        params: dict | None = None,
+        path_params: dict | None = None,
+        headers: dict | None = None,
         **kwargs: dict,
     ) -> t.Any:  # noqa ANN401
         return await self._handler(

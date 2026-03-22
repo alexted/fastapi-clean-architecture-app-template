@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from src.domain.use_cases.items.get_item import GetItemRequest, GetItemUseCase, GetItemResponse
 from src.domain.use_cases.items.create_item import CreateItemRequest, CreateItemUseCase, CreateItemResponse
 from src.domain.use_cases.items.delete_item import DeleteItemRequest, DeleteItemUseCase

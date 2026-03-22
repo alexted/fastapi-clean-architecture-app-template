@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Annotated
 from decimal import Decimal
 
@@ -8,19 +10,19 @@ from src.data.items import ItemDTO, ItemRepository
 from src.domain.use_cases.base import BaseUseCase
 
 
-class ItemData(BaseModel):
+class NewItemData(BaseModel):
     """ """
 
-    name: str
-    description: str
-    price: Annotated[Decimal, Field(max_digits=16, decimal_places=8, ge=0)]
+    name: str | None = None
+    description: str | None = None
+    price: Annotated[Decimal | None, Field(max_digits=16, decimal_places=8, ge=0)] = None
 
 
 class UpdateItemRequest(BaseModel):
     """ """
 
     id: PositiveInt
-    data: ItemData
+    new_data: NewItemData
 
 
 class UpdateItemResponse(BaseModel):
@@ -42,5 +44,5 @@ class UpdateItemUseCase(BaseUseCase):
         :param request_object:
         :return:
         """
-        item: ItemDTO = await self.item_repo.update(request_object.id, request_object.data)
+        item: ItemDTO = await self.item_repo.update(request_object.id, request_object.new_data)
         return UpdateItemResponse.model_construct(**item.model_dump())

@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import json
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 from functools import lru_cache
-from collections.abc import Iterator
 
 from fastapi import Depends
 from aiokafka import AIOKafkaProducer
 
 from src.infrastructure.core.settings import AppConfig, get_config
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 @lru_cache(maxsize=1)

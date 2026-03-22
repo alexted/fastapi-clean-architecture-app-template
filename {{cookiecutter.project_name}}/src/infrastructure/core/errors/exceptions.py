@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .constants import ErrorType
 
 
@@ -7,7 +9,7 @@ class OtherError(Exception):
     type: ErrorType = ErrorType.INTERNAL_ERROR
     code: int = 500
 
-    def __init__(self, message: str = None, code: int = None) -> None:
+    def __init__(self, message: str | None = None, code: int | None = None) -> None:
         """
         :param message: Error message
         :param code: HTTP status code

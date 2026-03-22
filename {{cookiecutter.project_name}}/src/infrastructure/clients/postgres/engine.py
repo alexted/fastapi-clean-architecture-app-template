@@ -1,8 +1,13 @@
-from collections.abc import AsyncGenerator
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from src.infrastructure.core.settings import AppConfig
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
+    from src.infrastructure.core.settings import AppConfig
 
 engine: AsyncEngine = None
 session_factory: async_sessionmaker[AsyncSession] = None

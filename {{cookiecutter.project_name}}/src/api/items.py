@@ -1,7 +1,8 @@
-from typing import Annotated
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Annotated
 
 from fastapi import Depends, Response, APIRouter, status
-from pydantic import PositiveInt
 
 from src.domain.use_cases.items import (
     GetItemRequest,
@@ -16,6 +17,12 @@ from src.domain.use_cases.items import (
     CreateItemResponse,
     UpdateItemResponse,
 )
+from src.domain.use_cases.items.list_items import ListItemsUseCase, ListItemsResponse
+
+if TYPE_CHECKING:
+    from pydantic import PositiveInt
+
+    from src.domain.use_cases.items.update_item import NewItemData
 
 routes = APIRouter(tags=["items"])
 
@@ -49,23 +56,37 @@ async def get_item(
     return item
 
 
+@routes.get("/items")
+async def list_items(use_case: Annotated[ListItemsUseCase, Depends(ListItemsUseCase)]) -> list[ListItemsResponse]:
+    """
+    List items
+    :param use_case:
+    :return:
+    """
+    items: list[ListItemsResponse] = await use_case.execute()
+    return items
+
+
 @routes.put("/items/{item_id}")
 async def update_item(
-    item_id: PositiveInt, item: UpdateItemRequest, use_case: Annotated[UpdateItemUseCase, Depends(UpdateItemUseCase)]
+    item_id: PositiveInt, new_item_data: NewItemData, use_case: Annotated[UpdateItemUseCase, Depends(UpdateItemUseCase)]
 ) -> UpdateItemResponse:
     """
     Update item
     :param item_id:
-    :param item:
+    :param new_item_data:
     :param use_case:
     :return:
     """
-    item: UpdateItemResponse = await use_case.execute(item)
+    req = UpdateItemRequest(item_id, new_item_data)
+    item: UpdateItemResponse = await use_case.execute(req)
     return item
 
 
 @routes.delete("/items/{item_id}")
-async def delete_item(item_id: PositiveInt, use_case: Annotated[DeleteItemUseCase, Depends(DeleteItemUseCase)]):
+async def delete_item(
+        item_id: PositiveInt, use_case: Annotated[DeleteItemUseCase, Depends(DeleteItemUseCase)]
+) -> Response:
     """
     Delete item
     :param item_id:

@@ -1,9 +1,15 @@
-from time import time
-from logging import Logger, getLogger
-from collections.abc import Callable
+from __future__ import annotations
 
-from fastapi import Request, Response
+from time import time
+from typing import TYPE_CHECKING
+from logging import Logger, getLogger
+
 from fastapi.concurrency import iterate_in_threadpool
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from fastapi import Request, Response
 
 logger: Logger = getLogger("{{ cookiecutter.project_name }}")
 
@@ -22,8 +28,6 @@ async def log_requests(request: Request, call_next: Callable) -> Response:
         else:
             request_body: bytes = b"file"
 
-        # Any exception in the code is caught by exception_handlers and always returns a response,
-        # so a response is always expected here
         response: Response = await call_next(request)
 
         response_body = [chunk async for chunk in response.body_iterator]

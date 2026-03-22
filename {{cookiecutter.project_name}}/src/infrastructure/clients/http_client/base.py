@@ -1,17 +1,21 @@
+from __future__ import annotations
+
 from json import JSONDecodeError
 import typing as t
 
-import httpx
-from httpx import Response
-
 from src.infrastructure.core.errors.exceptions import ExternalServiceError
 from src.infrastructure.clients.http_client.client import HttpClient
+
+if t.TYPE_CHECKING:
+    import httpx
+    from httpx import Response
 
 
 def handle_response_middleware(service_name: str) -> t.Callable:
     async def check_response(data: dict, handler: t.Callable) -> Response:
         """
-        Middleware to check the response of the remote infrastructure. If the response is negative, an error is generated
+        Middleware to check the response of the remote infrastructure.
+        If the response is negative, an error is generated
         """
 
         response: httpx.Response = await handler(data)
@@ -34,7 +38,7 @@ class BaseClient:
     def _init_api(self, client: HttpClient) -> t.Never:
         raise NotImplementedError
 
-    def __init__(self, url: str, headers: dict[str, t.Any] = None, **kwargs: dict) -> None:
+    def __init__(self, url: str, headers: dict[str, t.Any] | None = None, **kwargs: dict) -> None:
         self._client: HttpClient = HttpClient(base_url=url, headers=headers, **kwargs)
         self._init_api(self._client)
 
