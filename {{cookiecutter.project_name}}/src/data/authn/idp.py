@@ -10,6 +10,7 @@ from src.infrastructure.clients.http_client.client import ApiCall, HttpClient
 if t.TYPE_CHECKING:
     from src.infrastructure.core.settings import AppConfig
 
+
 class ContentType(StrEnum):
     FORM = "application/x-www-form-urlencoded"
     JSON = "application/json"

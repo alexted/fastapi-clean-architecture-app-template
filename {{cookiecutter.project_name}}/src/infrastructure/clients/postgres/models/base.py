@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.asyncio import AsyncAttrs
 
 
 class Base(AsyncAttrs, DeclarativeBase):

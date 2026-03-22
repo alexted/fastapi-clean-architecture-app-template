@@ -16,6 +16,9 @@ from ...infrastructure.clients.postgres.models import Item
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
+    from ...domain.use_cases.items import CreateItemRequest
+    from ...domain.use_cases.items.update_item import NewItemData
+
 logger = logging.getLogger()
 
 
@@ -25,7 +28,7 @@ class ItemRepository(AbstractRepository):
     def __init__(self, db_session: Annotated[AsyncSession, Depends(get_db_session)]) -> None:
         self._session: AsyncSession = db_session
 
-    def convert_to_dto(self, obj) -> ItemDTO:
+    def convert_to_dto(self, obj: Item) -> ItemDTO:
         """
 
         :param obj:
@@ -33,7 +36,7 @@ class ItemRepository(AbstractRepository):
         """
         return ItemDTO.model_validate(obj)
 
-    async def create(self, obj_data) -> ItemDTO:
+    async def create(self, obj_data: CreateItemRequest) -> ItemDTO:
         """
 
         :param obj_data:
@@ -63,7 +66,7 @@ class ItemRepository(AbstractRepository):
 
         return [self.convert_to_dto(res) for res in result]
 
-    async def update(self, item_id: int, data) -> ItemDTO:
+    async def update(self, item_id: int, data: NewItemData) -> ItemDTO:
         """
 
         :param item_id:

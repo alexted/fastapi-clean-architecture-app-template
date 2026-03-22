@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from decimal import Decimal
 
 from sqlalchemy import String, Numeric, BigInteger
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
-
-if TYPE_CHECKING:
-    from decimal import Decimal
 
 
 class Item(Base):

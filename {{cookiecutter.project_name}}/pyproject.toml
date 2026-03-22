@@ -34,6 +34,7 @@ dependencies = [
     "aiokafka[lz4,zstd]",
     {% endif -%}
     "nats-py",
+    "nats-jetstream",
     "httpx[http2]",
     "taskiq",
     "opentelemetry-distro",
@@ -93,28 +94,28 @@ select = [
     "ANN", # flake8-annotations
     "Q", # flake8-quotes
     "SIM", # flake8-simplify
-    "T", # flake8-type-checking
-    "T20",
+    "T", # flake8-debugger
+    "T20", # flake8-print
     "S", # flake8-bandit
-    "C", # flake8-copyright
+    "C", # mccabe complexity
     "UP", # pyupgrade
-    "TCH",
-    "FA",
-    "FAST",
-    "ASYNC",
-    "PERF",
-    "RUF",
-    "PT"
+    "TCH", # flake8-type-checking
+    "FA", # flake8-future-annotations
+    "FAST", # fastapi
+    "ASYNC", # flake8-async
+    "PERF", # perflint
+    "RUF", # ruff-specific rules
+    "PT" # flake8-pytest-style
 ]
 ignore = [
     "D203", # one blank line before class, handled by pydocstyle
-    "S105",  # hardcoded secrets/passwords/tokens
-    "ASYNC109",  # timeout in func agruments
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ANN", "S101"]
 "src/infrastructure/clients/postgres/migrations/*" = ["ANN"]
+"src/infrastructure/clients/postgres/models/items.py" = ["TCH"]
+"src/infrastructure/core/settings.py" = ["TCH"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
@@ -137,7 +138,6 @@ order-by-type = true
 force-sort-within-sections = true
 split-on-trailing-comma = false
 known-first-party = ["src"]
-required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import TYPE_CHECKING
 from functools import lru_cache
 
+from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-if TYPE_CHECKING:
-    from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
 
 
 class EnvironmentEnum(StrEnum):
