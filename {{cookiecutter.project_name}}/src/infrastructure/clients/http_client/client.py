@@ -71,7 +71,7 @@ class HttpClient:
         json: dict | None = None,
         params: dict | None = None,
         headers: dict | None = None,
-        timeout: int | None = None,         # noqa ASYNC109
+        timeout: int | None = None,  # noqa ASYNC109
         files: bytes | None = None,
         **kwargs: dict,
     ) -> httpx.Response:

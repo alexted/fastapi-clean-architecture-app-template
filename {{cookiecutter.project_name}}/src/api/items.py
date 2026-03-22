@@ -17,7 +17,7 @@ from src.domain.use_cases.items import (
     CreateItemResponse,
     UpdateItemResponse,
 )
-from src.domain.use_cases.items.list_items import ListItemsRequest, ListItemsUseCase, ListItemsResponse
+from src.domain.use_cases.items.list_items import ListItemsUseCase, ListItemsResponse
 
 if TYPE_CHECKING:
     from pydantic import PositiveInt
