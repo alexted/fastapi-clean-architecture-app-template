@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql import expression
 from sqlalchemy.types import DateTime
-from sqlalchemy.ext.compiler import compiles
 
 
 class utcnow(expression.FunctionElement):

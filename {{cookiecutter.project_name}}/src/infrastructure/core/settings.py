@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import StrEnum
 from functools import lru_cache
 
-from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
+from pydantic import HttpUrl, KafkaDsn, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

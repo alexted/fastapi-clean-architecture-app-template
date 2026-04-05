@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from tests.data.mock_data import items
 from tests.data.expected_data import created_item, updated_item
+from tests.data.mock_data import items
 
 pytestmark = pytest.mark.anyio
 

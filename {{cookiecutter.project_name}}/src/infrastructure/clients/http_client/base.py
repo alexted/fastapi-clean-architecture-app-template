@@ -3,8 +3,8 @@ from __future__ import annotations
 from json import JSONDecodeError
 import typing as t
 
-from src.infrastructure.core.errors.exceptions import ExternalServiceError
 from src.infrastructure.clients.http_client.client import HttpClient
+from src.infrastructure.core.errors.exceptions import ExternalServiceError
 
 if t.TYPE_CHECKING:
     import httpx
@@ -15,9 +15,8 @@ def handle_response_middleware(service_name: str) -> t.Callable:
     async def check_response(data: dict, handler: t.Callable) -> Response:
         """
         Middleware to check the response of the remote infrastructure.
-        If the response is negative, an error is generated
+        If the response is negative, an error is generated.
         """
-
         response: httpx.Response = await handler(data)
 
         if response.status_code not in (200, 201, 204):

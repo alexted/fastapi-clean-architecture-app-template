@@ -1,59 +1,37 @@
 [project]
-name = "{{ cookiecutter.project_name }}"
-version = "{{ cookiecutter.project_release }}"
-description = "{{ cookiecutter.project_description }}"
+name = "fastapi-app"
+version = "1.0.0"
+description = "fvd ervsfd"
 authors = [
-    { name = "{{ cookiecutter.app_developer }}", email = "author@mail.dev" }
+    { name = "dfwv ergs", email = "author@mail.dev" }
 ]
-readme = "README.md"
-requires-python = ">={{ cookiecutter.app_lang_version }}"
+requires-python = ">=3.14"
 dependencies = [
     "fastapi",
     "granian[reload,pname]",
     "pydantic[email]",
     "pydantic-settings",
-    {% if cookiecutter.use_jwt|lower == 'y' -%}
     "pyjwt[crypto]",
-    {% endif -%}
-    {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
     "asyncpg",
-    {% endif -%}
-    {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "sqlalchemy[asyncio]",
-    {% endif -%}
-    {% if cookiecutter.use_alembic|lower == 'y' -%}
     "alembic",
-    {% endif -%}
     "python-json-logger",
     "sentry-sdk[fastapi,opentelemetry-otlp]",
     "prometheus-fastapi-instrumentator",
-    {% if cookiecutter.use_redis|lower == 'y' -%}
     "redis[hiredis]",
-    {% endif -%}
-    {% if cookiecutter.use_kafka|lower == 'y' -%}
     "aiokafka[lz4,zstd]",
-    {% endif -%}
     "nats-py",
     "nats-jetstream",
     "httpx[http2]",
-    "taskiq",
+#    "taskiq",
     "opentelemetry-distro",
 #    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
     "opentelemetry-instrumentation-fastapi",
-    {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "opentelemetry-instrumentation-sqlalchemy",
-    {% endif -%}
     "opentelemetry-instrumentation-httpx",
-    {% if cookiecutter.use_redis|lower == 'y' -%}
     "opentelemetry-instrumentation-redis",
-        {% endif -%}
-    {% if cookiecutter.use_kafka|lower == 'y' -%}
     "opentelemetry-instrumentation-aiokafka",
-    {% endif -%}
-]
-
-[tool.poetry]
-package-mode = false
+    ]
 
 [dependency-groups]
 dev = [
@@ -66,54 +44,49 @@ dev = [
     "pre-commit",
 ]
 
+[tool.poetry]
+package-mode = false
+
 [build-system]
-requires = ["poetry-core>=2.0"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
-python_version = "{{ cookiecutter.app_lang_version }}"
-ignore_missing_imports = true
+python_version = "3.14"
+disable_error_code = "import-untyped"
 
 [tool.ruff]
 src = ["src"]
-target-version = "py{{ cookiecutter.app_lang_version|replace('.', '') }}"
+target-version = "py314"
 line-length = 120
 fix = true
-unsafe-fixes = true
+#unsafe-fixes = true
 show-fixes = true
 output-format = "grouped"
 
 [tool.ruff.lint]
 select = [
-    "E", # pycodestyle errors
-    "W", # pycodestyle warnings
-    "F", # pyflakes
-    "I", # isort
-    "B", # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "ANN", # flake8-annotations
-    "Q", # flake8-quotes
-    "SIM", # flake8-simplify
-    "T", # flake8-debugger
+    "E", "W", "F", "I", "B", "C4", "ANN", "SIM",
+    "T10", # flake8-debugger
     "T20", # flake8-print
     "S", # flake8-bandit
-    "C", # mccabe complexity
-    "UP", # pyupgrade
+    "C90", # mccabe
     "TCH", # flake8-type-checking
-    "FA", # flake8-future-annotations
-    "FAST", # fastapi
-    "ASYNC", # flake8-async
-    "PERF", # perflint
-    "RUF", # ruff-specific rules
-    "PT" # flake8-pytest-style
+    "UP", "FA", "FAST", "ASYNC", "PERF", "RUF", "PT",
+    "A",   # flake8-builtins
+    "BLE", # flake8-blind-except
+    "PTH", # flake8-use-pathlib
+    "RET", # flake8-return
+    "D",   # pydocstyle
 ]
 ignore = [
     "D203", # one blank line before class, handled by pydocstyle
+    "D212", # may conflict with D213 when using Google convention
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ANN", "S101"]
-"src/infrastructure/clients/postgres/migrations/*" = ["ANN"]
+"tests/*" = ["ANN", "S101", "D"]
+"src/infrastructure/clients/postgres/migrations/*" = ["ANN", "D"]
 "src/infrastructure/clients/postgres/models/items.py" = ["TCH"]
 "src/infrastructure/core/settings.py" = ["TCH"]
 
@@ -132,18 +105,16 @@ check-typed-exception = true
 hardcoded-tmp-directory = ["/tmp", "/var/tmp", "/dev/shm"]
 
 [tool.ruff.lint.isort]
-length-sort = true
 combine-as-imports = true
 order-by-type = true
 force-sort-within-sections = true
-split-on-trailing-comma = false
+# split-on-trailing-comma = false
 known-first-party = ["src"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.ruff.format]
-indent-style = "space"
 skip-magic-trailing-comma = true
 docstring-code-format = true
 docstring-code-line-length = 80
@@ -160,12 +131,11 @@ data_file = "tests/coverage/.coverage"
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
-omit = ["tests/*"]
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
     "if __name__ == .__main__.:",
-    "def logger",
+    "logger.",
     "def build_spec.*:",
     "except ConnectionRefusedError",
 ]

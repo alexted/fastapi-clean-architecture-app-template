@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import Any
 from datetime import datetime
+from typing import Any
 from unittest.mock import Mock
 
 from pydantic import TypeAdapter
@@ -18,11 +18,10 @@ class EqMock:
     def __eq__(self, other: Any) -> bool:
         if self.remember and self.value is not None:
             return self.value == other
-        else:
-            assert other, other
+        assert other, other
 
-            if self.remember:
-                self.value = other
+        if self.remember:
+            self.value = other
 
         return True
 

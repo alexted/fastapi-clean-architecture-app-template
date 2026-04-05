@@ -2,27 +2,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated
 
-from fastapi import Depends, Response, APIRouter, status
+from fastapi import APIRouter, Depends, Response, status
 
 from src.domain.use_cases.items import (
-    GetItemRequest,
-    GetItemUseCase,
-    GetItemResponse,
     CreateItemRequest,
+    CreateItemResponse,
     CreateItemUseCase,
     DeleteItemRequest,
     DeleteItemUseCase,
+    GetItemRequest,
+    GetItemResponse,
+    GetItemUseCase,
     UpdateItemRequest,
-    UpdateItemUseCase,
-    CreateItemResponse,
     UpdateItemResponse,
+    UpdateItemUseCase,
 )
-from src.domain.use_cases.items.list_items import ListItemsUseCase, ListItemsResponse
-
-if TYPE_CHECKING:
-    from pydantic import PositiveInt
-
-    from src.domain.use_cases.items.update_item import NewItemData
+from src.domain.use_cases.items.list_items import ListItemsResponse, ListItemsUseCase
 
 routes = APIRouter(tags=["items"])
 

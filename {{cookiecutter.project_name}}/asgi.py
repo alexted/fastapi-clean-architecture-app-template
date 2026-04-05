@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from granian import Granian
-from granian.log import LogLevels
 from granian.constants import Interfaces
+from granian.log import LogLevels
 
 if __name__ == "__main__":
     Granian(

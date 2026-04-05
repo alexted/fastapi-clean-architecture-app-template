@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
-import logging
 from datetime import UTC, datetime
+import logging
+from typing import TYPE_CHECKING, Any
 
 from fastapi import Request, Response
 from pydantic import BaseModel
 from starlette.status import HTTP_422_UNPROCESSABLE_CONTENT
 
-from .correlation_id import CORRELATION_ID
 from ..errors.constants import ErrorType
+from .correlation_id import CORRELATION_ID
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
@@ -18,7 +18,6 @@ if TYPE_CHECKING:
     from fastapi.exceptions import HTTPException, RequestValidationError
 
     from ..errors.exceptions import OtherError
-
 
 logger = logging.getLogger()
 

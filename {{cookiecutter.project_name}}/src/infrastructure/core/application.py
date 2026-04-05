@@ -1,24 +1,24 @@
 from __future__ import annotations
 
-from fastapi import FastAPI, Response, APIRouter, HTTPException
-import sentry_sdk
-from starlette.status import HTTP_200_OK
+from fastapi import APIRouter, FastAPI, HTTPException, Response
 from fastapi.exceptions import RequestValidationError
-from starlette.middleware.base import BaseHTTPMiddleware
-from sentry_sdk.integrations.otlp import OTLPIntegration
 from prometheus_fastapi_instrumentator import Instrumentator
+import sentry_sdk
+from sentry_sdk.integrations.otlp import OTLPIntegration
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.status import HTTP_200_OK
 
 from src.api import v1_routes
 
-from .settings import AppConfig, EnvironmentEnum, get_config
-from .constants import responses
-from .telemetry import setup_otel
-from .log_config import init_logging
-from .errors.exceptions import OtherError
 from ..clients.postgres.engine import init_database
-from .middlewares.log_requests import log_requests
+from .constants import responses
+from .errors.exceptions import OtherError
+from .log_config import init_logging
 from .middlewares.correlation_id import handle_correlation_id
-from .middlewares.error_handling import ExceptionHandler, OtherErrorHandler, FastAPIErrorHandler, ValidationErrorHandler
+from .middlewares.error_handling import ExceptionHandler, FastAPIErrorHandler, OtherErrorHandler, ValidationErrorHandler
+from .middlewares.log_requests import log_requests
+from .settings import AppConfig, EnvironmentEnum, get_config
+from .telemetry import setup_otel
 
 healthcheck_route = APIRouter(include_in_schema=False)
 

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from uuid import UUID
-from typing import Annotated
 import logging
+from typing import Annotated
+from uuid import UUID
 
-from fastapi import Depends, Request, HTTPException
+from fastapi import Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from src.data.authn.idp import IDPService

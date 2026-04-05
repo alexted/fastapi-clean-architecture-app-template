@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import logging
 import sys
 from typing import TYPE_CHECKING
-import logging
 
 from opentelemetry import trace
 from pythonjsonlogger.json import JsonFormatter
