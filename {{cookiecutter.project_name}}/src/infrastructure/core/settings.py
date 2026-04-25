@@ -28,6 +28,10 @@ class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
     APP_NAME: str = "{{ cookiecutter.project_name }}"
 
+    SERVER_HOST: str = "0.0.0.0"
+    SERVER_PORT: int = 5000
+    SERVER_WORKERS: int = 8
+
     SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO
     TELEMETRY_URL: HttpUrl | None = None

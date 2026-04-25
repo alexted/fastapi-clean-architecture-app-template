@@ -1,39 +1,32 @@
-FROM python:3.14-slim AS requirements-stage
+FROM cgr.dev/chainguard/python:latest-dev AS builder
 
-WORKDIR /tmp
+WORKDIR /app
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install poetry poetry-plugin-export
+ENV PATH="/home/nonroot/.local/bin:$PATH"
+
+RUN pip install --no-cache-dir poetry poetry-plugin-export
 
 COPY pyproject.toml poetry.lock* ./
 
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
-FROM python:3.14-slim
+RUN python -m venv /app/venv
+ENV PATH="/app/venv/bin:$PATH"
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+RUN pip install --no-cache-dir -r requirements.txt
 
-WORKDIR /usr/src/app
+FROM cgr.dev/chainguard/python:latest
 
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid 10001 \
-    svc-my-app
+WORKDIR /app
 
-COPY --from=requirements-stage /tmp/requirements.txt .
+COPY --from=builder /app/venv /app/venv
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m pip install -r requirements.txt
+ENV PATH="/app/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
-COPY --chown=svc-my-app:svc-my-app . .
-
-USER svc-my-app
+COPY . .
 
 EXPOSE 5000
 
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+ENTRYPOINT ["python", "entrypoint.py"]

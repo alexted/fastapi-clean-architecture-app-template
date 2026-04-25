@@ -1,36 +1,57 @@
 [project]
-name = "fastapi-app"
-version = "1.0.0"
-description = "fvd ervsfd"
-authors = [
-    { name = "dfwv ergs", email = "author@mail.dev" }
-]
-requires-python = ">=3.14"
+name = "{{ cookiecutter.project_name }}"
+version = "{{ cookiecutter.project_release }}"
+description = "{{ cookiecutter.project_description }}"
+authors = [{ name = "{{ cookiecutter.app_developer }}", email = "author@mail.dev" }]
+readme = "README.md"
+requires-python = ">={{ cookiecutter.app_lang_version }}"
 dependencies = [
     "fastapi",
     "granian[reload,pname]",
     "pydantic[email]",
     "pydantic-settings",
+    {% if cookiecutter.use_jwt|lower == 'y' -%}
     "pyjwt[crypto]",
+    {% endif -%}
+    {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' -%}
     "asyncpg",
+    {% endif -%}
+    {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "sqlalchemy[asyncio]",
+    {% endif -%}
+    {% if cookiecutter.use_alembic|lower == 'y' -%}
     "alembic",
+    {% endif -%}
     "python-json-logger",
     "sentry-sdk[fastapi,opentelemetry-otlp]",
     "prometheus-fastapi-instrumentator",
+    {% if cookiecutter.use_redis|lower == 'y' -%}
     "redis[hiredis]",
+    {% endif -%}
+    {% if cookiecutter.use_kafka|lower == 'y' -%}
     "aiokafka[lz4,zstd]",
+    {% endif -%}
+    {% if cookiecutter.use_nats|lower == 'y' -%}
     "nats-py",
     "nats-jetstream",
+    {% endif -%}
     "httpx[http2]",
+    {% if cookiecutter.background_tasks|lower == 'y' -%}
 #    "taskiq",
+    {% endif -%}
     "opentelemetry-distro",
 #    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
     "opentelemetry-instrumentation-fastapi",
+    {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "opentelemetry-instrumentation-sqlalchemy",
+    {% endif -%}
     "opentelemetry-instrumentation-httpx",
+    {% if cookiecutter.use_redis|lower == 'y' -%}
     "opentelemetry-instrumentation-redis",
+    {% endif -%}
+    {% if cookiecutter.use_kafka|lower == 'y' %}
     "opentelemetry-instrumentation-aiokafka",
+    {% endif -%}
     ]
 
 [dependency-groups]
@@ -52,12 +73,12 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
-python_version = "3.14"
+python_version = "{{ cookiecutter.app_lang_version }}"
 disable_error_code = "import-untyped"
 
 [tool.ruff]
 src = ["src"]
-target-version = "py314"
+target-version = "py{{ cookiecutter.app_lang_version|replace('.', '') }}"
 line-length = 120
 fix = true
 #unsafe-fixes = true
@@ -78,15 +99,28 @@ select = [
     "PTH", # flake8-use-pathlib
     "RET", # flake8-return
     "D",   # pydocstyle
+    "DTZ", # flake8-datetimez
+    "N",   # pep8-naming
+    "TRY", # tryceratops
+    "PLC", "PLE", "PLW", #"PLR", # Pylint
+    "PIE", # flake8-pie
+    "ISC", # flake8-implicit-str-concat
+    "FBT", # flake8-boolean-trap
+    "ARG", # flake8-unused-arguments
+    "ERA", # eradicate
+    ""
 ]
 ignore = [
     "D203", # one blank line before class, handled by pydocstyle
     "D212", # may conflict with D213 when using Google convention
+    "ANN401",
+    "TRY003",
+    "PLW2901",
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ANN", "S101", "D"]
-"src/infrastructure/clients/postgres/migrations/*" = ["ANN", "D"]
+"tests/*" = ["ANN", "S101", "D", "PLR2004", "ARG", "FBT"]
+"src/infrastructure/clients/postgres/migrations/*" = ["ANN", "D", "INP"]
 "src/infrastructure/clients/postgres/models/items.py" = ["TCH"]
 "src/infrastructure/core/settings.py" = ["TCH"]
 
