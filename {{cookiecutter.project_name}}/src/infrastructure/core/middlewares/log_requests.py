@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
     from fastapi import Request, Response
 
-logger: Logger = getLogger("fastapi-app")
+logger: Logger = getLogger("{{ cookiecutter.project_name }}")
 
 
 async def log_requests(request: Request, call_next: Callable) -> Response:

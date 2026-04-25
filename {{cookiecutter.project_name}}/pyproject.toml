@@ -36,7 +36,7 @@ dependencies = [
     "nats-jetstream",
     {% endif -%}
     "httpx[http2]",
-    {% if cookiecutter.background_tasks|lower == 'y' -%}
+    {% if cookiecutter.use_background_tasks|lower == 'y' -%}
 #    "taskiq",
     {% endif -%}
     "opentelemetry-distro",
