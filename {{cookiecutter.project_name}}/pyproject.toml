@@ -108,7 +108,6 @@ select = [
     "FBT", # flake8-boolean-trap
     "ARG", # flake8-unused-arguments
     "ERA", # eradicate
-    ""
 ]
 ignore = [
     "D203", # one blank line before class, handled by pydocstyle

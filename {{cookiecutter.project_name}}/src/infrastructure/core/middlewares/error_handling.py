@@ -5,7 +5,8 @@ from datetime import UTC, datetime
 import logging
 from typing import TYPE_CHECKING, Any
 
-from fastapi import Request, Response
+from fastapi import Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.status import HTTP_422_UNPROCESSABLE_CONTENT
 
@@ -42,11 +43,11 @@ class BaseErrorHandler(ABC):
     def get_handler(cls) -> Callable[[Request, Exception], Coroutine]:
         instance = cls()
 
-        async def handler(request: Request, exception: Exception) -> Response:
+        async def handler(request: Request, exception: Exception) -> JSONResponse:
             logger.debug(f"Handling exception: {type(exception)}: {exception}")
 
             error = instance._get_error(request, exception)
-            return Response(status_code=error.status_code, content=error.data.model_dump())
+            return JSONResponse(status_code=error.status_code, content=error.data.model_dump(mode="json"))
 
         return handler
 
