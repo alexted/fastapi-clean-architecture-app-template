@@ -1,21 +1,21 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated
 import logging
+from typing import TYPE_CHECKING, Annotated
 
 from fastapi import Depends
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.orm import selectinload
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.data.base import AbstractRepository
 
-from .dto import ItemDTO, ItemFilters
 from ...infrastructure.clients.postgres.engine import get_db_session
 from ...infrastructure.clients.postgres.models import Item
+from .dto import ItemDTO, ItemFilters
 
 if TYPE_CHECKING:
-    from sqlalchemy.ext.asyncio import AsyncSession
-
     from ...domain.use_cases.items import CreateItemRequest
     from ...domain.use_cases.items.update_item import NewItemData
 
@@ -23,7 +23,7 @@ logger = logging.getLogger()
 
 
 class ItemRepository(AbstractRepository):
-    """Items storage"""
+    """Items storage."""
 
     def __init__(self, db_session: Annotated[AsyncSession, Depends(get_db_session)]) -> None:
         self._session: AsyncSession = db_session
@@ -56,7 +56,6 @@ class ItemRepository(AbstractRepository):
         :param filters:
         :return:
         """
-
         query = select(Item).options(selectinload("*"))
 
         if filters and filters.id:
@@ -85,7 +84,6 @@ class ItemRepository(AbstractRepository):
         :param item_id:
         :return:
         """
-
         orm_stmt = delete(Item).where(Item.id == item_id).execution_options(populate_existing=True)
 
         result = (await self._session.execute(orm_stmt)).scalar_one_or_none()

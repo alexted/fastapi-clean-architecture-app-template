@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
-import logging
 from datetime import UTC, datetime
+import logging
+from typing import TYPE_CHECKING, Any
 
-from fastapi import Request, Response
+from fastapi import Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.status import HTTP_422_UNPROCESSABLE_CONTENT
 
-from .correlation_id import CORRELATION_ID
 from ..errors.constants import ErrorType
+from .correlation_id import CORRELATION_ID
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
@@ -18,7 +19,6 @@ if TYPE_CHECKING:
     from fastapi.exceptions import HTTPException, RequestValidationError
 
     from ..errors.exceptions import OtherError
-
 
 logger = logging.getLogger()
 
@@ -43,11 +43,11 @@ class BaseErrorHandler(ABC):
     def get_handler(cls) -> Callable[[Request, Exception], Coroutine]:
         instance = cls()
 
-        async def handler(request: Request, exception: Exception) -> Response:
+        async def handler(request: Request, exception: Exception) -> JSONResponse:
             logger.debug(f"Handling exception: {type(exception)}: {exception}")
 
             error = instance._get_error(request, exception)
-            return Response(status_code=error.status_code, content=error.data.model_dump())
+            return JSONResponse(status_code=error.status_code, content=error.data.model_dump(mode="json"))
 
         return handler
 

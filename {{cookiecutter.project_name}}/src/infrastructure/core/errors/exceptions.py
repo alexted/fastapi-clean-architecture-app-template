@@ -4,7 +4,7 @@ from .constants import ErrorType
 
 
 class OtherError(Exception):
-    """Base class for custom errors"""
+    """Base class for custom errors."""
 
     type: ErrorType = ErrorType.INTERNAL_ERROR
     code: int = 500
@@ -20,7 +20,7 @@ class OtherError(Exception):
         self.code = code or self.code
 
     def __str__(self) -> str:
-        """String representation of the error"""
+        """String representation of the error."""
         return f"message: {self.message}, code: {self.code}"
 
     @property

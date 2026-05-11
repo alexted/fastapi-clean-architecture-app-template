@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
 import asyncio
+from logging.config import fileConfig
 import threading
 import traceback
-from logging.config import fileConfig
+from typing import TYPE_CHECKING, Any
 
 from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from src.infrastructure.core.settings import AppConfig, get_config
 from src.infrastructure.clients.postgres.models import Base
+from src.infrastructure.core.settings import AppConfig, get_config
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Connection

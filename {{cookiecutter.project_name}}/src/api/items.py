@@ -1,28 +1,25 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated
+from typing import Annotated
 
-from fastapi import Depends, Response, APIRouter, status
+from fastapi import APIRouter, Depends, Response, status
+from pydantic import PositiveInt
 
 from src.domain.use_cases.items import (
-    GetItemRequest,
-    GetItemUseCase,
-    GetItemResponse,
     CreateItemRequest,
+    CreateItemResponse,
     CreateItemUseCase,
     DeleteItemRequest,
     DeleteItemUseCase,
+    GetItemRequest,
+    GetItemResponse,
+    GetItemUseCase,
     UpdateItemRequest,
-    UpdateItemUseCase,
-    CreateItemResponse,
     UpdateItemResponse,
+    UpdateItemUseCase,
 )
-from src.domain.use_cases.items.list_items import ListItemsUseCase, ListItemsResponse
-
-if TYPE_CHECKING:
-    from pydantic import PositiveInt
-
-    from src.domain.use_cases.items.update_item import NewItemData
+from src.domain.use_cases.items.list_items import ListItemsResponse, ListItemsUseCase
+from src.domain.use_cases.items.update_item import NewItemData
 
 routes = APIRouter(tags=["items"])
 
@@ -32,7 +29,7 @@ async def create_item(
     item: CreateItemRequest, use_case: Annotated[CreateItemUseCase, Depends(CreateItemUseCase)]
 ) -> CreateItemResponse:
     """
-    Create item
+    Create an item
     :param item:
     :param use_case:
     :return:

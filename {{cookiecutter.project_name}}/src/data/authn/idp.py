@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from enum import StrEnum
-import typing as t
 from functools import wraps
+import typing as t
 
 from src.infrastructure.clients.http_client.base import BaseClient, handle_response_middleware
 from src.infrastructure.clients.http_client.client import ApiCall, HttpClient
@@ -49,7 +49,7 @@ class IDPService(BaseClient):
         return wrapped
 
     async def get_service_access_token(self) -> str:
-        """Get infrastructure access token"""
+        """Get infrastructure access token."""
         result = await self._sign_in(
             headers={"Content-Type": ContentType.FORM.value},
             data={
@@ -63,19 +63,19 @@ class IDPService(BaseClient):
         return self.access_token
 
     async def sign_in(self, data: dict[str, t.Any], user_ip: str) -> dict[str, t.Any]:
-        """Get user access token"""
+        """Get user access token."""
         result = await self._sign_in(
             headers={"Content-Type": ContentType.FORM.value, "X-Forwarded-For": user_ip}, data=data
         )
         return result.json()
 
     async def get_user_info(self, user_access_token: str) -> dict[str, t.Any] | None:
-        """Get user info by access token"""
+        """Get user info by access token."""
         response = await self._get_userinfo(headers={"Authorization": f"Bearer {user_access_token}"})
         return response.json() if response.status_code == 200 else None
 
     async def sign_out(self, access_token: str, data: dict) -> dict[str, t.Any]:
-        """Sign out"""
+        """Sign out."""
         return await self._sign_out(
             headers={"Authorization": f"Bearer {access_token}", "Content-Type": ContentType.FORM.value}, data=data
         )

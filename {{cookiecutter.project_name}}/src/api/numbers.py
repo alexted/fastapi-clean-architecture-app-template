@@ -2,21 +2,21 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import Query, Depends, APIRouter
+from fastapi import APIRouter, Depends, Query
 
 from src.domain.use_cases.numbers import (
     DivideRequest,
-    DivideUseCase,
     DivideResponse,
+    DivideUseCase,
     MultiplyRequest,
+    MultiplyResponse,
     MultiplyUseCase,
     SubtractRequest,
-    SubtractUseCase,
-    MultiplyResponse,
     SubtractResponse,
+    SubtractUseCase,
     SummariseRequest,
-    SummariseUseCase,
     SummariseResponse,
+    SummariseUseCase,
 )
 
 routes = APIRouter(tags=["numbers"])

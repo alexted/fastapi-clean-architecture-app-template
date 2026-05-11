@@ -1,42 +1,32 @@
-# Pull official base image
-FROM python:{{ cookiecutter.project_name }}-slim
+FROM cgr.dev/chainguard/python:latest-dev AS builder
 
-# Prevents Python from writing pyc files.
-ENV PYTHONDONTWRITEBYTECODE=1
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
-ENV PYTHONUNBUFFERED=1
+WORKDIR /app
 
-# Set working directory
-WORKDIR /usr/src/app
+ENV PATH="/home/nonroot/.local/bin:$PATH"
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    svc-{{ cookiecutter.project_name }}
+RUN pip install --no-cache-dir poetry poetry-plugin-export
 
-# Download interceptors as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into this layer.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    python -m pip install .
+COPY pyproject.toml poetry.lock* ./
 
-# Switch to the non-privileged user to run the application.
-USER svc-{{ cookiecutter.project_name }}
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
-# Copy project files
+RUN python -m venv /app/venv
+ENV PATH="/app/venv/bin:$PATH"
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM cgr.dev/chainguard/python:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/venv /app/venv
+
+ENV PATH="/app/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
 COPY . .
 
-# Publish network port
 EXPOSE 5000
 
-# Execute script to start the application web server
-ENTRYPOINT ["bash", "./entrypoint.sh"]
+ENTRYPOINT ["python", "entrypoint.py"]

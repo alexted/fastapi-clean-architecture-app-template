@@ -2,7 +2,7 @@
 
 ## How to use
 ### Prerequisites:
-#### [Cookiecutter](https://cookiecutter.readthedocs.io/en/stable/) must be installed on the system or in your project's virtual environment
+#### [Cookiecutter](https://github.com/cookiecutter/cookiecutter) must be installed on the system or in your project's virtual environment
 
 ```bash
 pip install cookiecutter

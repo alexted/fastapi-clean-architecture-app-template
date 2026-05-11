@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import json as jsonlib
-import typing as t
-import logging
 from functools import reduce
+import json as jsonlib
+import logging
+import typing as t
 
 import httpx
 
@@ -76,7 +76,7 @@ class HttpClient:
         **kwargs: dict,
     ) -> httpx.Response:
         """
-        Call the API method of the infrastructure. Repeats the interface of the request method of the httpx library
+        Call the API method of the infrastructure. Repeats the interface of the request method of the httpx library.
 
         :param path:
         :param method:
@@ -88,7 +88,6 @@ class HttpClient:
         :param timeout:
         :return: httpx.Response
         """
-
         if json is not None:
             if isinstance(json, str):
                 data: str = json

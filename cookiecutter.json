@@ -8,5 +8,7 @@
   "use_alembic": "n",
   "use_jwt": "n",
   "use_redis": "n",
-  "use_kafka": "n"
+  "use_kafka": "n",
+  "use_nats": "n",
+  "use_background_tasks": "n"
 }

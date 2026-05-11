@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import Annotated
 from decimal import Decimal
+from typing import Annotated
 
-from pydantic import Field, BaseModel, ConfigDict, PositiveInt
+from pydantic import BaseModel, ConfigDict, Field, PositiveInt
 
 
 class ItemDTO(BaseModel):

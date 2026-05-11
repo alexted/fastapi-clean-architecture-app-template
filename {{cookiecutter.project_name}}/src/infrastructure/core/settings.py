@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import StrEnum
 from functools import lru_cache
 
-from pydantic import HttpUrl, KafkaDsn, RedisDsn, PostgresDsn
+from pydantic import HttpUrl, KafkaDsn, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -27,6 +27,10 @@ class LoggingLevelEnum(StrEnum):
 class AppConfig(BaseSettings):
     ENVIRONMENT: EnvironmentEnum = EnvironmentEnum.LOCAL
     APP_NAME: str = "{{ cookiecutter.project_name }}"
+
+    SERVER_HOST: str = "0.0.0.0"
+    SERVER_PORT: int = 5000
+    SERVER_WORKERS: int = 8
 
     SENTRY_DSN: HttpUrl | None = None
     LOG_LEVEL: LoggingLevelEnum = LoggingLevelEnum.INFO

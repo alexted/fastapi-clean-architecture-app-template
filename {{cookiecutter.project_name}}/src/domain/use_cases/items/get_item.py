@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import Annotated
 from decimal import Decimal
+from typing import Annotated
 
 from fastapi import Depends
-from pydantic import Field, BaseModel, PositiveInt
+from pydantic import BaseModel, Field, PositiveInt
 
 from src.data.items import ItemDTO, ItemFilters, ItemRepository
 from src.domain.use_cases.base import BaseUseCase

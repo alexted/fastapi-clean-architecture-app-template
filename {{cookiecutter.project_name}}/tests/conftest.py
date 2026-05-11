@@ -2,22 +2,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from httpx import AsyncClient, ASGITransport
-import pytest
-import asyncpg
-from alembic.config import Config as AlembicConfig
 from alembic.command import upgrade
+from alembic.config import Config as AlembicConfig
+import asyncpg
+from httpx import ASGITransport, AsyncClient
+import pytest
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from tests.data import mock_data
-from src.infrastructure.core.settings import AppConfig, get_config
-from src.infrastructure.core.application import create_app
 from src.infrastructure.clients.postgres.engine import get_db_session
+from src.infrastructure.core.application import create_app
+from src.infrastructure.core.settings import AppConfig, get_config
+from tests.data import mock_data
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator, AsyncIterator, AsyncGenerator
-
-    from fastapi import FastAPI
+    from collections.abc import AsyncGenerator, AsyncIterator, Iterator
 
 TEST_APP_URL = "http://test"
 
