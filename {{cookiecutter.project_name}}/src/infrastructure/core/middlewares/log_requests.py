@@ -5,18 +5,19 @@ from time import time
 from typing import TYPE_CHECKING
 
 from fastapi.concurrency import iterate_in_threadpool
+from .trace_id import get_current_trace_id
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-
     from fastapi import Request, Response
 
-logger: Logger = getLogger("{{ cookiecutter.project_name }}")
+logger: Logger = getLogger("fastapi-app")
 
 
 async def log_requests(request: Request, call_next: Callable) -> Response:
-    if request.url.path in ("/health", "/metrics"):
+    if request.url.path in ("/health/live", "/health/ready", "/metrics"):
         return await call_next(request)
+
     request.state.start_time = time()
 
     if (
@@ -38,7 +39,7 @@ async def log_requests(request: Request, call_next: Callable) -> Response:
             "resource": request.url.path,
             "query_params": request.query_params,
             "headers": dict(request.headers),
-            "correlation_id": request.headers.get("X-Request-ID", request.state.correlation_id),
+            "trace_id": get_current_trace_id(),
             "client_ip": request.client.host,
             "execution_duration": round(time() - request.state.start_time, 3),
             "response_status": response.status_code,
@@ -46,6 +47,4 @@ async def log_requests(request: Request, call_next: Callable) -> Response:
             "response_body": (b"".join(response_body)).decode(),
         }
     )
-    # NOTE: It may make sense to move data logging to a background task to reduce endpoint response time.
-    # See the example here: https://stackoverflow.com/a/73464007/8791187
     return response

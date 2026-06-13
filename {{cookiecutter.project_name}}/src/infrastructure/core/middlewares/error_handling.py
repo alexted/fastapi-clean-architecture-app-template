@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from starlette.status import HTTP_422_UNPROCESSABLE_CONTENT
 
 from ..errors.constants import ErrorType
-from .correlation_id import CORRELATION_ID
+from .trace_id import get_current_trace_id
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
@@ -26,7 +26,7 @@ logger = logging.getLogger()
 class ErrorSchema(BaseModel):
     error: str
     message: str | list[dict[str, Any]]
-    correlation_id: str | None
+    trace_id: str | None
     timestamp: datetime
 
 
@@ -59,7 +59,7 @@ class FastAPIErrorHandler(BaseErrorHandler):
             data=ErrorSchema(
                 error=ErrorType.INTERNAL_ERROR,
                 message=exception.detail,
-                correlation_id=CORRELATION_ID.get(),
+                trace_id=get_current_trace_id(),
                 timestamp=datetime.now(UTC).isoformat(),
             ),
         )
@@ -72,7 +72,7 @@ class ValidationErrorHandler(BaseErrorHandler):
             data=ErrorSchema(
                 error=ErrorType.VALIDATION_ERROR,
                 message=exception.errors(),
-                correlation_id=CORRELATION_ID.get(),
+                trace_id=get_current_trace_id(),
                 timestamp=datetime.now(UTC).isoformat(),
             ),
         )
@@ -85,7 +85,7 @@ class OtherErrorHandler(BaseErrorHandler):
             data=ErrorSchema(
                 error=exception.type or exception.__class__.__name__,
                 message=exception.message,
-                correlation_id=CORRELATION_ID.get(),
+                trace_id=get_current_trace_id(),
                 timestamp=datetime.now(UTC).isoformat(),
             ),
         )
@@ -99,7 +99,7 @@ class ExceptionHandler(BaseErrorHandler):
             data=ErrorSchema(
                 error=ErrorType.INTERNAL_ERROR,
                 message=exception.__repr__(),
-                correlation_id=CORRELATION_ID.get(),
+                trace_id=get_current_trace_id(),
                 timestamp=datetime.now(UTC).isoformat(),
             ),
         )

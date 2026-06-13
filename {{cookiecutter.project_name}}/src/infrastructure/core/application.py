@@ -1,31 +1,24 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from prometheus_fastapi_instrumentator import Instrumentator
 import sentry_sdk
 from sentry_sdk.integrations.otlp import OTLPIntegration
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.status import HTTP_200_OK
 
+from api.health import health_routes
 from src.api import v1_routes
 
 from ..clients.postgres.engine import init_database
 from .constants import responses
 from .errors.exceptions import OtherError
 from .log_config import init_logging
-from .middlewares.correlation_id import handle_correlation_id
+from .middlewares.trace_id import handle_trace_id
 from .middlewares.error_handling import ExceptionHandler, FastAPIErrorHandler, OtherErrorHandler, ValidationErrorHandler
 from .middlewares.log_requests import log_requests
 from .settings import AppConfig, EnvironmentEnum, get_config
 from .telemetry import setup_otel
-
-healthcheck_route = APIRouter(include_in_schema=False)
-
-
-@healthcheck_route.get("/health", description="liveness probe")
-def health_check() -> Response:
-    return Response(status_code=HTTP_200_OK)
 
 
 def create_app() -> FastAPI:
@@ -36,8 +29,8 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         title=config.APP_NAME,
-        description="{{ cookiecutter.project_description }}",
-        version="{{ cookiecutter.project_release }}",
+        description="qwer asdf zxcv rtyu fdgh hf cngbxvb cvxbcv",
+        version="1.0.0",
         exception_handlers={
             HTTPException: FastAPIErrorHandler.get_handler(),
             RequestValidationError: ValidationErrorHandler.get_handler(),
@@ -53,18 +46,20 @@ def create_app() -> FastAPI:
         },
     )
 
-    app.add_middleware(BaseHTTPMiddleware, dispatch=handle_correlation_id)
+    setup_otel(config, app)
+
+    app.add_middleware(BaseHTTPMiddleware, dispatch=handle_trace_id)
     app.add_middleware(BaseHTTPMiddleware, dispatch=log_requests)
 
     if config.ENVIRONMENT == EnvironmentEnum.PROD:
-        setup_otel(config, app)
-
         sentry_sdk.init(
-            dsn=config.SENTRY_URL, integrations=[OTLPIntegration()], send_default_pii=True, enable_logs=True
+            dsn=config.SENTRY_DSN, integrations=[OTLPIntegration()], send_default_pii=True, enable_logs=True
         )
-        Instrumentator(excluded_handlers=["/health", "/metrics"]).instrument(app).expose(app, include_in_schema=False)
+        Instrumentator(
+            excluded_handlers=["/health/live", "/health/ready", "/metrics"]
+        ).instrument(app).expose(app, include_in_schema=False)
 
-    app.include_router(healthcheck_route, tags=["infrastructure"])
+    app.include_router(health_routes)
     app.include_router(v1_routes)
 
     return app

@@ -4,7 +4,7 @@ version = "{{ cookiecutter.project_release }}"
 description = "{{ cookiecutter.project_description }}"
 authors = [{ name = "{{ cookiecutter.app_developer }}", email = "author@mail.dev" }]
 readme = "README.md"
-requires-python = ">={{ cookiecutter.app_lang_version }}"
+requires-python = ">={{ cookiecutter.app_lang_version }},<4"
 dependencies = [
     "fastapi",
     "granian[reload,pname]",
@@ -37,10 +37,10 @@ dependencies = [
     {% endif -%}
     "httpx[http2]",
     {% if cookiecutter.use_background_tasks|lower == 'y' -%}
-#    "taskiq",
+    "taskiq",
     {% endif -%}
     "opentelemetry-distro",
-#    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
+    "opentelemetry-instrumentation-logging",
     "opentelemetry-instrumentation-fastapi",
     {% if cookiecutter.use_postgresql|lower == 'y' -%}
     "opentelemetry-instrumentation-sqlalchemy",
@@ -49,9 +49,10 @@ dependencies = [
     {% if cookiecutter.use_redis|lower == 'y' -%}
     "opentelemetry-instrumentation-redis",
     {% endif -%}
-    {% if cookiecutter.use_kafka|lower == 'y' %}
+    {% if cookiecutter.use_kafka|lower == 'y' -%}
     "opentelemetry-instrumentation-aiokafka",
     {% endif -%}
+    #    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
     ]
 
 [dependency-groups]
