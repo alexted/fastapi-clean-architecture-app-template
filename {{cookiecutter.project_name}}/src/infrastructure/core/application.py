@@ -29,8 +29,8 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         title=config.APP_NAME,
-        description="qwer asdf zxcv rtyu fdgh hf cngbxvb cvxbcv",
-        version="1.0.0",
+        description="{{ cookiecutter.project_description }}",
+        version="{{ cookiecutter.project_release }}",
         exception_handlers={
             HTTPException: FastAPIErrorHandler.get_handler(),
             RequestValidationError: ValidationErrorHandler.get_handler(),

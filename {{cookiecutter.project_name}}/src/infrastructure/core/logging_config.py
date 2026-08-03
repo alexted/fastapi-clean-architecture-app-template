@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class OTelJsonFormatter(JsonFormatter):
-    """Кастомный форматтер для корректной обработки данных OpenTelemetry."""
+    """Custom formatter for correct processing of OpenTelemetry data."""
     def add_fields(self, log_record: dict, record: logging.LogRecord, message_dict: dict) -> None:
         super().add_fields(log_record, record, message_dict)
 
