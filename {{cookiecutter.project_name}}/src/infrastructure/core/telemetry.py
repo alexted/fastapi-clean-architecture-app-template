@@ -2,19 +2,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.resources import Resource
 from opentelemetry import trace
 from opentelemetry.instrumentation.aiokafka import AIOKafkaInstrumentor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-
-# enable only if you plan to send traces somewhere other than Sentry
-# import socket
-# from opentelemetry.sdk.trace.export import BatchSpanProcessor
-# from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
+from opentelemetry.instrumentation.logging import LoggingInstrumentor
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
+# enable only if you plan to send traces somewhere other than Sentry
+# from opentelemetry.sdk.trace.export import BatchSpanProcessor
+# from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
 if TYPE_CHECKING:
     from fastapi import FastAPI
@@ -29,7 +28,6 @@ def setup_otel(config: AppConfig, app: FastAPI) -> None:
                 "service.name": config.APP_NAME,
                 "service.namespace": "backend",
                 "deployment.environment": config.ENVIRONMENT,
-                # "service.instance.id": socket.gethostname(),
             }
         )
     )
@@ -45,6 +43,7 @@ def setup_otel(config: AppConfig, app: FastAPI) -> None:
     # )
     # provider.add_span_processor(span_processor)
 
+    LoggingInstrumentor().instrument(set_logging_format=False)
     FastAPIInstrumentor().instrument_app(app)
     SQLAlchemyInstrumentor().instrument()
     RedisInstrumentor().instrument()

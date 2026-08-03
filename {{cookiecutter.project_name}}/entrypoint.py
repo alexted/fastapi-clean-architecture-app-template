@@ -4,7 +4,8 @@ from granian import Granian
 from granian.constants import Interfaces
 from granian.log import LogLevels
 
-from src.infrastructure.core.settings  import get_config, EnvironmentEnum
+from src.infrastructure.core.settings import EnvironmentEnum, get_config
+
 
 def main():
     config = get_config()
