@@ -7,8 +7,8 @@ from src.infrastructure.clients.http_client.client import HttpClient
 from src.infrastructure.core.errors.exceptions import ExternalServiceError
 
 if t.TYPE_CHECKING:
-    import httpx
-    from httpx import Response
+    import httpx2
+    from httpx2 import Response
 
 
 def handle_response_middleware(service_name: str) -> t.Callable:
@@ -17,7 +17,7 @@ def handle_response_middleware(service_name: str) -> t.Callable:
         Middleware to check the response of the remote infrastructure.
         If the response is negative, an error is generated.
         """
-        response: httpx.Response = await handler(data)
+        response: httpx2.Response = await handler(data)
 
         if response.status_code not in (200, 201, 204):
             try:

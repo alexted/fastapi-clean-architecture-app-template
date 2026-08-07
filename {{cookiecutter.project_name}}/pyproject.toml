@@ -35,7 +35,7 @@ dependencies = [
     "nats-py",
     "nats-jetstream",
     {% endif -%}
-    "httpx[http2]",
+    "httpx2[http2]",
     {% if cookiecutter.use_background_tasks|lower == 'y' -%}
     "taskiq",
     {% endif -%}

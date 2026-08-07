@@ -62,7 +62,7 @@ def init_logging(config: AppConfig) -> None:
                 "fastapi": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "sqlalchemy.engine": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "alembic": {"level": "INFO", "handlers": ["console"], "propagate": False},
-                "httpx": {"level": "WARNING", "handlers": ["console"], "propagate": False},
+                "httpx2": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "redis": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "aiokafka": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "asyncpg": {"level": "WARNING", "handlers": ["console"], "propagate": False},

@@ -5,7 +5,7 @@ import json as jsonlib
 import logging
 import typing as t
 
-import httpx
+import httpx2
 
 logger = logging.getLogger()
 
@@ -37,7 +37,7 @@ class HttpClient:
         self._headers: dict = headers
         self._verify: bool = verify
         self._session_params: dict = session_params
-        self.__session: httpx.AsyncClient | None = None
+        self.__session: httpx2.AsyncClient | None = None
 
     async def __aenter__(self) -> HttpClient:
         return self
@@ -51,9 +51,9 @@ class HttpClient:
             await session.aclose()
 
     @property
-    def _session(self) -> httpx.AsyncClient:
+    def _session(self) -> httpx2.AsyncClient:
         if self.__session is None:
-            self.__session: httpx.AsyncClient = httpx.AsyncClient(
+            self.__session: httpx2.AsyncClient = httpx2.AsyncClient(
                 base_url=self._base_url,
                 params=self._query_params,
                 headers=self._headers,
@@ -74,9 +74,9 @@ class HttpClient:
         timeout: int | None = None,  # noqa ASYNC109
         files: bytes | None = None,
         **kwargs: dict,
-    ) -> httpx.Response:
+    ) -> httpx2.Response:
         """
-        Call the API method of the infrastructure. Repeats the interface of the request method of the httpx library.
+        Call the API method of the infrastructure. Repeats the interface of the request method of the httpx2 library.
 
         :param path:
         :param method:
@@ -86,7 +86,7 @@ class HttpClient:
         :param params:
         :param headers:
         :param timeout:
-        :return: httpx.Response
+        :return: httpx2.Response
         """
         if json is not None:
             if isinstance(json, str):
@@ -107,7 +107,7 @@ class HttpClient:
             f"headers: {headers}"
         )
 
-        response: httpx.Response = await self._session.request(
+        response: httpx2.Response = await self._session.request(
             url=path, method=method, data=data, headers=headers, params=params, timeout=timeout, files=files, **kwargs
         )
 
@@ -123,7 +123,7 @@ class ApiCall:
         self._method: str = method
         self._handler: t.Callable = reduce(handler_factory, (middleware or [])[::-1], self._call)
 
-    async def _call(self, parameters: dict) -> httpx.Response:
+    async def _call(self, parameters: dict) -> httpx2.Response:
         path_params: dict = parameters.pop("path_params", {})
         path: str = self._path.format(**path_params) if path_params else self._path
 
