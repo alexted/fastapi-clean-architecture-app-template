@@ -19,7 +19,7 @@ services:
 
 {% if cookiecutter.use_postgresql|lower == 'y' or cookiecutter.use_alembic|lower == 'y' %}
   postgres:
-    image: postgres:alpine
+    image: postgres:latest
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: password
@@ -32,7 +32,7 @@ services:
 
 {% if cookiecutter.use_redis|lower == 'y' %}
   cache:
-    image: valkey/valkey:alpine
+    image: valkey/valkey:latest
     restart: unless-stopped
     ports:
       - "6379:6379"
