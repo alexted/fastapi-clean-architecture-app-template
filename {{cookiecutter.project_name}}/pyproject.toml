@@ -33,9 +33,8 @@ dependencies = [
     {% endif -%}
     {% if cookiecutter.use_nats|lower == 'y' -%}
     "nats-py",
-    "nats-jetstream",
     {% endif -%}
-    "httpx[http2]",
+    "httpx2[http2]",
     {% if cookiecutter.use_background_tasks|lower == 'y' -%}
     "taskiq",
     {% endif -%}
@@ -51,8 +50,8 @@ dependencies = [
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
     "opentelemetry-instrumentation-aiokafka",
-    {% endif -%}
-    #    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
+    {% endif %}
+#    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
     ]
 
 [dependency-groups]
@@ -75,26 +74,37 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 python_version = "{{ cookiecutter.app_lang_version }}"
+files = ["src", "entrypoint.py"]
+#strict = true
+plugins = [
+    "pydantic.mypy",
+    "sqlalchemy.ext.mypy.plugin"
+]
 disable_error_code = "import-untyped"
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+allow_untyped_defs = true
+allow_untyped_decorators = true
 
 [tool.ruff]
 src = ["src"]
 target-version = "py{{ cookiecutter.app_lang_version|replace('.', '') }}"
 line-length = 120
 fix = true
-#unsafe-fixes = true
+unsafe-fixes = true
 show-fixes = true
 output-format = "grouped"
 
 [tool.ruff.lint]
-select = [
-    "E", "W", "F", "I", "B", "C4", "ANN", "SIM",
+extend-select = [
+    "E", "W",  "I", "C4", "ANN", "SIM",
     "T10", # flake8-debugger
     "T20", # flake8-print
     "S", # flake8-bandit
     "C90", # mccabe
     "TCH", # flake8-type-checking
-    "UP", "FA", "FAST", "ASYNC", "PERF", "RUF", "PT",
+    "FA", "FAST", "ASYNC", "PERF", "PT",
     "A",   # flake8-builtins
     "BLE", # flake8-blind-except
     "PTH", # flake8-use-pathlib
@@ -142,7 +152,7 @@ hardcoded-tmp-directory = ["/tmp", "/var/tmp", "/dev/shm"]
 combine-as-imports = true
 order-by-type = true
 force-sort-within-sections = true
-# split-on-trailing-comma = false
+split-on-trailing-comma = false
 known-first-party = ["src"]
 
 [tool.ruff.lint.pydocstyle]
@@ -153,7 +163,7 @@ skip-magic-trailing-comma = true
 docstring-code-format = true
 docstring-code-line-length = 80
 
-[tool.pytest.ini_options]
+[tool.pytest]
 minversion = "9.0"
 testpaths = ["tests"]
 
@@ -161,6 +171,7 @@ testpaths = ["tests"]
 source = ["src"]
 omit = ["tests/*"]
 data_file = "tests/coverage/.coverage"
+branch = true
 
 [tool.coverage.report]
 show_missing = true
@@ -173,3 +184,4 @@ exclude_lines = [
     "def build_spec.*:",
     "except ConnectionRefusedError",
 ]
+fail_under = 80

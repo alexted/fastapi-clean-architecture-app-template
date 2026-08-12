@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
 from fastapi import APIRouter, Depends, Response, status
-from pydantic import PositiveInt
 
 from src.domain.use_cases.items import (
     CreateItemRequest,
@@ -19,7 +18,11 @@ from src.domain.use_cases.items import (
     UpdateItemUseCase,
 )
 from src.domain.use_cases.items.list_items import ListItemsResponse, ListItemsUseCase
-from src.domain.use_cases.items.update_item import NewItemData
+
+if TYPE_CHECKING:
+    from pydantic import PositiveInt
+
+    from src.domain.use_cases.items.update_item import NewItemData
 
 routes = APIRouter(tags=["items"])
 
@@ -82,7 +85,7 @@ async def update_item(
 
 @routes.delete("/items/{item_id}")
 async def delete_item(
-        item_id: PositiveInt, use_case: Annotated[DeleteItemUseCase, Depends(DeleteItemUseCase)]
+    item_id: PositiveInt, use_case: Annotated[DeleteItemUseCase, Depends(DeleteItemUseCase)]
 ) -> Response:
     """
     Delete item

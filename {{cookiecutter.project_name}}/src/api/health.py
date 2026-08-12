@@ -2,19 +2,21 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
 from fastapi import APIRouter, Depends
-from redis.asyncio import Redis
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_200_OK, HTTP_503_SERVICE_UNAVAILABLE
 
-from src.infrastructure.clients.postgres.engine import get_db_session
-from src.infrastructure.clients.cache import get_cache_client
 from src.infrastructure.clients.kafka import get_kafka_producer
-from aiokafka import AIOKafkaProducer
+from src.infrastructure.clients.postgres.engine import get_db_session
+from src.infrastructure.clients.redis import get_cache_client
+
+if TYPE_CHECKING:
+    from aiokafka import AIOKafkaProducer
+    from redis.asyncio import Redis
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,7 @@ async def _check_postgres(session: AsyncSession) -> bool:
         await session.execute(text("SELECT 1"))
         return True
     except Exception as e:
-        logger.error(f"Postgres readiness check failed: {e}")
+        logger.exception(f"Postgres readiness check failed: {e}")
         return False
 
 
@@ -43,7 +45,7 @@ async def _check_redis(redis_client: Redis) -> bool:
     try:
         return await redis_client.ping()
     except Exception as e:
-        logger.error(f"Redis readiness check failed: {e}")
+        logger.exception(f"Redis readiness check failed: {e}")
         return False
 
 
@@ -52,7 +54,7 @@ async def _check_kafka(producer: AIOKafkaProducer) -> bool:
         cluster_metadata = await producer.client.fetch_all_metadata()
         return len(cluster_metadata.brokers()) > 0
     except Exception as e:
-        logger.error(f"Kafka readiness check failed: {e}")
+        logger.exception(f"Kafka readiness check failed: {e}")
         return False
 
 
@@ -91,8 +93,8 @@ async def readiness_probe(
 
         return {"status": "ok", "components": components}
 
-    except asyncio.TimeoutError:
-        logger.error("Readiness probe timed out")
+    except TimeoutError:
+        logger.exception("Readiness probe timed out")
         return JSONResponse(status_code=HTTP_503_SERVICE_UNAVAILABLE)
     except Exception as err:
         logger.exception(f"Unexpected error in readiness probe: {err}")

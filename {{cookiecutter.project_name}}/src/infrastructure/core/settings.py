@@ -40,7 +40,7 @@ class AppConfig(BaseSettings):
     POSTGRES_MAX_CONNECTIONS: int = 10
 {% endif -%}
 {% if cookiecutter.use_redis | lower == 'y' %}
-    CACHE_DSN: RedisDsn
+    REDIS_DSN: RedisDsn
 {% endif -%}
 {% if cookiecutter.use_kafka| lower == 'y' %}
     KAFKA_DSN: KafkaDsn | str

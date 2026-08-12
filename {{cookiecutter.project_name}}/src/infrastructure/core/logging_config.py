@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 class OTelJsonFormatter(JsonFormatter):
     """Custom formatter for correct processing of OpenTelemetry data."""
+
     def add_fields(self, log_record: dict, record: logging.LogRecord, message_dict: dict) -> None:
         super().add_fields(log_record, record, message_dict)
 
@@ -62,7 +63,7 @@ def init_logging(config: AppConfig) -> None:
                 "fastapi": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "sqlalchemy.engine": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "alembic": {"level": "INFO", "handlers": ["console"], "propagate": False},
-                "httpx": {"level": "WARNING", "handlers": ["console"], "propagate": False},
+                "httpx2": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "redis": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "aiokafka": {"level": "WARNING", "handlers": ["console"], "propagate": False},
                 "asyncpg": {"level": "WARNING", "handlers": ["console"], "propagate": False},

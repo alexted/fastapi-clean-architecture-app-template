@@ -32,8 +32,8 @@ async def init_kafka_producer(config: Annotated[AppConfig, Depends(get_config)])
 
 async def get_kafka_producer(
     producer: Annotated[AIOKafkaProducer, Depends(init_kafka_producer)],
-) -> AsyncGenerator[AIOKafkaProducer, None]:
-    """Provides Kafka producer instance."""
+) -> AsyncGenerator[AIOKafkaProducer]:
+    """Provides the Kafka producer instance."""
     if producer._closed is None:
         await producer.start()
         producer._closed = False

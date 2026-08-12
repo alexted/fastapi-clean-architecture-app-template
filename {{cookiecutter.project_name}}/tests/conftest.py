@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 from alembic.command import upgrade
 from alembic.config import Config as AlembicConfig
 import asyncpg
-from httpx import ASGITransport, AsyncClient
+from httpx2 import ASGITransport, AsyncClient
 import pytest
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
