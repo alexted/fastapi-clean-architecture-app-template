@@ -76,10 +76,6 @@ build-backend = "poetry.core.masonry.api"
 python_version = "{{ cookiecutter.app_lang_version }}"
 files = ["src", "entrypoint.py"]
 #strict = true
-plugins = [
-    "pydantic.mypy",
-    "sqlalchemy.ext.mypy.plugin"
-]
 disable_error_code = "import-untyped"
 
 [[tool.mypy.overrides]]
@@ -91,8 +87,6 @@ allow_untyped_decorators = true
 src = ["src"]
 target-version = "py{{ cookiecutter.app_lang_version|replace('.', '') }}"
 line-length = 120
-fix = true
-unsafe-fixes = true
 show-fixes = true
 output-format = "grouped"
 
@@ -152,7 +146,6 @@ hardcoded-tmp-directory = ["/tmp", "/var/tmp", "/dev/shm"]
 combine-as-imports = true
 order-by-type = true
 force-sort-within-sections = true
-split-on-trailing-comma = false
 known-first-party = ["src"]
 
 [tool.ruff.lint.pydocstyle]
