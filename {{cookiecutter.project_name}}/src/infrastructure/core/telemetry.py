@@ -2,16 +2,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.resources import Resource
 from opentelemetry import trace
 from opentelemetry.instrumentation.aiokafka import AIOKafkaInstrumentor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
+from opentelemetry.instrumentation.httpx import HTTPX2ClientInstrumentor
 from opentelemetry.instrumentation.logging import LoggingInstrumentor
 from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
-# enable only if you plan to send traces somewhere other than Sentry
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+
+# NOTE! enable only if you plan to send traces somewhere other than Sentry
 # from opentelemetry.sdk.trace.export import BatchSpanProcessor
 # from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
@@ -33,7 +34,7 @@ def setup_otel(config: AppConfig, app: FastAPI) -> None:
     )
     trace.set_tracer_provider(provider)
 
-    # enable only if you plan to send traces somewhere other than Sentry
+    # NOTE! enable only if you plan to send traces somewhere other than Sentry
     # otlp_exporter = OTLPSpanExporter(endpoint=config.TELEMETRY_URL)
     # span_processor = BatchSpanProcessor(
     #     otlp_exporter,
@@ -48,4 +49,4 @@ def setup_otel(config: AppConfig, app: FastAPI) -> None:
     SQLAlchemyInstrumentor().instrument()
     RedisInstrumentor().instrument()
     AIOKafkaInstrumentor().instrument()
-    HTTPXClientInstrumentor().instrument()
+    HTTPX2ClientInstrumentor().instrument()

@@ -39,7 +39,7 @@ class HttpClient:
         self._session_params: dict = session_params
         self.__session: httpx2.AsyncClient | None = None
 
-    async def __aenter__(self) -> HttpClient:
+    async def __aenter__(self) -> t.Self:
         return self
 
     async def __aexit__(self, exc_type: str, exc_val: str, exc_tb: str) -> None:
@@ -144,7 +144,7 @@ class ApiCall:
         path_params: dict | None = None,
         headers: dict | None = None,
         **kwargs: dict,
-    ) -> t.Any:  # noqa ANN401
+    ) -> t.Any:
         return await self._handler(
             strip_none(data=data, json=json, params=params, path_params=path_params, headers=headers, **kwargs)
         )

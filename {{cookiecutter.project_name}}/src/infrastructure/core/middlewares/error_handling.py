@@ -5,7 +5,6 @@ from datetime import UTC, datetime
 import logging
 from typing import TYPE_CHECKING, Any
 
-from fastapi import Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.status import HTTP_422_UNPROCESSABLE_CONTENT
@@ -16,6 +15,7 @@ from .trace_id import get_current_trace_id
 if TYPE_CHECKING:
     from collections.abc import Callable, Coroutine
 
+    from fastapi import Request
     from fastapi.exceptions import HTTPException, RequestValidationError
 
     from ..errors.exceptions import OtherError

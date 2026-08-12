@@ -5,10 +5,12 @@ from time import time
 from typing import TYPE_CHECKING
 
 from fastapi.concurrency import iterate_in_threadpool
+
 from .trace_id import get_current_trace_id
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
     from fastapi import Request, Response
 
 logger: Logger = getLogger("{{ cookiecutter.project_name }}")

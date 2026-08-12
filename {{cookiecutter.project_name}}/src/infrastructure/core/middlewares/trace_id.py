@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
 from opentelemetry import trace
 import sentry_sdk
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
     from fastapi import Request, Response
 
 

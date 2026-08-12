@@ -7,7 +7,7 @@ from granian.log import LogLevels
 from src.infrastructure.core.settings import EnvironmentEnum, get_config
 
 
-def main():
+def main() -> None:
     config = get_config()
 
     if config.ENVIRONMENT == EnvironmentEnum.LOCAL:
@@ -31,6 +31,7 @@ def main():
         interface=Interfaces.ASGI,
         log_level=log_level,
     ).serve()
+
 
 if __name__ == "__main__":
     main()

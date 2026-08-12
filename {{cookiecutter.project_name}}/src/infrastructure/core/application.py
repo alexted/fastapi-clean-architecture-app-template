@@ -7,16 +7,16 @@ import sentry_sdk
 from sentry_sdk.integrations.otlp import OTLPIntegration
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from api.health import health_routes
 from src.api import v1_routes
+from src.api.health import health_routes
 
 from ..clients.postgres.engine import init_database
 from .constants import responses
 from .errors.exceptions import OtherError
-from .log_config import init_logging
-from .middlewares.trace_id import handle_trace_id
+from .logging_config import init_logging
 from .middlewares.error_handling import ExceptionHandler, FastAPIErrorHandler, OtherErrorHandler, ValidationErrorHandler
 from .middlewares.log_requests import log_requests
+from .middlewares.trace_id import handle_trace_id
 from .settings import AppConfig, EnvironmentEnum, get_config
 from .telemetry import setup_otel
 
@@ -55,9 +55,9 @@ def create_app() -> FastAPI:
         sentry_sdk.init(
             dsn=config.SENTRY_DSN, integrations=[OTLPIntegration()], send_default_pii=True, enable_logs=True
         )
-        Instrumentator(
-            excluded_handlers=["/health/live", "/health/ready", "/metrics"]
-        ).instrument(app).expose(app, include_in_schema=False)
+        Instrumentator(excluded_handlers=["/health/live", "/health/ready", "/metrics"]).instrument(app).expose(
+            app, include_in_schema=False
+        )
 
     app.include_router(health_routes)
     app.include_router(v1_routes)

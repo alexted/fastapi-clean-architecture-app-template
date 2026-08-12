@@ -8,11 +8,10 @@ from src.infrastructure.core.errors.exceptions import ExternalServiceError
 
 if t.TYPE_CHECKING:
     import httpx2
-    from httpx2 import Response
 
 
 def handle_response_middleware(service_name: str) -> t.Callable:
-    async def check_response(data: dict, handler: t.Callable) -> Response:
+    async def check_response(data: dict, handler: t.Callable) -> httpx2.Response:
         """
         Middleware to check the response of the remote infrastructure.
         If the response is negative, an error is generated.
@@ -41,7 +40,7 @@ class BaseClient:
         self._client: HttpClient = HttpClient(base_url=url, headers=headers, **kwargs)
         self._init_api(self._client)
 
-    async def __aenter__(self) -> BaseClient:
+    async def __aenter__(self) -> t.Self:
         return self
 
     async def __aexit__(self, exc_type: str, exc_val: str, exc_tb: str) -> None:

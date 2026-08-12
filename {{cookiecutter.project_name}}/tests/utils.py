@@ -15,7 +15,7 @@ class EqMock:
     def __init__(self, remember: bool = False) -> None:
         self.remember: bool = remember
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if self.remember and self.value is not None:
             return self.value == other
         assert other, other
