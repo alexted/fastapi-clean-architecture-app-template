@@ -17,11 +17,10 @@ class DeleteItemUseCase(BaseUseCase):
     def __init__(self, item_repo: Annotated[ItemRepository, Depends(ItemRepository)]) -> None:
         self.item_repo: ItemRepository = item_repo
 
-    async def execute(self, request_object: DeleteItemRequest) -> bool:
+    async def execute(self, request_object: DeleteItemRequest) -> None:
         """
 
         :param request_object:
         :return:
         """
         await self.item_repo.delete(request_object.id)
-        return True
