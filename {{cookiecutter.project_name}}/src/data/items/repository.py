@@ -83,6 +83,4 @@ class ItemRepository(AbstractRepository):
         """
         orm_stmt = delete(Item).where(Item.id == item_id).execution_options(populate_existing=True)
 
-        result = (await self._session.execute(orm_stmt)).scalar_one_or_none()
-
         await self._session.execute(orm_stmt)
