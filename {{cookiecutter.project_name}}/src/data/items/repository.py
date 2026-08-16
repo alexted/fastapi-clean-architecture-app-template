@@ -1,10 +1,9 @@
-from __future__ import annotations
-
 import logging
 from typing import TYPE_CHECKING, Annotated
 
 from fastapi import Depends
 from sqlalchemy import delete, insert, select, update
+from sqlalchemy.ext.asyncio import AsyncSession  # noqa: TC002
 from sqlalchemy.orm import selectinload
 
 from src.data.base import AbstractRepository
@@ -14,8 +13,6 @@ from ...infrastructure.clients.postgres.models import Item
 from .dto import ItemDTO, ItemFilters
 
 if TYPE_CHECKING:
-    from sqlalchemy.ext.asyncio import AsyncSession
-
     from ...domain.use_cases.items import CreateItemRequest
     from ...domain.use_cases.items.update_item import NewItemData
 
@@ -78,7 +75,7 @@ class ItemRepository(AbstractRepository):
 
         return self.convert_to_dto(result)
 
-    async def delete(self, item_id: int) -> ItemDTO:
+    async def delete(self, item_id: int) -> None:
         """
 
         :param item_id:
@@ -88,4 +85,4 @@ class ItemRepository(AbstractRepository):
 
         result = (await self._session.execute(orm_stmt)).scalar_one_or_none()
 
-        return self.convert_to_dto(result)
+        await self._session.execute(orm_stmt)

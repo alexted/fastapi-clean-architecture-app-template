@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from prometheus_fastapi_instrumentator import Instrumentator

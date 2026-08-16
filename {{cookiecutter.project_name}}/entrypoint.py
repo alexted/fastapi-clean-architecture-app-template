@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from granian import Granian
 from granian.constants import Interfaces
 from granian.log import LogLevels
@@ -18,8 +16,6 @@ def main() -> None:
         log_level = getattr(LogLevels, config.LOG_LEVEL.lower(), LogLevels.info)
         workers = config.SERVER_WORKERS
         reload = False
-
-    print(f"Starting Granian server in {config.ENVIRONMENT} mode...", flush=True)
 
     Granian(
         target="src.infrastructure.core.application:create_app",

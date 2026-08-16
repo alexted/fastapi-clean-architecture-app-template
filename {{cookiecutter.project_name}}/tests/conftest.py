@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from alembic.command import upgrade
@@ -73,7 +71,7 @@ async def migrations(db_engine: AsyncEngine) -> AsyncGenerator[str, Any]:
     async with db_engine.begin() as conn:
         await conn.run_sync(run_upgrade)
 
-    yield "on head"
+    yield "on head" # noqa: PT022
 
 
 @pytest.fixture

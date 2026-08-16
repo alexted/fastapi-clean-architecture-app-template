@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 
 from tests.data.expected_data import created_item, updated_item

@@ -50,7 +50,7 @@ dependencies = [
     {% endif -%}
     {% if cookiecutter.use_kafka|lower == 'y' -%}
     "opentelemetry-instrumentation-aiokafka",
-    {% endif %}
+    {% endif -%}
 #    "opentelemetry-exporter-otlp",  # enable only if you plan to send traces somewhere other than Sentry
     ]
 
