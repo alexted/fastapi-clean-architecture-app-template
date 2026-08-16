@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from fastapi import APIRouter
 
 {% if cookiecutter.use_postgresql | lower == 'y' -%}

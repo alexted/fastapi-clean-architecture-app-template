@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from src.domain.use_cases.numbers.divide import DivideRequest, DivideResponse, DivideUseCase
 from src.domain.use_cases.numbers.multiply import MultiplyRequest, MultiplyResponse, MultiplyUseCase
 from src.domain.use_cases.numbers.subtract import SubtractRequest, SubtractResponse, SubtractUseCase

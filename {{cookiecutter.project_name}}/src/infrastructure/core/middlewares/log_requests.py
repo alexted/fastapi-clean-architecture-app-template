@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from logging import Logger, getLogger
 from time import time
 from typing import TYPE_CHECKING

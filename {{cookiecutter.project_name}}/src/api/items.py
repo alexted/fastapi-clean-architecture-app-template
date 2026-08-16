@@ -1,8 +1,7 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING, Annotated
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response, status
+from pydantic import PositiveInt  # noqa: TC002
 
 from src.domain.use_cases.items import (
     CreateItemRequest,
@@ -17,12 +16,8 @@ from src.domain.use_cases.items import (
     UpdateItemResponse,
     UpdateItemUseCase,
 )
-from src.domain.use_cases.items.list_items import ListItemsResponse, ListItemsUseCase
-
-if TYPE_CHECKING:
-    from pydantic import PositiveInt
-
-    from src.domain.use_cases.items.update_item import NewItemData
+from src.domain.use_cases.items.list_items import ListItemsRequest, ListItemsResponse, ListItemsUseCase
+from src.domain.use_cases.items.update_item import NewItemData  # noqa: TC001
 
 routes = APIRouter(tags=["items"])
 
@@ -63,7 +58,7 @@ async def list_items(use_case: Annotated[ListItemsUseCase, Depends(ListItemsUseC
     :param use_case:
     :return:
     """
-    items: list[ListItemsResponse] = await use_case.execute()
+    items: list[ListItemsResponse] = await use_case.execute(ListItemsRequest())
     return items
 
 
@@ -78,7 +73,7 @@ async def update_item(
     :param use_case:
     :return:
     """
-    req = UpdateItemRequest(item_id, new_item_data)
+    req = UpdateItemRequest(id=item_id, new_data=new_item_data)
     item: UpdateItemResponse = await use_case.execute(req)
     return item
 
